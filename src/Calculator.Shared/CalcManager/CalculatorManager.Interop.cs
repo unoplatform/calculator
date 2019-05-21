@@ -102,17 +102,28 @@ namespace CalculationManager
 		[DllImport(DllPath)]
 		public static extern CommandType IExpressionCommand_GetCommandType(IntPtr pExpressionCommand);
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate IntPtr GetCEngineStringFunc(IntPtr state, IntPtr id);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void BinaryOperatorReceivedFunc(IntPtr state);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void SetPrimaryDisplayCallbackFunc(IntPtr state, string displayStringValue, bool isError);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void SetIsInErrorCallbackFunc(IntPtr state, bool isError);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void SetParenthesisNumberCallbackFunc(IntPtr state, int parenthesisCount);
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void MaxDigitsReachedCallbackFunc(IntPtr state);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void MemoryItemChangedCallbackFunc(IntPtr state, int indexOfMemory);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void OnHistoryItemAddedCallbackFunc(IntPtr state, int addedItemIndex);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void OnNoRightParenAddedCallbackFunc(IntPtr state);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void SetExpressionDisplayCallbackFunc(IntPtr state);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void SetMemorizedNumbersCallbackFunc(IntPtr state, int count, IntPtr newMemorizedNumbers);
 
 		public static GetCEngineStringFunc _getCEngineStringCallback = GetCEngineStringCallback;
@@ -128,6 +139,9 @@ namespace CalculationManager
 		public static SetExpressionDisplayCallbackFunc _setExpressionDisplayCallback = SetExpressionDisplayCallback;
 		public static SetMemorizedNumbersCallbackFunc _setMemorizedNumbersCallback = SetMemorizedNumbersCallback;
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(MaxDigitsReachedCallbackFunc))]
+#endif
 		public static void MaxDigitsReachedCallback(IntPtr state)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -136,6 +150,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.MaxDigitsReachedCallback");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(MemoryItemChangedCallbackFunc))]
+#endif
 		public static void MemoryItemChangedCallback(IntPtr state, int indexOfMemory)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -144,6 +161,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.MemoryItemChangedCallback({indexOfMemory})");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(OnHistoryItemAddedCallbackFunc))]
+#endif
 		public static void OnHistoryItemAddedCallback(IntPtr state, int addedItemIndex)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -152,6 +172,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.OnHistoryItemAddedCallback({addedItemIndex})");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(OnNoRightParenAddedCallbackFunc))]
+#endif
 		public static void OnNoRightParenAddedCallback(IntPtr state)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -160,6 +183,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.OnNoRightParenAddedCallback");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(SetExpressionDisplayCallbackFunc))]
+#endif
 		public static void SetExpressionDisplayCallback(IntPtr state)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -168,6 +194,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.SetExpressionDisplayCallback");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(SetMemorizedNumbersCallbackFunc))]
+#endif
 		public static void SetMemorizedNumbersCallback(IntPtr state, int count, IntPtr newMemorizedNumbers)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -184,6 +213,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.SetMemorizedNumbersCallback({string.Join(";", numbers)})");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(SetParenthesisNumberCallbackFunc))]
+#endif
 		public static void SetParenthesisNumberCallback(IntPtr state, int parenthesisCount)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -191,6 +223,10 @@ namespace CalculationManager
 
 			Debug.WriteLine($"CalculatorManager.SetParenthesisNumberCallback({parenthesisCount})");
 		}
+
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(BinaryOperatorReceivedFunc))]
+#endif
 
 		public static void BinaryOperatorReceivedCallback(IntPtr state)
 		{
@@ -200,6 +236,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.BinaryOperatorReceivedCallback");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(SetPrimaryDisplayCallbackFunc))]
+#endif
 		public static void SetPrimaryDisplayCallback(IntPtr state, [MarshalAs(UnmanagedType.LPWStr)] string displayStringValue, bool isError)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -208,6 +247,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.SetPrimaryDisplayCallback({displayStringValue}, {isError})");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(SetIsInErrorCallbackFunc))]
+#endif
 		public static void SetIsInErrorCallback(IntPtr state, bool isError)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -216,6 +258,9 @@ namespace CalculationManager
 			Debug.WriteLine($"CalculatorManager.SetIsInErrorCallback({isError})");
 		}
 
+#if __IOS__
+		[ObjCRuntime.MonoPInvokeCallback(typeof(GetCEngineStringFunc))]
+#endif
 		public static IntPtr GetCEngineStringCallback(IntPtr state, IntPtr pResourceId)
 		{
 			var provider = GCHandle.FromIntPtr(state).Target as EngineResourceProvider;
@@ -267,7 +312,7 @@ namespace CalculationManager
 
 
 	public partial class CalculatorManager : ICalcDisplay
-    {
+	{
 
 		private GCHandle _displayCallbackHandle;
 		private GCHandle _resourceProviderHandle;
