@@ -51,7 +51,7 @@ jobs:
       msbuildLocationMethod: version
       msbuildVersion: latest
       msbuildArchitecture: x86
-      msbuildArguments: /r /p:BuildOptions="Platform=iOS"
+      msbuildArguments: /r /p:BuildOptions="Platform=iPhone"
       clean: false
       maximumCpuCount: true
       restoreNugetPackages: false

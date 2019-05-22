@@ -22,7 +22,7 @@
 		</ItemGroup>
 
 		<PropertyGroup>
-			<BuildOptions>$(BuildOptions);PackageVersion=@(PackageVersion);PackageBuildNumber=@(PackageBuildNumber)</BuildOptions>
+			<BuildOptions>$(BuildOptions);Configuration=Release;PackageVersion=@(PackageVersion);PackageBuildNumber=@(PackageBuildNumber)</BuildOptions>
 		</PropertyGroup>
 
 		<MSBuild Properties="$(BuildOptions)"
