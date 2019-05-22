@@ -23,11 +23,18 @@
 
 		<PropertyGroup>
 			<BuildOptions>$(BuildOptions);Configuration=Release;PackageVersion=@(PackageVersion);PackageBuildNumber=@(PackageBuildNumber)</BuildOptions>
+
+			<SolutionPath>../Calculator.sln</SolutionPath>
+			
+			<BuildOptions Condition="'$(PlatformTarget)'=='iOS'">$(BuildOptions);Platform=iOS</BuildOptions>
+			<SolutionPath Condition="'$(PlatformTarget)'=='iOS'">../Calculator.iOS/Calculator.iOS.csproj</SolutionPath>
+			
+			<SolutionPath Condition="'$(PlatformTarget)'=='Wasm'">../Calculator.Wasm/Calculator.Wasm.csproj</SolutionPath>
 		</PropertyGroup>
 
 		<MSBuild Properties="$(BuildOptions)"
 						 Targets="Restore;Build"
-						 Projects="../Calculator.sln"
+						 Projects="$(SolutionPath)"
 						 RebaseOutputs="false"/>
 	</Target>
 
