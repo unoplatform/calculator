@@ -26,10 +26,10 @@
 
 			<SolutionPath>../Calculator.sln</SolutionPath>
 			
-			<BuildOptions Condition="'$(PlatformTarget)'=='iOS'">$(BuildOptions);Platform=iOS</BuildOptions>
-			<SolutionPath Condition="'$(PlatformTarget)'=='iOS'">../Calculator.iOS/Calculator.iOS.csproj</SolutionPath>
+			<BuildOptions Condition="'$(BuildPlatformTarget)'=='iOS'">$(BuildOptions);Platform=iOS</BuildOptions>
+			<SolutionPath Condition="'$(BuildPlatformTarget)'=='iOS'">../Calculator.iOS/Calculator.iOS.csproj</SolutionPath>
 			
-			<SolutionPath Condition="'$(PlatformTarget)'=='Wasm'">../Calculator.Wasm/Calculator.Wasm.csproj</SolutionPath>
+			<SolutionPath Condition="'$(BuildPlatformTarget)'=='Wasm'">../Calculator.Wasm/Calculator.Wasm.csproj</SolutionPath>
 		</PropertyGroup>
 
 		<MSBuild Properties="$(BuildOptions)"

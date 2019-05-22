@@ -37,7 +37,7 @@ jobs:
   - script: |
       source /emsdk/emsdk_env.sh
       cd $(build.sourcesdirectory)
-      msbuild /r /p:PlatformTarget=Wasm $(build.sourcesdirectory)/src/build/build.csproj
+      msbuild /r /p:BuildPlatformTarget=Wasm $(build.sourcesdirectory)/src/build/build.csproj
 
     env:
       GITVERSION_FullSemVer: $(GITVERSION_FullSemVer)
