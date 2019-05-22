@@ -51,20 +51,7 @@ jobs:
       msbuildLocationMethod: version
       msbuildVersion: latest
       msbuildArchitecture: x86
-      msbuildArguments: /r
-      clean: false
-      maximumCpuCount: true
-      restoreNugetPackages: false
-      logProjectEvents: true
-      createLogFile: true
-
-  - task: MSBuild@1
-    inputs:
-      solution: '$(build.sourcesdirectory)/src/Calculator.iOS/Calculator.iOS.csproj'
-      msbuildLocationMethod: version
-      msbuildVersion: latest
-      msbuildArchitecture: x86
-      msbuildArguments: /r /p:Configuration=Release /p:Platform=iPhone /detailedsummary /m:16 /nr:false "/p:InformationalVersion=%GITVERSION_InformationalVersion%"
+      msbuildArguments: /r /p:BuildOptions="Platform=iOS"
       clean: false
       maximumCpuCount: true
       restoreNugetPackages: false

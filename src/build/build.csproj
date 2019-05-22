@@ -10,7 +10,7 @@
 		<PackageReference Include="MSBuildTasks" Version="1.5.0.235" />
 	</ItemGroup>
 
-	<Target Name="Build">
+	<Target Name="RunBuild" AfterTargets="Build">
 
 		<CallTarget Targets="BuildVersion">
 			<Output TaskParameter="TargetOutputs" PropertyName="_VersionOutput"/>
@@ -29,7 +29,6 @@
 						 Targets="Restore;Build"
 						 Projects="../Calculator.sln"
 						 RebaseOutputs="false"/>
-
 	</Target>
 
 	<Target Name="BuildVersion"
