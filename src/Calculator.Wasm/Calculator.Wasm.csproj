@@ -44,4 +44,5 @@
 		<Content Include="..\CalcManager\CalcManager.wasm" Link="CalcManager.wasm" />
 	</ItemGroup>
 	<Import Project="..\Calculator.Shared\Calculator.Shared.projitems" Label="Shared" Condition="Exists('..\Calculator.Shared\Calculator.Shared.projitems')" />
+	<Import Project="..\build\AppVersion.targets" />
 </Project>
