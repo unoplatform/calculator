@@ -100,51 +100,6 @@
     <Message Text="Informational version : $(_InformationalVersion)"
                      Importance="$(_MessageImportance)" />
 
-    <!-- Create official assembly version files with right version number -->
-    <AssemblyInfo
-        CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.cs"
-        AssemblyVersion="$(_AppVersion)"
-        AssemblyFileVersion="$(_BuildNumber)"
-        AssemblyProduct="$(ProjectName) for Windows"
-        AssemblyCompany="$(CompanyName)"
-        AssemblyInformationalVersion="$(_InformationalVersion)"
-        AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />
-
-    <AssemblyInfo
-        CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.Phone.cs"
-        AssemblyVersion="$(_AppVersion)"
-        AssemblyFileVersion="$(_BuildNumber)"
-        AssemblyProduct="$(ProjectName) for Windows Phone"
-        AssemblyCompany="$(CompanyName)"
-        AssemblyInformationalVersion="$(_InformationalVersion)"
-        AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />
-
-    <AssemblyInfo
-        CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.iOS.cs"
-        AssemblyVersion="$(_AppVersion)"
-        AssemblyFileVersion="$(_BuildNumber)"
-        AssemblyProduct="$(ProjectName) for iOS"
-        AssemblyCompany="$(CompanyName)"
-        AssemblyInformationalVersion="$(_InformationalVersion)"
-        AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />
-
-    <AssemblyInfo
-        CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.Android.cs"
-        AssemblyVersion="$(_AppVersion)"
-        AssemblyFileVersion="$(_BuildNumber)"
-        AssemblyProduct="$(ProjectName) for Android"
-        AssemblyCompany="$(CompanyName)"
-        AssemblyInformationalVersion="$(_InformationalVersion)"
-        AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />
-
-    <!-- Set completed -->
-    <Touch AlwaysCreate="True"
-                 Files="$(ArtifactsOutput)\Version-$(_AppVersion)-$(_BuildNumber)-$(SolutionPlatform).txt"/>
-
     <Message Text="#### Done running BuildVersion"
                      Importance="$(_MessageImportance)" />
     <Message Text="%0A"
