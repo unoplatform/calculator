@@ -47,6 +47,19 @@ jobs:
 
   - task: MSBuild@1
     inputs:
+      solution: '$(build.sourcesdirectory)/src/build/build.csproj'
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: true
+      createLogFile: true
+
+  - task: MSBuild@1
+    inputs:
       solution: '$(build.sourcesdirectory)/src/Calculator.iOS/Calculator.iOS.csproj'
       msbuildLocationMethod: version
       msbuildVersion: latest

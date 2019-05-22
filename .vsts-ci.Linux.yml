@@ -33,6 +33,9 @@ jobs:
 
     env:
       GITVERSION_FullSemVer: $(GITVERSION_FullSemVer)
+      
+  - script: |
+      msbuild /r /p:Configuration=Release $(build.sourcesdirectory)/src/build/build.csproj
 
   - script: |
       source /emsdk/emsdk_env.sh
