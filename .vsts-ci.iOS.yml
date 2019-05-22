@@ -51,7 +51,7 @@ jobs:
       msbuildLocationMethod: version
       msbuildVersion: latest
       msbuildArchitecture: x86
-      msbuildArguments: /r  /p:BuildPlatformTarget=iOS
+      msbuildArguments: /r  /p:BuildPlatformTarget=iOS /bl:$(build.artifactstagingdirectory)\build.binlog
       clean: false
       maximumCpuCount: true
       restoreNugetPackages: false
