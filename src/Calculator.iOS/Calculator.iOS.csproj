@@ -195,7 +195,7 @@
       <Kind>Static</Kind>
     </NativeReference>
   </ItemGroup>
+	<Import Project="..\build\AppVersion.targets" />
   <Import Project="..\Calculator.Shared\Calculator.Shared.projitems" Label="Shared" Condition="Exists('..\Calculator.Shared\Calculator.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-	<Import Project="..\build\AppVersion.targets" />
 </Project>
