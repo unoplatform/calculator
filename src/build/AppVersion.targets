@@ -1,9 +1,5 @@
 <Project>
 
-  <ItemGroup>
-    <PackageReference Include="MSBuildTasks" Version="1.5.0.235" />
-  </ItemGroup>
-
   <UsingTask TaskName="_XmlUpdate"
                        TaskFactory="CodeTaskFactory"
                        AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >
