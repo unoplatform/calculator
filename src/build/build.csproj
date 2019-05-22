@@ -126,10 +126,6 @@
         AssemblyInformationalVersion="$(_InformationalVersion)"
         AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />
 
-    <!-- Set completed -->
-    <Touch AlwaysCreate="True"
-                 Files="$(ArtifactsOutput)\Version-$(_AppVersion)-$(_BuildNumber)-$(SolutionPlatform).txt"/>
-
     <Message Text="#### Done running BuildVersion"
                      Importance="$(_MessageImportance)" />
     <Message Text="%0A"
