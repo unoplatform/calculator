@@ -26,16 +26,17 @@
 
 			<SolutionPath>../Calculator.sln</SolutionPath>
 			
-			<BuildOptions Condition="'$(BuildPlatformTarget)'=='iOS'">$(BuildOptions);Platform=iOS</BuildOptions>
+			<BuildOptions Condition="'$(BuildPlatformTarget)'=='iOS'">$(BuildOptions);Platform=iPhone</BuildOptions>
 			<SolutionPath Condition="'$(BuildPlatformTarget)'=='iOS'">../Calculator.iOS/Calculator.iOS.csproj</SolutionPath>
 			
 			<SolutionPath Condition="'$(BuildPlatformTarget)'=='Wasm'">../Calculator.Wasm/Calculator.Wasm.csproj</SolutionPath>
 		</PropertyGroup>
 
+		<Message Text="Building $(SolutionPath) with $(BuildOptions)" Importance="high" />
+
 		<MSBuild Properties="$(BuildOptions)"
 						 Targets="Restore;Build"
-						 Projects="$(SolutionPath)"
-						 RebaseOutputs="false"/>
+						 Projects="$(SolutionPath)" />
 	</Target>
 
 	<Target Name="BuildVersion"
@@ -95,7 +96,7 @@
     <!-- Create official assembly version files with right version number -->
     <AssemblyInfo
         CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.cs"
+        OutputFile="..\AssemblyVersion.Uwp.cs"
         AssemblyVersion="$(_AppVersion)"
         AssemblyFileVersion="$(_BuildNumber)"
         AssemblyProduct="$(ProjectName) for Windows"
@@ -105,10 +106,10 @@
 
     <AssemblyInfo
         CodeLanguage="CS"
-        OutputFile="..\AssemblyVersion.Phone.cs"
+        OutputFile="..\AssemblyVersion.Wasm.cs"
         AssemblyVersion="$(_AppVersion)"
         AssemblyFileVersion="$(_BuildNumber)"
-        AssemblyProduct="$(ProjectName) for Windows Phone"
+        AssemblyProduct="$(ProjectName) for WebAssembly"
         AssemblyCompany="$(CompanyName)"
         AssemblyInformationalVersion="$(_InformationalVersion)"
         AssemblyCopyright="Copyright (C) $(CompanyName) $([System.DateTime]::Now.Year)" />

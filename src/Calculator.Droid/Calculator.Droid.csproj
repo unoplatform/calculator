@@ -58,6 +58,9 @@
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.32" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersion.Android.cs">
+      <Link>Properties\AssemblyVersion.Android.cs</Link>
+    </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
@@ -80,9 +83,9 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <Import Project="..\Calculator.Shared\Calculator.Shared.projitems" Label="Shared" Condition="Exists('..\Calculator.Shared\Calculator.Shared.projitems')" />
-	<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-	<Import Project="..\build\AppVersion.targets" />
-	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="..\build\AppVersion.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
 		<Target Name="BeforeBuild">
 		</Target>

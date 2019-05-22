@@ -114,6 +114,9 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersion.iOS.cs">
+      <Link>Properties\AssemblyVersion.iOS.cs</Link>
+    </Compile>
     <Compile Include="Main.cs" />
     <ImageAsset Include="Media.xcassets\AppIcons.appiconset\Icon-83.5%402x.png">
       <Visible>false</Visible>
