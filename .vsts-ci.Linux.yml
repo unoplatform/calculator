@@ -13,9 +13,10 @@ jobs:
     clean: true
   
   - bash: |
+      # emsdk may alreay be activated in the base image
+      # cd /emsdk
+      # sudo ./emsdk activate sdk-1.38.31-64bit
       sudo chmod -R 777 /emsdk
-      cd /emsdk
-      sudo ./emsdk activate sdk-1.38.28-64bit
 
     displayName: 'Setup Emscripten'
 

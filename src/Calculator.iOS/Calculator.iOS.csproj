@@ -183,7 +183,7 @@
     <BundleResource Include="Resources\Fonts\winjs-symbols.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="1.45.0-dev.1457" />
+    <PackageReference Include="Uno.UI" Version="1.45.0-dev.1503" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
     <NativeReference Include="Native References/x86_64/libCalcManager.a">
