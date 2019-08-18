@@ -133,6 +133,17 @@ namespace CalculatorApp
 			Initialize();
 		}
 
+		public void SetMode(string mode)
+		{			
+			if (mode != null)
+			{
+				if (int.TryParse(mode, out var intParameter))
+				{
+					m_model.Mode = (ViewMode)intParameter;
+				}
+			}		
+		}
+
         void WindowSizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             // We don't use layout aware page's view states, we have our own

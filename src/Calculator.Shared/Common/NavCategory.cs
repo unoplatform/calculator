@@ -573,7 +573,7 @@ namespace CalculatorApp
                 return menuOptions;
             }
 
-            static NavCategoryGroup CreateCalculatorCategory()
+            public static NavCategoryGroup CreateCalculatorCategory()
             {
                 return  new NavCategoryGroup(NavCategory.s_categoryGroupManifest[0].Value);
             }

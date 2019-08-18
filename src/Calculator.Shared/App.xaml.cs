@@ -19,6 +19,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
+using Windows.UI.StartScreen;
+using CalculatorApp.Common;
+using Windows.ApplicationModel.Resources.Core;
+using Windows.ApplicationModel.Resources;
 
 #if HAS_UNO
 using Microsoft.Extensions.Logging;
@@ -30,14 +35,14 @@ namespace CalculatorApp
 	/// Provides application-specific behavior to supplement the default Application class.
 	/// </summary>
 	sealed partial class App : Application
-    {
-        static bool m_isAnimationEnabled = true;
+	{
+		static bool m_isAnimationEnabled = true;
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
-        public App()
+		/// <summary>
+		/// Initializes the singleton application object.  This is the first line of authored code
+		/// executed, and as such is the logical equivalent of main() or WinMain().
+		/// </summary>
+		public App()
 		{
 #if HAS_UNO
 			ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
@@ -58,13 +63,13 @@ namespace CalculatorApp
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		protected override async void OnLaunched(LaunchActivatedEventArgs e)
 		{
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-               // this.DebugSettings.EnableFrameRateCounter = true;
-            }
+			if (System.Diagnostics.Debugger.IsAttached)
+			{
+				// this.DebugSettings.EnableFrameRateCounter = true;
+			}
 #endif
 
 #if !HAS_UNO
@@ -114,9 +119,14 @@ namespace CalculatorApp
 					// parameter
 					rootFrame.Navigate(typeof(MainPage), e.Arguments);
 				}
+				else
+				{
+					(rootFrame.Content as MainPage)?.SetMode(e.Arguments);
+				}
 				// Ensure the current window is active
 				Windows.UI.Xaml.Window.Current.Activate();
 			}
+			await SetupJumpListAsync();
 		}
 
 #if HAS_UNO
@@ -161,38 +171,70 @@ namespace CalculatorApp
 		}
 #endif
 
+		private async Task SetupJumpListAsync()
+		{
+			try
+			{
+				if (JumpList.IsSupported())
+				{
+					var calculatorOptions = NavCategoryGroup.CreateCalculatorCategory();
+
+					var jumpList = await JumpList.LoadCurrentAsync();
+					
+					jumpList.Items.Clear();
+					jumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+					var resourceLoader = new ResourceLoader();
+
+
+					foreach (var option in calculatorOptions.Categories)
+					{
+						var mode = option.Mode;
+						var item = JumpListItem.CreateWithArguments(((int)mode).ToString(), resourceLoader.GetString(NavCategory.GetNameResourceKey(mode)));
+						item.Description = resourceLoader.GetString(NavCategory.GetNameResourceKey(mode));
+						item.Logo = new Uri("ms-appx:///Assets/" + mode.ToString() + ".png");
+
+						jumpList.Items.Add(item);
+					}
+
+					await jumpList.SaveAsync();
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
 
 		/// <summary>
 		/// Return True if animation is enabled by user setting.
 		/// </summary>
 		public static bool IsAnimationEnabled()
-        {
-            return m_isAnimationEnabled;
-        }
+		{
+			return m_isAnimationEnabled;
+		}
 
-        /// <summary>
-        /// Return the current application view state. The value
-        /// will match one of the constants in the ViewState namespace.
-        /// </summary>
-        public static string GetAppViewState()
-        {
-            String newViewState;
+		/// <summary>
+		/// Return the current application view state. The value
+		/// will match one of the constants in the ViewState namespace.
+		/// </summary>
+		public static string GetAppViewState()
+		{
+			String newViewState;
 #if NETFX_CORE
 			CoreWindow window = CoreWindow.GetForCurrentThread();
 #else
 			var window = Windows.UI.Xaml.Window.Current;
 #endif
 			if ((window.Bounds.Width >= 560) && (window.Bounds.Height >= 356))
-            {
-                newViewState = ViewState.DockedView;
-            }
-            else
-            {
-                newViewState = ViewState.Snap;
-            }
+			{
+				newViewState = ViewState.DockedView;
+			}
+			else
+			{
+				newViewState = ViewState.Snap;
+			}
 
-            return newViewState;
-        }
+			return newViewState;
+		}
 
 		/// <summary>
 		/// Invoked when Navigation to a certain page fails
@@ -203,7 +245,7 @@ namespace CalculatorApp
 		{
 			throw new Exception($"Failed to load Page {e.SourcePageType}: {e.Exception}");
 
-        }
+		}
 
 		/// <summary>
 		/// Invoked when application execution is being suspended.  Application state is saved
