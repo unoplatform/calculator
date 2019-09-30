@@ -23,7 +23,7 @@ The Uno Calculator will regularly follow with the Windows Calculator updates. Yo
   never lose precision.
 
 ## Getting started
-Prerequisites:
+Requirements:
 - Your computer must be running Windows 10, version 1803 or newer.
 - Install the latest version of [Visual Studio](https://developer.microsoft.com/en-us/windows/downloads).
   - Install the "Universal Windows Platform Development" workload.
@@ -34,7 +34,7 @@ Prerequisites:
 
 > When using Visual Studio 2019, the `.vsconfig` feature will automatically prompt to install missing components.
 
-- Get the code:
+- Code Snippet:
     ```
     git clone https://github.com/nventive/calculator
     ```
