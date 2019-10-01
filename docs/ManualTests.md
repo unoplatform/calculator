@@ -46,6 +46,15 @@ Steps:
 1. Input “15” using the in-app buttons and select “HEX” 
 *Expected: “F” shows up in the display and the letters A-F show up as in-app buttons*
 
+# A short program of a programmer calculator in python3 
+   calculator.py
+number_1 = int(input('Enter your first number: '))
+number_2 = int(input('Enter your second number: '))
+
+print(number_1 + number_2)
+ 
+This program can help you to make your programmer calculator in python.
+
 ### Converters 
 
 **Converter Usage**
