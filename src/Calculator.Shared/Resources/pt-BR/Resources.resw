@@ -1115,7 +1115,7 @@
     <comment>Unit conversion category name called Temperature</comment>
   </data>
   <data name="CategoryName_WeightText" xml:space="preserve">
-    <value>Peso e massa</value>
+    <value>Peso</value>
     <comment>Unit conversion category name called Weight and Mass. Note that this category includes units of both mass and weight. People use the word "weight" in everyday life for measuring things such as food and people. In case a language has same word for "weight" and "mass" please use one word only.</comment>
   </data>
   <data name="CategoryName_PressureText" xml:space="preserve">
