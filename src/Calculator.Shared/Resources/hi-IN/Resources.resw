@@ -1107,7 +1107,7 @@
     <comment>Unit conversion category name called Time</comment>
   </data>
   <data name="CategoryName_VolumeText" xml:space="preserve">
-    <value>वॉल्यूम</value>
+    <value>आयतन</value>
     <comment>Unit conversion category name called Volume (eg. cups, teaspoons, milliliters)</comment>
   </data>
   <data name="CategoryName_TemperatureText" xml:space="preserve">
