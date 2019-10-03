@@ -289,7 +289,7 @@ Steps:
 *Expected: Move to "Date Calculation" screen.*
 6.	Press **Ctrl +M** to Store in Memory
 7.	Press **Ctrl +P** to Add to Active Memory
-8.	Press **Ctrl +Q** to Subtract form Active Memory
+8.	Press **Ctrl +Q** to Subtract from Active Memory
 9.	Press **Ctrl +R** to Recall from Memory
 10.	Press **Ctrl +L** to Clear from Memory
 11.	Press **Delete** to Clear Current Input 'CE'
