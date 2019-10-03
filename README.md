@@ -1,3 +1,5 @@
+![uno logo](https://www.google.com/search?q=uno+platform+logo&source=lnms&tbm=isch&sa=X&ved=0ahUKEwj2nJ3Wtf_kAhVFk3AKHa1eBmIQ_AUIEigB&biw=1536&bih=754#imgrc=Yk6h3qud2y-yIM:)
+
 # Uno Calculator
 
 The Uno Calculator is a port of the [Windows Calculator](https://github.com/microsoft/calculator) to C# and to the [Uno Platform](https://platform.uno) for iOS, Android and WebAssembly.
