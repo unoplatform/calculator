@@ -11,9 +11,9 @@ We are happy to hear your ideas for the future of Calculator. Check the
 [GitHub issues](https://github.com/nventive/calculator/issues) and see if others have
 submitted similar feedback. You can upvote existing feedback or submit a new suggestion.
 
-We always look at upvoted items in Feedback Hub when we decide what to work on next. We read the
-comments in both Feedback Hub and GitHub, and we look forward to hearing your input. Remember that
-all community interactions must abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
+We always look at upvoted items in Feedback Hub when we decide what to work on next. We read all the
+comments in both Feedback Hub and GitHub, and we look forward to hear your input. Remember that
+all community interactions,must abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Finding issues you can help with
 Looking for something to work on?
@@ -82,6 +82,6 @@ assign the request to an appropriate reviewer. Any member of the community may
 participate in the review, but at least one member of the Calculator team will ultimately approve
 the request.
 
-Often, multiple iterations will be needed to responding to feedback from reviewers. Try looking at
+Often, multiple iterations will be needed to respond to feedback from reviewers. Try looking at
 [past pull requests](https://github.com/Microsoft/calculator/pulls?q=is%3Apr+is%3Aclosed) to see
 what the experience might be like.
