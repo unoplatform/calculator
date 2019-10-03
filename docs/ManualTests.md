@@ -221,71 +221,73 @@ Steps:
 *Expected: No elements fall out of intended boundaries.*
 
 
-**All Calculators Test: Verify toggling functions**
+**All Calculators Test: Verify toggling functions**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	For Standard & Scientific Modes: While in the Smallest scale, verify that the History Icon brings up the history panel gracefully and is displayed appropriately.
-For Scientific Mode: At a Smaller Scale
-Verify the following:
-3.	Grad / Deg / Rad
-    Perform a trig function
+
+    For Scientific Mode: At a Smaller Scale  
+Verify the following:  
+3.	Grad / Deg / Rad  
+    Perform a trig function  
 *Expected: The answer to the function is in the selected grad/deg/rad. Repeat for each of the modes.*
-4.	(Hyp) Hyperbolic
+4.	(Hyp) Hyperbolic  
 *Expected: Sin toggles to Sinh, Cos toggles to Cosh, Tan toggles to Tanh.*
-5.	(F-E key) Floating Point Notation & Scientific Notation.
+5.	(F-E key) Floating Point Notation & Scientific Notation.  
 *Expected: Display toggles between floating point and Scientific notation.*
-For Programmer Mode
+
+    For Programmer Mode  
 Verify the following:
-6.	"Bit Toggling Keypad":
+6.	"Bit Toggling Keypad":  
 *Expected: In app keypad changes to represent Bits (1s and 0s).*
-7.	"QWORD / DWORD / WORD / BYTE":
+7.	"QWORD / DWORD / WORD / BYTE":  
 *Expected: Toggles as expected.*
-8.	"Hex" Hexadecimal:
+8.	"Hex" Hexadecimal:  
 *Expected: A B C D E F become active and user can use them. A maximum of 16 characters can be entered.*
-9.	"Dec" Decimal:
+9.	"Dec" Decimal:  
 *Expected: A B C D E F are inactive. A maximum of 19 characters can be entered.*
-10.	"Oct" Octal:
+10.	"Oct" Octal:  
 *Expected: A B C D E F 8 9 are inactive. A maximum of 22 characters can be entered.*
-11.	"Bin" Binary:
+11.	"Bin" Binary:  
 *Expected: A B C D E F 2 3 4 5 6 7 8 9 are inactive. A maximum of 64 characters can be entered.*
 
 
-**Date Calculation Test: Verify dates can be calculated.**
+**Date Calculation Test: Verify dates can be calculated.**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Date Calculation" Calculator.
-3.  With "Difference between dates" Selected
-    Change the various date input fields
+3.  With "Difference between dates" Selected  
+    Change the various date input fields  
 *Expected: From and To reflect dates input respectively.*
-5.	With "Add or Subtract days" Selected
-    Change the various date input fields
+5.	With "Add or Subtract days" Selected  
+    Change the various date input fields  
 *Expected: Verify changes made to both add and subtract reflect input respectively.*
 
 
-**Currency Converter Test: Verify conversion & updating current currency rates.**
+**Currency Converter Test: Verify conversion & updating current currency rates.**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Currency Converter" Calculator.
-3.	Select 2 Currency types from the dropdowns & enter a "1" into a conversion slot.
+3.	Select 2 Currency types from the dropdowns & enter a "1" into a conversion slot.    
 *Expected: The currency is slotted properly and converted rate matches the ratio provided under the selected currency types.*
-4.	Click "Updated"
+4.	Click "Updated"  
 *Expected: Display matches PC's date and time.*
-5.	After at least a minute: Select "Update rates" & Check "Updated" again:
+5.	After at least a minute: Select "Update rates" & Check "Updated" again:  
 *Expected: The "Update Rates" button changes the date and time to match the computer's current date and time.*
 
 
-**All Calculators Test: Hotkeys: Verify Hot Key function.**
+**All Calculators Test: Hotkeys: Verify Hot Key function.**  
 Steps:
 1.	Launch the "Calculator" app.
 
     For All Applicable Modes verify the following:
-2.	Press **Alt +1** to Enter "Standard" mode
+2.	Press **Alt +1** to Enter "Standard" mode  
 *Expected: Move to "Standard" screen.*
-3.	Press **Alt +2** to Enter "Scientific" mode
+3.	Press **Alt +2** to Enter "Scientific" mode  
 *Expected: Move to "Scientific" screen.*
-4.	Press **Alt +3** to Enter "Programmer" mode
+4.	Press **Alt +3** to Enter "Programmer" mode  
 *Expected: Move to "Programming" screen.*
-5.	Press **Alt +4** to Enter "Date Calculation" mode
+5.	Press **Alt +4** to Enter "Date Calculation" mode  
 *Expected: Move to "Date Calculation" screen.*
 6.	Press **Ctrl +M** to Store in Memory
 7.	Press **Ctrl +P** to Add to Active Memory
@@ -297,13 +299,13 @@ Steps:
 13.	Press **F9** to Toggle '±'
 14.	Press **R** to Select '1/x'
 15.	Press **@** to Select '√'
-16.	Press **Ctrl + H** to Toggle History Panel
+16.	Press **Ctrl + H** to Toggle History Panel  
 *Expected: Function when in small scale window.*
-17.	Press **Up arrow** to Move up History Panel
+17.	Press **Up arrow** to Move up History Panel  
 *Expected: Function when in small scale window.*
-18.	Press **Down arrow** to Move Down History Panel
+18.	Press **Down arrow** to Move Down History Panel  
 *Expected: Function when in small scale window.*
-19.	Press **Ctrl + Shift + D** to Clear History Panel
+19.	Press **Ctrl + Shift + D** to Clear History Panel  
 *Expected: Function when in small scale window.*
 20.	Press **Spacebar** to Repeat Last Input
 
