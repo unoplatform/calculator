@@ -7,80 +7,80 @@ These manual tests are run before every release of the Calculator app.
 
 ### Math in Standard Calculator 
 
-**Test 1**
+**Test 1**  
 Steps:
-1. From the Standard Calculator page, input “3”, “+”, “3”, “Enter” on the keyboard 
-Expected: “6” shows up in the display 
-2. Input “4”, “-”, “2”, “=” using the in-app buttons 
+1. From the Standard Calculator page, input “3”, “+”, “3”, “Enter” on the keyboard  
+*Expected: “6” shows up in the display*
+2. Input “4”, “-”, “2”, “=” using the in-app buttons  
 *Expected: “2” shows up in the display*
  
- **Test 2**
- Steps:
+ **Test 2**  
+Steps:
 1. From the Standard Calculator page, input “3”, “+”, “3”, “Enter” on the keyboard 
 2. Navigate to the History pane, and verify that “3 + 3 = 6” shows up in the pane 
 3. Input “MS” using the in-app buttons 
-4. Navigate to the Memory pane
+4. Navigate to the Memory pane  
 *Expected: “6” shows up in the pane*
 
 ### Math in Scientific Calculator
 
-**Test 1**
-Steps: 
-1. From the Scientific Calculator page, input “3”, “^”, “3”, “Enter” on the keyboard 
+**Test 1**  
+Steps:
+1. From the Scientific Calculator page, input “3”, “^”, “3”, “Enter” on the keyboard  
 *Expected: “27” shows up in the display*
 
-**Test 2**
+**Test 2**  
 Steps:
-1. Input “5”, “n!”, “=” using the in-app buttons 
+1. Input “5”, “n!”, “=” using the in-app buttons  
 *Expected: “120” shows up in the display*
 
-### Math in Programmer Calculator 
+### Math in Programmer Calculator
 
-**Test 1**
+**Test 1**  
 Steps:
-1. From the Programmer Calculator page, input “1”, “&”, “0”, “Enter” on the keyboard 
+1. From the Programmer Calculator page, input “1”, “&”, “0”, “Enter” on the keyboard  
 *Expected: “0” shows up in the display*
 
-**Test 2**
+**Test 2**  
 Steps:
-1. Input “15” using the in-app buttons and select “HEX” 
+1. Input “15” using the in-app buttons and select “HEX”  
 *Expected: “F” shows up in the display and the letters A-F show up as in-app buttons*
 
 ### Converters 
 
-**Converter Usage**
+**Converter Usage**  
 Steps:
 1. From the Length Converter page, select “kilometers” as the unit type in the input field and input “5” using the keyboard 
-2. Select “miles” as the unit type in the output field 
+2. Select “miles” as the unit type in the output field  
 *Expected: The output starts with is “3.106856”*
 
 
 ## Basic Verification Tests
 
-**Launch App Test**
+**Launch App Test**  
 Steps:
 1.	Press the Windows key.
 2.	Navigate to "all apps".
 3.	Look for "Calculator".
-4.	Click to launch the "Calculator" app.
+4.	Click to launch the "Calculator" app.  
 *Expected: The calculator app launches gracefully.*
 
 
-**All Calculators Test: Verify All Numbers & Input Methods**
+**All Calculators Test: Verify All Numbers & Input Methods**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Standard" Calculator.
-3.	Mouse Input
+3.	Mouse Input  
 *Expected: All numbers work via mouse click.*
-4.	Keyboard Input:
+4.	Keyboard Input:  
 *Expected: All numbers work via number pad.*
-5.	Navigate to "Scientific" Calculator and Repeat Steps 3-5
+5.	Navigate to "Scientific" Calculator and Repeat Steps 3-5  
 *Expected: Steps 3-5 pass in Scientific mode*
-6.	Navigate to "Programmer" Calculator and Repeat Steps 3-5
+6.	Navigate to "Programmer" Calculator and Repeat Steps 3-5  
 *Expected: Steps 3-5 pass in Programmer mode*
 
 
-**All Calculators Test: Verify Basic Arithmetic Functions**
+**All Calculators Test: Verify Basic Arithmetic Functions**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Standard" Calculator.
@@ -104,7 +104,7 @@ Steps:
 5.	Navigate to "Programmer" Calculator and Repeat Steps 3-18 (No Decimal in Programming Calc).
 
 
-**Scientific Calculator Test: Verify advanced arithmetic functions**
+**Scientific Calculator Test: Verify advanced arithmetic functions**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Scientific" Calculator.
@@ -124,39 +124,39 @@ Steps:
     m.	“( )" Parenthesis
 
 
-**All Calculators Test: Verify memory functions**
+**All Calculators Test: Verify memory functions**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Standard" Calculator.
 3.	Perform a calculation and press the MS button.
-4.	If small scale, Select the (M) with the drop down arrow
+4.	If small scale, Select the (M) with the drop down arrow  
 *Expected: Calculation from previous step is present.*
-5.	Click the (M+) Add to Memory.
+5.	Click the (M+) Add to Memory.  
 *Expected: Previous calculation is added to itself.*
-6.	Click the (M-) Subtract from Memory.
+6.	Click the (M-) Subtract from Memory.  
 *Expected: Previous calculation is subtracted from the base calculation.*
-7.	Click the (MR) Memory Recall.
+7.	Click the (MR) Memory Recall.  
 *Expected: Previous calculation is made primary (This is not available in the Programmer mode).*
-8.	Check the MC button.
+8.	Check the MC button.  
 *Expected: The stored information is cleared.*
-9.	Navigate to "Scientific" Calculator and Repeat Steps 3-8.
+9.	Navigate to "Scientific" Calculator and Repeat Steps 3-8.  
 *Expected: All in "Scientific" mode.*
-10.	Navigate to "Programmer" Calculator and Repeat Steps 3-8.
+10.	Navigate to "Programmer" Calculator and Repeat Steps 3-8.  
 *Expected: All in "Programmer" mode.*
 
 
-**Scientific Calculator Test: Verify trigonometric functions**
+**Scientific Calculator Test: Verify trigonometric functions**  
 Steps:
 1.	Launch the "Calculator" app.
 2.	Navigate to "Scientific" Calculator.
-3.  Using the Number Pad and Mouse perform the following trigonometric functions and verify the result.
+3. Using the Number Pad and Mouse perform the following trigonometric functions and verify the result.
 3.	Sine (sin)
 4.	Cosine (cos)
 5.	Tangent (tan)
 6.	Inverse Sine (sin-1)
 7.	Inverse Cosine (cos-1)
 8.	Inverse Tangent (tan-1) Inverse Tangent:
-9.	Press (HYP) for Hyperbolic trig functions: 
+9.	Press (HYP) for Hyperbolic trig functions:  
 *Expected: Trig function buttons show hyperbolic trig functions.*
 10.	Hyperbolic Sine (sinh)
 11.	Hyperbolic Tangent (tanh) 
@@ -166,58 +166,58 @@ Steps:
 15.	Inverse Hyperbolic Cosine (cosh-1) 
 
 
-**Programmer Calculator Test: Verify logical functions**
+**Programmer Calculator Test: Verify logical functions**  
 Steps:
 1.	Launch the "Calculator" app
 2.	Navigate to "Programmer" Calculator.
 3.  Using the Number Pad and Mouse perform the following trigonometric functions and verify the result.
-4.	Rotate Left (RoL) Logical Operator:
+4.	Rotate Left (RoL) Logical Operator:  
     01011001 rol 3 = 11001010.
-5.	Rotate Right (RoR) Logical Operator:
+5.	Rotate Right (RoR) Logical Operator:  
     01011001 RoR 3 = 00101011.
-6.	(Lsh) Logical Operator:
-    (10 multiplied by 2 three times)
-    10 Lsh 3 = gives 80.
+6.	(Lsh) Logical Operator:  
+    (10 multiplied by 2 three times)  
+    10 Lsh 3 = gives 80.  
     10.345 Lsh 3 = also gives 80.
-7.	(Rsh) Logical Operator:
-    (16 divided by 2 twice)
-    16 Rsh 2 = gives 4.
+7.	(Rsh) Logical Operator:  
+    (16 divided by 2 twice)  
+    16 Rsh 2 = gives 4.  
     16.999 Rsh 2 = also gives 4.
-7.	(Or) Logical Operator
+8.	(Or) Logical Operator  
     101 OR 110 = gives 111.
-9.	Exclusive Or (Xor) Logical Operator:
+9.	Exclusive Or (Xor) Logical Operator:  
     101 XOR 110 = gives 11.
-9.	(Not) Logical Operator
-    NOT 1001100111001001 =
+10.	(Not) Logical Operator
+    NOT 1001100111001001 =  
     0110011000110110.
-10.	(And) Logical Operator
+11.	(And) Logical Operator  
     101 AND 110 = gives 100.
-11.	(Mod) Logical Operator
+12.	(Mod) Logical Operator  
     Remainder of integer division (Modulo x)
-12.	"( )" Parenthesis
+13.	"( )" Parenthesis
 
 
-**All Calculators and Converters Test: Verify scaling functions and languages**
+**All Calculators and Converters Test: Verify scaling functions and languages**  
 Steps:
 1.	Launch the "Calculator" app.
-2.	For All Modes: While scaling in both directions to capacity
+2.	For All Modes: While scaling in both directions to capacity  
 *Expected: Elements like Memory and History are shifted or integrated appropriately.*
-3.	In Any Mode: While at the Smallest scale, Select the Menu Button
+3.	In Any Mode: While at the Smallest scale, Select the Menu Button  
 *Expected: The menu items are scrollable with nothing overlapping.*
-4.	While in the Menu: Check the About Page
+4.	While in the Menu: Check the About Page  
 *Expected:  Everything in the about page fits into its window*
-5.	For Scientific Mode: At a Larger Scale
+5.	For Scientific Mode: At a Larger Scale  
 *Expected: All buttons are present and the up arrow is grayed out.*
-6.	For Scientific Mode: At a Smaller Scale
+6.	For Scientific Mode: At a Smaller Scale  
 *Expected: All buttons are present and the up arrow is able to be toggled.*
-7.	For Programmer Mode: At a Any Scale
+7.	For Programmer Mode: At a Any Scale  
 *Expected: All buttons are present and the up arrow is able to be toggled.*
-8.	For Converter Mode: While Scaling
+8.	For Converter Mode: While Scaling  
 *Expected: The number pad and input areas move around each other gracefully.*
 9.	Changing Language: Open Settings app > Time & language > Region & language > Add a language > Select a Right to Left (RTL) language such as Hebrew > Install the associated files> Set it to the system default.
 10.	Set the system number format preference: Open a Run dialog (WIN + R) > type ‘intl.cpl’ > Enter > In the format dropdown list > Select Hebrew > Apply.
 11.	Initiating the change: Package has completed installing > Sign out > Sign in. (This change to the app may also require a reinstallation of the build)
-12.	Repeat Steps 2-6 again in a (RTL) language.
+12.	Repeat Steps 2-6 again in a (RTL) language.  
 *Expected: No elements fall out of intended boundaries.*
 
 
