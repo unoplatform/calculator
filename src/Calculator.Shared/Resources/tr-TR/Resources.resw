@@ -2634,7 +2634,7 @@
     <comment>The timestamp of currency conversion ratios fetched from an online service. %1 is the date. %2 is the time. Example: "Updated Sep 28, 2016 5:42 PM"</comment>
   </data>
   <data name="RefreshButtonText.Content" xml:space="preserve">
-    <value>Ücretleri güncelleştir</value>
+    <value>Döviz kurunu güncelleştir</value>
     <comment>The text displayed for a hyperlink button that refreshes currency converter ratios.</comment>
   </data>
   <data name="DataChargesMayApply" xml:space="preserve">
@@ -2642,7 +2642,7 @@
     <comment>The text displayed when users are on a metered connection and using currency converter.</comment>
   </data>
   <data name="FailedToRefresh" xml:space="preserve">
-    <value>Yeni ücretler alınamadı. Daha sonra yeniden deneyin.</value>
+    <value>Kur güncellenemedi. Daha sonra yeniden deneyin.</value>
     <comment>The text displayed when currency ratio data fails to load.</comment>
   </data>
   <data name="OfflineStatusHyperlinkText" xml:space="preserve">
@@ -2658,7 +2658,7 @@
     <comment>This string is what is read by Narrator, and other screen readers, when the currency rates in Currency converter have successfully updated.</comment>
   </data>
   <data name="CurrencyRatesUpdateFailed" xml:space="preserve">
-    <value>Ücretler güncelleştirilemedi</value>
+    <value>Döviz kuru güncelleştirilemedi</value>
     <comment>This string is what is read by Narrator, and other screen readers, when the currency rates in Currency converter have failed to update.</comment>
   </data>
   <data name="AboutButton.AccessKey" xml:space="preserve">
