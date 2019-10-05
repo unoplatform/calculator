@@ -1,3 +1,5 @@
+## We welcome you here and hope to see your valuable contributions to our repositories.
+
 # Uno Calculator
 
 The Uno Calculator is a port of the [Windows Calculator](https://github.com/microsoft/calculator) to C# and to the [Uno Platform](https://platform.uno) for iOS, Android and WebAssembly.
@@ -51,3 +53,5 @@ This project collects usage data and sends it to App Center to help improve the 
 
 ## Reporting Security Issues
 Security issues and bugs should be reported through the [GitHub security tab](https://github.com/nventive/calculator/security).
+
+## Thanks for visiting!
