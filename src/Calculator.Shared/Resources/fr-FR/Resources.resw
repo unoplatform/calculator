@@ -482,7 +482,7 @@
     <comment>Label for a control that activates standard mode calculator layout.</comment>
   </data>
   <data name="converterModeButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Mode du convertisseur</value>
+    <value>Mode Convertisseur</value>
     <comment>Screen reader prompt for a control that activates the unit converter mode.</comment>
   </data>
   <data name="scientificModeButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -606,7 +606,7 @@
     <comment>Screen reader prompt for the Calculator Memory button</comment>
   </data>
   <data name="memButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Stockage de mémoire (Ctrl+M)</value>
+    <value>Stockage mémoire (Ctrl+M)</value>
     <comment>This is the tool tip automation name for the Memory Store (MS) button.</comment>
   </data>
   <data name="ClearMemoryButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
