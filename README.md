@@ -6,7 +6,8 @@ The app provides standard, scientific, and programmer calculator functionality, 
 
 The Uno Calculator will regularly follow with the Windows Calculator updates. You can get it from the [App Store](https://bit.ly/calc-ios), [Play Store](https://play.google.com/store/apps/details?id=uno.platform.calculator), [in your browser](https://calculator.platform.uno), and of course the original calculator on the [Microsoft Store](https://www.microsoft.com/store/apps/9WZDNCRFHVN5).
 
-[![Build Status](https://uno-platform.visualstudio.com/Uno%20Platform/_apis/build/status/Uno%20Platform/Calculator%20CI?branchName=uno)](https://uno-platform.visualstudio.com/Uno%20Platform/_build?definitionId=55&_a=summary)
+[![Build Status](https://uno-platform.visualstudio.com/Uno%20Platform/_apis/build/status/Uno%20Platform/Calculator%20CI?branchName=uno)](https://uno-platform.visualstudio.com/Uno%20Platform/_build?definitionId=55&_a=summary) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/unoplatform/calculator/blob/uno/CONTRIBUTING.md)
 
   ![Calculator Screenshot](docs/Images/CalculatorScreenshot.png)
 
