@@ -1,6 +1,6 @@
 # Uno Calculator
 
-The Uno Calculator is a port of the [Windows Calculator](https://github.com/microsoft/calculator) to C# and to the [Uno Platform](https://platform.uno) for iOS, Android and WebAssembly.
+The Uno Calculator is a port of the [Windows Calculator](https://github.com/microsoft/calculator) to C# and the [Uno Platform](https://platform.uno) for iOS, Android and WebAssembly.
 
 The app provides standard, scientific, and programmer calculator functionality, as well as a set of converters between various units of measurement and currencies.
 
@@ -12,9 +12,9 @@ The Uno Calculator will regularly follow with the Windows Calculator updates. Yo
 
 ## Features
 - Standard Calculator functionality which offers basic operations and evaluates commands immediately as they are entered.
-- Scientific Calculator functionality which offers expanded operations and evaluates commands using order of operations.
+- Scientific Calculator functionality which offers expanded operations and evaluates commands using an order of operations.
 - Programmer Calculator functionality which offers common mathematical operations for developers including conversion between common bases.
-- Date Calculation functionality which offers the difference between two dates, as well as the ability to add/subtract years, months and/or days to/from a given input date.
+- Date Calculation functionality which offers the difference between two dates, as well as the ability to add/subtract years, months and/or days to/from a given input data.
 - Calculation history and memory capabilities.
 - Conversion between many units of measurement.
 - Currency conversion based on data retrieved from [Bing](https://www.bing.com).
@@ -32,7 +32,7 @@ Prerequisites:
   - Install the optional "Mobile C++ development tools" component.
   - Install the latest Windows 10 SDK.
 
-> When using Visual Studio 2019, the `.vsconfig` feature will automatically prompt to install missing components.
+> When using Visual Studio 2019, the `.vsconfig` the feature will automatically prompt to install missing components.
 
 - Get the code:
     ```
@@ -47,7 +47,7 @@ Want to contribute? The team encourages community feedback and contributions. Pl
 If Calculator is not working properly, please [file an issue](https://github.com/nventive/calculator/issues).
 
 ## Data / Telemetry
-This project collects usage data and sends it to App Center to help improve the quality of the calculator.
+This project collects usage data and sends it to the App Center to help improve the quality of the calculator.
 
 ## Reporting Security Issues
 Security issues and bugs should be reported through the [GitHub security tab](https://github.com/nventive/calculator/security).
