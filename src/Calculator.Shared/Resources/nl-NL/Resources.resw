@@ -142,7 +142,7 @@
     <comment>{@Appx_Description@} This is the description of the application when built by a user via GitHub. We use a different description to make it easier for users to distinguish the apps when both this version and the Store version are installed on the same device.</comment>
   </data>
   <data name="copyMenuItem" xml:space="preserve">
-    <value>Kopie</value>
+    <value>Kopieer</value>
     <comment>Copy context menu string</comment>
   </data>
   <data name="pasteMenuItem" xml:space="preserve">
@@ -810,15 +810,15 @@
     <comment>Screen reader prompt for the Calculator RSH button</comment>
   </data>
   <data name="xorButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Exclusief of</value>
+    <value>Exclusieve of</value>
     <comment>Screen reader prompt for the Calculator XOR button</comment>
   </data>
   <data name="qwordButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Viervoudig Woorden in-/uitschakelen</value>
+    <value>Viervoudige woorden in-/uitschakelen</value>
     <comment>Screen reader prompt for the Calculator qword button. Should read as "Quadruple word toggle button".</comment>
   </data>
   <data name="dwordButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Dubbel Woorden in-/uitschakelen</value>
+    <value>Dubbele woorden in-/uitschakelen</value>
     <comment>Screen reader prompt for the Calculator dword button. Should read as "Double word toggle button".</comment>
   </data>
   <data name="wordButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -866,7 +866,7 @@
     <comment>Screen Reader prompt for the shift button on the number pad in scientific mode.</comment>
   </data>
   <data name="minusButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Minus</value>
+    <value>Min</value>
     <comment>Screen reader prompt for the minus button on the number pad</comment>
   </data>
   <data name="minus" xml:space="preserve">
@@ -911,7 +911,7 @@
     <comment>{Locked="%1"} Screen reader prompt for the Calculator "(" button on the scientific and programmer operator keypad. %1 is the localized count of open parenthesis, e.g. "2".</comment>
   </data>
   <data name="NoRightParenthesisAdded_Announcement" xml:space="preserve">
-    <value>Er zijn geen haakjes openen om te sluiten.</value>
+    <value>Er zijn geen open haakjes om te sluiten.</value>
     <comment>{Locked="%1"} Screen reader prompt for the Calculator when the ")" button on the scientific and programmer operator keypad cannot be added to the equation. e.g. "1+)".</comment>
   </data>
   <data name="ftoeButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -951,11 +951,11 @@
     <comment>Screen reader prompt for the Calculator tanh button  on the scientific operator keypad</comment>
   </data>
   <data name="xpower2Button.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Vierkant</value>
+    <value>Macht</value>
     <comment>Screen reader prompt for the x squared on the scientific operator keypad. </comment>
   </data>
   <data name="xpower3Button.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Kubus</value>
+    <value>Derde macht</value>
     <comment>Screen reader prompt for the x cubed on the scientific operator keypad. </comment>
   </data>
   <data name="invsinButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -1015,7 +1015,7 @@
     <comment>Screen reader for the exp button on the scientific operator keypad</comment>
   </data>
   <data name="dmsButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Graden Minuten Seconde</value>
+    <value>Graden Minuten Seconden</value>
     <comment>Screen reader for the exp button on the scientific operator keypad</comment>
   </data>
   <data name="degreesButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
@@ -1175,7 +1175,7 @@
     <comment>A measurement unit for volume. (Please choose the most appropriate plural form to fit any number between 0 and 999,999,999,999,999)</comment>
   </data>
   <data name="UnitAbbreviation_Milliliter" xml:space="preserve">
-    <value>mL</value>
+    <value>ml</value>
     <comment>An abbreviation for a measurement unit of volume</comment>
   </data>
   <data name="UnitName_PintUK" xml:space="preserve">
@@ -2211,11 +2211,11 @@
     <comment>A human hand, used as a comparison measurement unit for length or area. (Please choose the most appropriate plural form to fit any number between 0 and 999,999,999,999,999)</comment>
   </data>
   <data name="UnitName_Paper" xml:space="preserve">
-    <value>vellen papier</value>
+    <value>bladen papier</value>
     <comment>A sheet of 8.5 x 11 inch paper, used as a comparison measurement unit for area. (Please choose the most appropriate plural form to fit any number between 0 and 999,999,999,999,999)</comment>
   </data>
   <data name="UnitAbbreviation_Paper" xml:space="preserve">
-    <value>vellen papier</value>
+    <value>bladen papier</value>
     <comment>A sheet of 8.5 x 11 inch paper, used as a comparison measurement unit for area. (Please choose the most appropriate plural form to fit any number between 0 and 999,999,999,999,999)</comment>
   </data>
   <data name="UnitName_Castle" xml:space="preserve">
@@ -2487,7 +2487,7 @@
     <comment>Automation name for reading out the date difference. %1 =  Date difference</comment>
   </data>
   <data name="Date_ResultingDateAutomationName" xml:space="preserve">
-    <value>Resulterende daum %1</value>
+    <value>Resulterende datum %1</value>
     <comment>Automation name for reading out the resulting date in Add/Subtract mode. %1 = Resulting date</comment>
   </data>
   <data name="HeaderAutomationName_Calculator" xml:space="preserve">
@@ -2879,11 +2879,11 @@
     <comment>Name for the factorial function. Used by screen readers.</comment>
   </data>
   <data name="DegreeMinuteSecond" xml:space="preserve">
-    <value>graden minuut seconde</value>
+    <value>graden minuten seconden</value>
     <comment>Name for the degree minute second (dms) function. Used by screen readers.</comment>
   </data>
   <data name="NaturalLog" xml:space="preserve">
-    <value>natuurlijke logaritme</value>
+    <value>natuurlijk logaritme</value>
     <comment>Name for the natural log (ln) function. Used by screen readers.</comment>
   </data>
   <data name="Square" xml:space="preserve">
