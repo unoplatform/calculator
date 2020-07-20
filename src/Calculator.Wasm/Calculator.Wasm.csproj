@@ -56,7 +56,7 @@
 		<PackageReference Include="Uno.UI" Version="3.0.0-dev.405" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.23" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="1.3.0-dev.12" />
-		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.3.0-dev.12" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.3.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<MonoRuntimeMixedModeExcludedAssembly Include="Newtonsoft.Json" />
