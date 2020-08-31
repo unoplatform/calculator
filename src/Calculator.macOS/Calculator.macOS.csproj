@@ -83,7 +83,7 @@
       <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>2.6.1</Version>
+      <Version>3.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
