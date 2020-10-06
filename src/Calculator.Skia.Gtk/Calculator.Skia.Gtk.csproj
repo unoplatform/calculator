@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Uno.SourceGenerationTasks" Version="3.0.0-dev.16" />
     <PackageReference Include="Uno.UI.Skia.Gtk" Version="3.1.0-dev.628" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.8" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
 	</ItemGroup>
