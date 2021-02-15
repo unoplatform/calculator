@@ -62,7 +62,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-		<PackageReference Include="Uno.UI.WebAssembly" Version="3.5.0-dev.492" />
+		<PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.33" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.163" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.163" />
