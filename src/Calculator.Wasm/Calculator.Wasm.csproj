@@ -64,7 +64,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
 		<PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.487" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.33" />
-		<PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.180" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.180" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
 	</ItemGroup>
