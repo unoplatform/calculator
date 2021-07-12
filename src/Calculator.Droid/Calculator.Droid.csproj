@@ -95,7 +95,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI" Version="3.9.0-dev.83" />
-    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
+    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
   </ItemGroup>
