@@ -99,8 +99,20 @@ namespace CalculatorApp
 				var coreWindow = Window.Current.Content;
 				try
 				{
-					coreWindow.KeyDown += (snd, e) =>
+					coreWindow.KeyDown += async (snd, e) =>
 					{
+						Console.WriteLine($"coreWindow.KeyDown: {e.Key}");
+
+						if (e.Key == Windows.System.VirtualKey.V)
+						{
+							target.OnPasteCommand(new object());
+						}
+
+						if (e.Key == Windows.System.VirtualKey.T)
+						{
+							target.OnCopyCommand(new object());
+						}
+
 						target.OnKeyPress(e.Key);
 						e.Handled = true;
 					};

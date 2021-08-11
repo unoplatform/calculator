@@ -189,7 +189,7 @@ namespace CalculatorApp.ViewModel
             RaisePropertyChanged(ClearMemoryVisibilityPropertyName);
         }
 
-        void OnCopyCommand(object parameter)
+        public void OnCopyCommand(object parameter)
         {
 			if (NavCategory.IsConverterViewMode(m_mode))
 			{
@@ -205,7 +205,7 @@ namespace CalculatorApp.ViewModel
             }
         }
 
-        void OnPasteCommand(object parameter)
+        public void OnPasteCommand(object parameter)
         {
 			if (NavCategory.IsConverterViewMode(m_mode))
             {
