@@ -71,7 +71,7 @@
 		<PackageReference Include="Uno.UI.WebAssembly" Version="4.2.0-dev.29" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.42" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.0-dev.2" />
-		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.0-dev.2" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.0-dev.5" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.0-dev.29" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
