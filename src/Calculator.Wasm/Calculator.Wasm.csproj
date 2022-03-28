@@ -65,16 +65,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="Uno.UI.WebAssembly" Version="4.2.0-dev.267" />
+		<PackageReference Include="Uno.UI.WebAssembly" Version="4.2.0-dev.426" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.42" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.0-dev.5" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.0-dev.5" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.0-dev.267" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.0-dev.486" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
+		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.0.1" />
 	</ItemGroup>
 	
 	<ItemGroup>

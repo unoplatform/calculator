@@ -1,0 +1,139 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst;net6.0-macos</TargetFrameworks>
+		<SingleProject>true</SingleProject>
+		<OutputType>Exe</OutputType>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net6.0-ios'">iossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net6.0-macos'">osx-x64</RuntimeIdentifier>
+		<InvariantGlobalization Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">true</InvariantGlobalization>
+		<!-- Debugger workaround https://github.com/dotnet/maui-samples/blob/8aa6b8780b12e97b157514c3bdc54bb4a13001cd/HelloMacCatalyst/HelloMacCatalyst.csproj#L7 -->
+		<!-- <MtouchExtraArgs Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">$(MtouchExtraArgs) -setenv:MONO_THREADS_SUSPEND=preemptive</MtouchExtraArgs> -->
+		<!-- Required for C# Hot Reload -->
+		<UseInterpreter>False</UseInterpreter>
+		<IsUnoHead>true</IsUnoHead>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)'=='net6.0-macos'">10.14</SupportedOSPlatformVersion>
+		<NoWarn>CA1416;Uno0001</NoWarn>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Uno.UI" Version="4.2.0-dev.426" />
+		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="4.2.0-dev.426" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.0-dev.486" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Calculator.macOS\" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)'=='net6.0-android'">
+			<PropertyGroup>
+				<AndroidKeyStore>true</AndroidKeyStore>
+				<AndroidSigningKeyStore>..\Calculator.Droid\calc-prod.keystore</AndroidSigningKeyStore>
+				<AndroidSigningKeyAlias>calc-prod</AndroidSigningKeyAlias>
+				<DefineConstants>$(DefineConstants);HAS_APP_CENTER</DefineConstants>
+			</PropertyGroup>
+			
+			<ItemGroup>
+				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.4.0.4" />
+				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+			</ItemGroup>
+			
+			<ItemGroup Condition="'$(Configuration)'=='Release'">
+				<AndroidAotProfile Include="Android/custom.aprof" />
+			</ItemGroup>
+
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<RunAOTCompilation>true</RunAOTCompilation>
+			</PropertyGroup>
+	
+			<ItemGroup>
+				<AndroidNativeLibrary Include="..\Calculator.Droid\libs\ARM\$(Configuration)\libCalcManager.so">
+					<Abi>armeabi-v7a</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="..\Calculator.Droid\libs\ARM64\$(Configuration)\libCalcManager.so">
+					<Abi>arm64-v8a</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="..\Calculator.Droid\libs\x86\$(Configuration)\libCalcManager.so">
+					<Abi>x86</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="..\Calculator.Droid\libs\x64\$(Configuration)\libCalcManager.so">
+					<Abi>x86_64</Abi>
+				</AndroidNativeLibrary>
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)'=='net6.0-ios'">
+			<ItemGroup>
+				<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.3.0-dev.1" />
+				<!--
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+				-->
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'iossimulator-x64' ">
+				<NativeReference Include="..\Calculator.iOS\NativeReferences/x86_64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'ios-arm64' ">
+				<NativeReference Include="..\Calculator.iOS\NativeReferences/arm64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup>
+				<!-- Required to avoid
+					 Undefined symbols for architecture arm64:
+							"_kSecImportExportPassphrase", referenced from:
+									_AppleCryptoNative_X509ImportCertificate in libSystem.Security.Cryptography.Native.Apple.a(pal_x509_ios.c.o)
+				-->
+				<_NativeExecutableFrameworks Include="Security" />
+			</ItemGroup>
+			<PropertyGroup>
+				<MtouchExtraArgs>--registrar:static -gcc_flags "-lc++ -lstdc++"</MtouchExtraArgs>
+				<InvariantGlobalization>false</InvariantGlobalization>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<CodesignKey>iPhone Distribution</CodesignKey>
+				<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(TargetFramework)'=='net6.0-maccatalyst'">
+			<ItemGroup>
+				<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.2.0-dev.2" />
+				<!--
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+				 -->
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">
+				<NativeReference Include="MacCatalyst/NativeReferences/x86_64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">
+				<NativeReference Include="MacCatalyst/NativeReferences/arm64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<PropertyGroup>
+			    <MtouchExtraArgs>--registrar:static -gcc_flags "-lc++ -lstdc++"</MtouchExtraArgs>
+   				<InvariantGlobalization>false</InvariantGlobalization>
+			</PropertyGroup>
+			<ItemGroup>
+				<TrimmerRootDescriptor Include="MacCatalyst/linker.xml" />
+			</ItemGroup>
+		</When>
+	</Choose>
+
+	<Import Project="..\Calculator.Shared\Calculator.Shared.projitems" Label="Shared" />
+</Project>
