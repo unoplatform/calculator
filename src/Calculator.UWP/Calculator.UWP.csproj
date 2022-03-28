@@ -15,7 +15,7 @@
       <Version>4.3.1</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI">
-      <Version>4.2.0-dev.267</Version>
+      <Version>4.2.0-dev.486</Version>
     </PackageReference>
     <PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
   </ItemGroup>
