@@ -20,7 +20,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Uno.UI" Version="4.2.0-dev.426" />
+		<PackageReference Include="Uno.UI" Version="4.2.0-dev.673" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Uno.UI.RemoteControl" Version="4.2.0-dev.426" Condition="'$(Configuration)'=='Debug'" />
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.0-dev.426" />
