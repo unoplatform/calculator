@@ -57,6 +57,12 @@ jobs:
       provisioningProfileLocation: 'secureFiles'
       provProfileSecureFile: Uno_Calculator_Canary_Catalyst.provisionprofile # Located in the Library's secure files
 
+  - task: InstallAppleProvisioningProfile@1
+    displayName: 'Install Apple Provisioning Profile'
+    inputs:
+      provisioningProfileLocation: 'secureFiles'
+      provProfileSecureFile: Uno_Calculator_catalyst.provisionprofile # Located in the Library's secure files
+
   - bash: |
       cd $(build.sourcesdirectory)/src/CalcManager
       chmod +x build_catalyst.sh
