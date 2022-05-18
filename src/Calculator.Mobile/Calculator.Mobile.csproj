@@ -144,7 +144,6 @@
 				<EnablePackageSigning>true</EnablePackageSigning>
 				<EnableCodeSigning>true</EnableCodeSigning>
 				<CodeSignEntitlements>MacCatalyst\Entitlements.plist</CodeSignEntitlements>
-				<CodesignProvision>Uno Calculator Canary (Catalyst)</CodesignProvision>
 
 				<!-- https://github.com/xamarin/xamarin-macios/issues/14686 -->
 				<_LibMonoLinkMode>Static</_LibMonoLinkMode>
