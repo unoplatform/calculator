@@ -145,7 +145,7 @@
 				<EnableCodeSigning>true</EnableCodeSigning>
 				<CodeSignEntitlements>MacCatalyst\Entitlements.plist</CodeSignEntitlements>
 				
-				<CodesignProvision>Uno Calculator (Catalyst)</CodesignProvision>
+				<CodesignProvision>Uno Calculator (catalyst)</CodesignProvision>
 				<CodesignProvision Condition="$(BUILD_SOURCEBRANCH.StartsWith('refs/heads/canaries'))">Uno Calculator Canary (Catalyst)</CodesignProvision>
 
 				<!-- https://github.com/xamarin/xamarin-macios/issues/14686 -->
