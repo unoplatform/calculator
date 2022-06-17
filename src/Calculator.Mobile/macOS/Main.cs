@@ -1,4 +1,5 @@
 using AppKit;
+using CalculatorApp;
 
 namespace Calculator.macOS
 {
