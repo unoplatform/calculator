@@ -616,6 +616,7 @@ Global
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|x64.Build.0 = Debug|Any CPU
 		{E627989A-4AFA-4BB4-AF77-B1CF7397A6A9}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -642,7 +643,6 @@ Global
 		SolutionGuid = {0EA53F83-5FA6-46A1-A290-A3C6962D2CAC}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Calculator.Shared\Calculator.Shared.projitems*{093428d1-ab83-4f1a-93e9-304b44a24d1f}*SharedItemsImports = 4
 		Calculator.Shared\Calculator.Shared.projitems*{313fcf91-a6db-4585-a23e-49bbeef4784d}*SharedItemsImports = 4
 		Calculator.Shared\Calculator.Shared.projitems*{41897354-b080-4c36-bb23-8c4f4b7c16e2}*SharedItemsImports = 5
 		Calculator.Shared\Calculator.Shared.projitems*{53337466-6e79-45f3-a650-1bfb93cc19b0}*SharedItemsImports = 5
