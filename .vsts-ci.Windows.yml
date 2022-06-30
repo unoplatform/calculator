@@ -130,6 +130,7 @@ jobs:
 
   - task: MSBuild@1
     displayName: 'Build Store Packages (Xamarin)'
+    retryCountOnTaskFailure: 3
     inputs:
       solution: src/Calculator.windows-ci-only.slnf
       msbuildLocationMethod: version
@@ -144,6 +145,7 @@ jobs:
 
   - task: MSBuild@1
     displayName: 'Build Android AppCenter package'
+    retryCountOnTaskFailure: 3
     inputs:
       solution: src/Calculator.Droid/Calculator.Droid.csproj
       msbuildLocationMethod: version
