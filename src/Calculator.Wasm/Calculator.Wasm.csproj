@@ -72,7 +72,7 @@
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.0-dev.5" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.0-dev.5" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.0-dev.263" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.20" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
 	</ItemGroup>
