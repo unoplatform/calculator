@@ -69,7 +69,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Uno.UI.WebAssembly" Version="4.6.0-dev.116" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.44.0-dev.45" />
-		<PackageReference Include="Uno.Wasm.Bootstrap" Version="4.0.0-dev.174" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.6" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="4.0.0-dev.174" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.6.0-dev.116" />
