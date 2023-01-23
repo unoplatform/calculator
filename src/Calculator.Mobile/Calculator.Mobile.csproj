@@ -39,7 +39,7 @@
 			</PropertyGroup>
 			
 			<ItemGroup>
-				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.4.0.4" />
+				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.7.0.2" />
 				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
 				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
 				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
