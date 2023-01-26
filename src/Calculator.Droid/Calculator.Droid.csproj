@@ -97,7 +97,7 @@
     </PackageReference>
     <PackageReference Include="Uno.UI" Version="4.8.0-dev.30" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.0-dev.30" />
     <PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
