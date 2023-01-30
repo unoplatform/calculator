@@ -93,7 +93,7 @@
       <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.2</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI" Version="4.8.0-dev.30" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
