@@ -32,5 +32,5 @@ build_libCalc()
     rm *.o || true
 }
 
-build_libCalc x86_64 "x86_64-apple-ios13.0-macabi" macosx "-miphoneos-version-min=13.0"
+build_libCalc x86_64 "x86_64-apple-ios13.2-macabi" macosx "-miphoneos-version-min=13.0"
 build_libCalc arm64 "arm64-apple-ios14.0-macabi" macosx "-miphoneos-version-min=13.0"
