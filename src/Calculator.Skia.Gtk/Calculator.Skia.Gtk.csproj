@@ -22,7 +22,7 @@
 	
   <ItemGroup>
 		<PackageReference Include="Uno.UI.Skia.Gtk" Version="5.1.31" />
-		<PackageReference Include="Uno.UI.Lottie" Version="5.1.31" />
+		<PackageReference Include="Uno.UI.Lottie" Version="5.2.132" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.5" />
