@@ -83,5 +83,5 @@ participate in the review, but at least one member of the Calculator team will u
 the request.
 
 Often, multiple iterations will be needed to responding to feedback from reviewers. Try looking at
-[past pull requests](https://github.com/Microsoft/calculator/pulls?q=is%3Apr+is%3Aclosed) to see
+[past pull requests](https://github.com/unoplatform/calculator/pulls?q=is%3Apr+is%3Aclosed) to see
 what the experience might be like.
