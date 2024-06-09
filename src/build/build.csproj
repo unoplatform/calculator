@@ -42,6 +42,9 @@
 		<PropertyGroup>
 			<_BuildNumber Condition="$(BuildNumberOffset) != ''">$([MSBuild]::Add($(_BuildNumber), $(BuildNumberOffset)))</_BuildNumber>
 			<_VersionCode Condition="$(VersionCodeOffset) != ''">$([MSBuild]::Add($(_BuildNumber), $(VersionCodeOffset)))</_VersionCode>
+			<_VersionCode Condition="$(VersionCodeOffset) != ''">$([MSBuild]::Add($(_VersionCode), $([System.DateTime]::Now.ToString(`yyMMddHHmm`))))</_VersionCode>
+			<_VersionCode Condition="$(VersionCodeOffset) != ''">$([MSBuild]::Subtract($(_VersionCode),'2200000000'))</_VersionCode>
+			<_AppleBuildNumber Condition="$(_AppleBuildNumber) == ''">$([System.DateTime]::Now.ToString(`yyMMddHHmm`)).$(_BuildNumber)</_AppleBuildNumber>
 			<_InformationalVersion>$(PackageInformationalVersion)</_InformationalVersion>
 			<_InformationalVersion Condition="'$(_InformationalVersion)' == ''">$(GITVERSION_InformationalVersion)</_InformationalVersion>
 			<_AppVersion>$(_AppVersion)</_AppVersion>
@@ -131,6 +134,12 @@
 			<_PlistFilePath>$(_SourceBasePath).iOS/Info.plist</_PlistFilePath>
 			<_macPlistFilePath>$(_SourceBasePath).macOS/Info.plist</_macPlistFilePath>
 			<_AppxManifestPath>$(_SourceBasePath).UWP/Package.appxmanifest</_AppxManifestPath>
+			
+			<_mobileSourceBasePath>../$(AppName).Mobile</_mobileSourceBasePath>
+			<_MobileAndroidManifestPath>$(_mobileSourceBasePath)/Android/AndroidManifest.xml</_MobileAndroidManifestPath>
+			<_catalystPlistFilePath>$(_mobileSourceBasePath)/MacCatalyst/Info.plist</_catalystPlistFilePath>
+			<_MobileiOSPlistFilePath>$(_mobileSourceBasePath)/iOS/Info.plist</_MobileiOSPlistFilePath>
+
 			<_AndroidNamespace>
 				<Namespace Prefix="android" Uri="http://schemas.android.com/apk/res/android" />
 			</_AndroidNamespace>
@@ -140,44 +149,44 @@
 		</PropertyGroup>
 
 		<Message Text="Updating Package versions" />
-		<Message Text="_AppVersion: $(_AppVersion) _BuildNumber: $(_BuildNumber) _VersionCode: $(_VersionCode)" Importance="high" />
+		<Message Text="_AppVersion: $(_AppVersion) _BuildNumber: $(_BuildNumber) _AppleBuildNumber: $(_AppleBuildNumber) _VersionCode: $(_VersionCode)" Importance="high" />
 
-		<!-- Android -->
-		<XmlPoke Condition="Exists('$(_ManifestPath)')"
-                     XmlInputPath="$(_ManifestPath)"
+		<!-- Android netcore -->
+		<XmlPoke Condition="Exists('$(_MobileAndroidManifestPath)')"
+                     XmlInputPath="$(_MobileAndroidManifestPath)"
                      Query="/manifest/@android:versionName"
                      Value="$(_AppVersion)"
                      Namespaces="$(_AndroidNamespace)" />
 
-		<XmlPoke Condition="Exists('$(_ManifestPath)')"
-                     XmlInputPath="$(_ManifestPath)"
+		<XmlPoke Condition="Exists('$(_MobileAndroidManifestPath)')"
+                     XmlInputPath="$(_MobileAndroidManifestPath)"
                      Query="/manifest/@android:versionCode"
                      Value="$(_VersionCode)"
                      Namespaces="$(_AndroidNamespace)" />
 
-		<!-- iOS -->
+		<!-- catalyst -->
 		<!-- Using our own _XmlUpdate instead of XmlPoke to avoid unecessary (and possibly breaking) changes in the plist -->
-		<_XmlUpdate Condition="Exists('$(_PlistFilePath)')"
-                            XmlFileName="$(_PlistFilePath)"
+		<_XmlUpdate Condition="Exists('$(_catalystPlistFilePath)')"
+                            XmlFileName="$(_catalystPlistFilePath)"
                             XPath="//plist/dict/key[text() = 'CFBundleShortVersionString']/following-sibling::string[1]"
                             Value="$(_AppVersion)" />
 
-		<_XmlUpdate Condition="Exists('$(_PlistFilePath)')"
-                            XmlFileName="$(_PlistFilePath)"
+		<_XmlUpdate Condition="Exists('$(_catalystPlistFilePath)')"
+                            XmlFileName="$(_catalystPlistFilePath)"
                             XPath="//plist/dict/key[text() = 'CFBundleVersion']/following-sibling::string[1]"
-                            Value="$(_BuildNumber)" />
+                            Value="$(_AppleBuildNumber)" />
 
-		<!-- macOS -->
+		<!-- Mobile iOS -->
 		<!-- Using our own _XmlUpdate instead of XmlPoke to avoid unecessary (and possibly breaking) changes in the plist -->
-		<_XmlUpdate Condition="Exists('$(_macPlistFilePath)')"
-                            XmlFileName="$(_macPlistFilePath)"
+		<_XmlUpdate Condition="Exists('$(_MobileiOSPlistFilePath)')"
+                            XmlFileName="$(_MobileiOSPlistFilePath)"
                             XPath="//plist/dict/key[text() = 'CFBundleShortVersionString']/following-sibling::string[1]"
                             Value="$(_AppVersion)" />
 
-		<_XmlUpdate Condition="Exists('$(_macPlistFilePath)')"
-                            XmlFileName="$(_macPlistFilePath)"
+		<_XmlUpdate Condition="Exists('$(_MobileiOSPlistFilePath)')"
+                            XmlFileName="$(_MobileiOSPlistFilePath)"
                             XPath="//plist/dict/key[text() = 'CFBundleVersion']/following-sibling::string[1]"
-                            Value="$(_BuildNumber)" />
+                            Value="$(_AppleBuildNumber)" />
 
 		<!-- UWP -->
 		<ItemGroup>

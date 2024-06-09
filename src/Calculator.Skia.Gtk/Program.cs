@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using CalculatorApp;
 using GLib;
-using Uno.UI.Runtime.Skia;
+using Uno.UI.Runtime.Skia.Gtk;
 
 namespace Calculator.Skia.Gtk
 {
@@ -23,7 +23,7 @@ namespace Calculator.Skia.Gtk
 				expArgs.ExitApplication = true;
 			};
 
-			var host = new GtkHost(() => new App(), args);
+			var host = new GtkHost(() => new App());
 
 			host.Run();
 		}

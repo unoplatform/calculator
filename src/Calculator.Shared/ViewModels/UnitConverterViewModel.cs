@@ -557,6 +557,16 @@ namespace CalculatorApp.ViewModel
 			}
 		}
 
+		public bool CanUseMUX
+#if __IOS__ || __ANDROID__
+			=> false;
+#else
+			=> true;
+#endif
+
+		public bool CanUseWUX
+			=> !CanUseMUX;
+
 
 		private bool m_IsCurrencyCurrentCategory;
 
@@ -779,9 +789,6 @@ namespace CalculatorApp.ViewModel
 
 		bool m_relocalizeStringOnSwitch;
 
-		// For Saving the User Preferences only if the Unit converter ViewModel is initialised for the first time
-		bool m_IsFirstTime;
-
 		string m_localizedValueFromFormat;
 		string m_localizedValueFromDecimalFormat;
 		string m_localizedValueToFormat;
@@ -990,7 +997,6 @@ namespace CalculatorApp.ViewModel
 			Unit2AutomationName = m_localizedOutputUnitName;
 			IsDecimalEnabled = true;
 
-			m_IsFirstTime = true;
 			m_model.Initialize();
 			PopulateData();
 		}
@@ -998,7 +1004,6 @@ namespace CalculatorApp.ViewModel
 		void ResetView()
 		{
 			m_model.SendCommand(UCM.Command.Reset);
-			m_IsFirstTime = true;
 			OnCategoryChanged(null);
 		}
 
@@ -1085,15 +1090,7 @@ namespace CalculatorApp.ViewModel
 				m_supplementaryResultsTimer.Cancel();
 			}
 
-			if (!m_IsFirstTime)
-			{
-				SaveUserPreferences();
-			}
-			else
-			{
-				RestoreUserPreferences();
-				m_IsFirstTime = false;
-			}
+			SaveUserPreferences();
 		}
 
 		void OnSwitchActive(object unused)
@@ -1493,13 +1490,13 @@ namespace CalculatorApp.ViewModel
 			using (var @out = new StringWriter())
 			{
 				const string delimiter = "[;;;]";
-				@out.Write(m_resettingTimer);
+				@out.Write(m_resettingTimer ? "1" : "0");
 				@out.Write(delimiter);
 				@out.Write((int)(m_value1cp));
 				@out.Write(delimiter);
-				@out.Write(m_Value1Active);
+				@out.Write(m_Value1Active ? "1" : "0");
 				@out.Write(delimiter);
-				@out.Write(m_Value2Active);
+				@out.Write(m_Value2Active ? "1" : "0");
 				@out.Write(delimiter);
 				@out.Write(m_Value1);
 				@out.Write(delimiter);
@@ -1843,12 +1840,15 @@ namespace CalculatorApp.ViewModel
 		};
 
 		// TODO UNO: KeyboardShortcutManager
-		public void OnKeyPress(VirtualKey key)
+		public bool OnKeyPress(VirtualKey key)
 		{
 			if (_keyToCommandMap.TryGetValue(key, out var cmd))
 			{
 				m_model.SendCommand(cmd);
+				return true;
 			}
+
+			return false;
 		}
 
 		public void OnPaste(String stringToPaste, ViewMode mode)

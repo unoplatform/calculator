@@ -14,22 +14,7 @@ jobs:
   - checkout: self
     clean: true
 
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 2.2.x'
-    inputs:
-      packageType: runtime
-      version: 2.2.x
-
-  - task: nventiveCanaryUpdater@5
-    displayName: 'Canary Update'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries')
-    inputs:
-      solution: src/Calculator.sln
-      branchToMerge: uno
-      summaryFile: '$(Build.ArtifactStagingDirectory)/Canary.md'
-      resultFile: '$(Build.ArtifactStagingDirectory)/result.json'
-      nugetUpdaterVersion: 2.1.1
-      packageAuthor: nventive
+  - template: build/uno-ci/canary-updater.yml
 
   - script: |
       cd src/CalcManager
@@ -40,6 +25,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.sourcesdirectory)/src/CalcManager/bin/runtimes
       artifactType: container
@@ -69,6 +55,12 @@ jobs:
       artifactName: CalcManagerLibs
       downloadPath: '$(build.sourcesdirectory)/src/build'
 
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK'
+    retryCountOnTaskFailure: 3
+    inputs:
+      version: 8.0.200
+
   - script: |
         mkdir -p $(build.sourcesdirectory)/src/CalcManager/bin/runtimes
         cp -rv $(build.sourcesdirectory)/src/build/CalcManagerLibs/* $(build.sourcesdirectory)/src/CalcManager/bin/runtimes
@@ -78,12 +70,9 @@ jobs:
   - template: build/uno-ci/canary-updater.yml
   - template: build/uno-ci/gitversion.yml
 
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 5.0.102'
-    inputs:
-      version: 5.0.102
-
   - task: MSBuild@1
+    displayName: 'Setup versions'
+    retryCountOnTaskFailure: 3
     inputs:
       solution: src/build/build.csproj
       msbuildLocationMethod: version
@@ -98,7 +87,7 @@ jobs:
 
   - script: |
       dotnet publish -c Release -r linux-x64 --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-      echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-x64/publish/VERSION
+      echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-x64/publish/VERSION
 
     displayName: 'Build Skia linux-x64'
     env:
@@ -110,12 +99,13 @@ jobs:
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-x64'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-x64/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-x64/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-x64.zip' 
       includeRootFolder: false
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactType: container
@@ -142,44 +132,15 @@ jobs:
   - checkout: self
     clean: true
 
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 2.2.0'
-    inputs:
-      packageType: runtime
-      version: 2.2.0
+  - template: build/uno-ci/canary-updater.yml
+
+  - template: build/uno-ci/gitversion.yml
 
   - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 3.1.3'
+    displayName: 'Use .NET SDK'
+    retryCountOnTaskFailure: 3
     inputs:
-      packageType: runtime
-      version: 3.1.3
-
-  - task: nventiveCanaryUpdater@5
-    displayName: 'Canary Update'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries')
-    inputs:
-      solution: src/Calculator.sln
-      branchToMerge: uno
-      summaryFile: '$(Build.ArtifactStagingDirectory)/Canary.md'
-      resultFile: '$(Build.ArtifactStagingDirectory)/result.json'
-      nugetUpdaterVersion: 2.0.6
-      packageAuthor: nventive
-
-  - task: gitversion/setup@0
-    inputs:
-      versionSpec: '5.x'
-
-  - task: gitversion/execute@0
-    inputs:
-      updateAssemblyInfo: 'False'
-      useConfigFile: true
-      configFilePath: gitversion.yml
-    displayName: Use GitVersion
-
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 5.0.102'
-    inputs:
-      version: 5.0.102
+      version: 8.0.200
 
   - task: DownloadBuildArtifacts@0
     inputs:
@@ -193,6 +154,8 @@ jobs:
     displayName: 'Copy CalcManager to final location'
 
   - task: MSBuild@1
+    displayName: 'Setup versions'
+    retryCountOnTaskFailure: 3
     inputs:
       solution: src/build/build.csproj
       msbuildLocationMethod: version
@@ -207,7 +170,7 @@ jobs:
 
   - script: |
         dotnet publish -c Release -r linux-arm --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-arm/publish/VERSION
+        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm/publish/VERSION
 
     displayName: 'Build Skia linux-arm'
     env:
@@ -215,7 +178,7 @@ jobs:
 
   - script: |
         dotnet publish -c Release -r linux-arm64 --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-arm64/publish/VERSION
+        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm64/publish/VERSION
 
     displayName: 'Build Skia linux-arm64'
     env:
@@ -227,29 +190,30 @@ jobs:
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-arm'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-arm/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-arm.zip' 
       includeRootFolder: false
 
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-arm64'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net5.0/linux-arm64/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm64/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-arm64.zip' 
       includeRootFolder: false
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactType: container
       artifactName: Calculator
 
-- job: macOS_Snap
+- job: Linux_Snap
   dependsOn:
     - Linux_Skia_x86
   pool:
-    vmImage: 'macOS-10.15'
+    vmImage: 'ubuntu-20.04'
 
   steps:
   - task: DownloadBuildArtifacts@0
@@ -258,11 +222,23 @@ jobs:
       downloadPath: '$(build.sourcesdirectory)/build'
 
   - script: |
-        brew install snapcraft
-        brew install multipass --cask
+        sudo snap install snapcraft --classic --channel 7.x
+        sudo usermod --append --groups lxd $USER
+        export PATH=$PATH:/snap/bin
+        sudo chown root:root /
+        sudo /snap/bin/lxd.migrate -yes
+        sudo /snap/bin/lxd waitready
+        sudo /snap/bin/lxd init --auto
+
+    displayName: 'Install Snapcraft'
+    retryCountOnTaskFailure: 3
+
+  - script: |
+        export PATH=$PATH:/snap/bin
         cd $(build.sourcesdirectory)/build
-        snapcraft
-        
+        sg lxd -c 'snapcraft --use-lxd'
+    displayName: 'Build Snap'
+
   - task: CopyFiles@2
     displayName: 'Publish Snap'
     inputs:
@@ -275,6 +251,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactType: container
@@ -296,6 +273,8 @@ jobs:
   - script: |
         cd $(build.sourcesdirectory)/build
         snapcraft
+
+    retryCountOnTaskFailure: 3
         
   - task: CopyFiles@2
     displayName: 'Publish Snap'
@@ -309,6 +288,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactType: container
@@ -354,7 +334,7 @@ jobs:
     - Linux_Skia_x86
     
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-20.04'
 
   container:
     image: appimagecrafters/appimage-builder:0.7.2
@@ -363,20 +343,10 @@ jobs:
   steps:
   - task: UseDotNet@2
     displayName: 'Use .Net Core runtime 3.1.x'
+    retryCountOnTaskFailure: 3
     inputs:
       packageType: sdk
       version: '3.1.x'
-
-  - task: gitversion/setup@0
-    inputs:
-      versionSpec: '5.x'
-
-  - task: gitversion/execute@0
-    inputs:
-      updateAssemblyInfo: 'False'
-      useConfigFile: true
-      configFilePath: gitversion.yml
-    displayName: Use GitVersion
 
   - task: DownloadBuildArtifacts@0
     inputs:
@@ -386,9 +356,13 @@ jobs:
   - script: |
       /tmp/docker exec -t -u 0 ci-container \
       sh -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" -y install sudo"
+      sudo apt update
       sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-      sudo apt -y install zip
+      sudo apt -y install zip git
     displayName: 'Setup dependencies'
+    retryCountOnTaskFailure: 3
+
+  - template: build/uno-ci/gitversion.yml
 
   - script: |
         cd $(build.sourcesdirectory)/build/appimage
@@ -404,6 +378,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Package Artifacts
+    retryCountOnTaskFailure: 3
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactType: container

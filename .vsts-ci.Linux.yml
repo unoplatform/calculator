@@ -8,20 +8,21 @@ jobs:
   variables:
     NUGET_PACKAGES: $(build.sourcesdirectory)/.nuget
     VersionCodeOffset: 400559 # last value for the APK release
-    EMSDK_VERSION: 2.0.11
+    EMSDK_VERSION: 3.1.34 # Needs to be aligned with the current bootstrapper build
 
   steps:
   - checkout: self
     clean: true
 
-  - template: build/uno-ci/canary-updater.yml
-  - template: build/uno-ci/gitversion.yml
-
   - task: UseDotNet@2
     displayName: 'Use .NET Core sdk'
+    retryCountOnTaskFailure: 3
     inputs:
       packageType: sdk
-      version: 5.0.102
+      version: 8.0.200
+
+  - template: build/uno-ci/canary-updater.yml
+  - template: build/uno-ci/gitversion.yml
   
   - bash: |
       cd ~
@@ -31,6 +32,7 @@ jobs:
       ./emsdk activate $(EMSDK_VERSION)
 
     displayName: 'Setup Emscripten'
+    retryCountOnTaskFailure: 3
 
   - script: |
       source ~/emsdk/emsdk_env.sh
@@ -55,7 +57,7 @@ jobs:
   - task: CopyFiles@2
     displayName: 'Publish Wasm Binaries'
     inputs:
-      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Wasm/bin/Release/net5.0/dist
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Wasm/bin/Release/net8.0/dist
       Contents: '**/*.*'
       TargetFolder: $(build.artifactstagingdirectory)/Uno-Calculator-wasm
       CleanTargetFolder: false
@@ -64,6 +66,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     condition: always()
+    retryCountOnTaskFailure: 3
     inputs:
       PathtoPublish: $(build.artifactstagingdirectory)
       ArtifactName: Uno-Calculator-wasm

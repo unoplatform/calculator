@@ -519,7 +519,7 @@ namespace UnitConversionManager
 
 				@out.Write(Quote(c.id.ToString()));
 				@out.Write(delimiter);
-				@out.Write(Quote(c.supportsNegative.ToString()));
+				@out.Write(Quote(c.supportsNegative ? "1" : "0"));
 				@out.Write(delimiter);
 				@out.Write(Quote(c.name));
 				@out.Write(delimiter);
@@ -581,17 +581,17 @@ namespace UnitConversionManager
 		{
 			using (var @out = new StringWriter())
 			{
-				@out.Write(Quote(u.id.ToString()));
+				@out.Write(Quote(u.id.ToString(CultureInfo.InvariantCulture)));
 				@out.Write(delimiter);
 				@out.Write(Quote(u.name));
 				@out.Write(delimiter);
 				@out.Write(Quote(u.abbreviation));
 				@out.Write(delimiter);
-				@out.Write(u.isConversionSource.ToString());
+				@out.Write(u.isConversionSource ? "1" : "0");
 				@out.Write(delimiter);
-				@out.Write(u.isConversionTarget.ToString());
+				@out.Write(u.isConversionTarget ? "1" : "0");
 				@out.Write(delimiter);
-				@out.Write(u.isWhimsical.ToString());
+				@out.Write(u.isWhimsical ? "1" : "0");
 				@out.Write(delimiter);
 
 				return @out.ToString();
@@ -603,7 +603,7 @@ namespace UnitConversionManager
 			CalculatorList<string> tokenList = StringToVector(w, ';');
 			Debug.Assert(tokenList.Size() == EXPECTEDSERIALIZEDUNITTOKENCOUNT);
 			Unit serializedUnit = new Unit();
-			serializedUnit.id = System.Convert.ToInt32(Unquote(tokenList[0]));
+			serializedUnit.id = System.Convert.ToInt32(Unquote(tokenList[0]), CultureInfo.InvariantCulture);
 			serializedUnit.name = Unquote(tokenList[1]);
 			serializedUnit.accessibleName = serializedUnit.name;
 			serializedUnit.abbreviation = Unquote(tokenList[2]);
@@ -663,11 +663,11 @@ namespace UnitConversionManager
 				@out.Write('|');
 				@out.Write(CategoryToString(m_currentCategory, delimiter));
 				@out.Write('|');
-				@out.Write(m_currentHasDecimal);
+				@out.Write(m_currentHasDecimal ? "1" : "0");
 				@out.Write(delimiter);
-				@out.Write(m_returnHasDecimal);
+				@out.Write(m_returnHasDecimal ? "1" : "0");
 				@out.Write(delimiter);
-				@out.Write(m_switchedActive);
+				@out.Write(m_switchedActive ? "1" : "0");
 				@out.Write(delimiter);
 				@out.Write(m_currentDisplay);
 				@out.Write(delimiter);
@@ -1323,17 +1323,28 @@ namespace UnitConversionManager
 
 			if (!curUnits.IsEmpty())
 			{
+				// Units may already have been initialized through UnitConverter::RestoreUserPreferences().
+				// Check if they have been, and if so, do not override restored units.
+				bool isFromUnitValid = m_fromType != EMPTY_UNIT && curUnits.Contains(m_fromType);
+				bool isToUnitValid = m_toType != EMPTY_UNIT && curUnits.Contains(m_toType);
+
+				if (isFromUnitValid && isToUnitValid)
+				{
+					return;
+				}
+
+
 				bool conversionSourceSet = false;
 				bool conversionTargetSet = false;
 				foreach (Unit cur in curUnits)
 				{
-					if (!conversionSourceSet && cur.isConversionSource)
+					if (!conversionSourceSet && cur.isConversionSource && !isFromUnitValid)
 					{
 						m_fromType = cur;
 						conversionSourceSet = true;
 					}
 
-					if (!conversionTargetSet && cur.isConversionTarget)
+					if (!conversionTargetSet && cur.isConversionTarget && !isToUnitValid)
 					{
 						m_toType = cur;
 						conversionTargetSet = true;

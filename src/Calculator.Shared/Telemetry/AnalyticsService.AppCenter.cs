@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+#if HAS_APP_CENTER
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+#endif
 
 namespace CalculatorApp.Telemetry
 {
@@ -22,15 +25,19 @@ namespace CalculatorApp.Telemetry
 			var id = "d46819e8-746b-40b8-824e-53fb666b53e8";
 #endif
 
+#if HAS_APP_CENTER
 			AppCenter.Start(
 				id,
 				typeof(Analytics),
 				typeof(Crashes));
+#endif
 		}
 
 		static partial void TrackViewPartial(string viewName)
 		{
+#if HAS_APP_CENTER
 			Analytics.TrackEvent(viewName);
+#endif
 		}
 	}
 }

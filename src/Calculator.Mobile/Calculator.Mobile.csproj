@@ -1,0 +1,218 @@
+﻿	<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-macos</TargetFrameworks>
+		<SingleProject>true</SingleProject>
+		<OutputType>Exe</OutputType>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net8.0-ios'">iossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net8.0-macos'">osx-x64</RuntimeIdentifier>
+		<!-- Debugger workaround https://github.com/dotnet/maui-samples/blob/8aa6b8780b12e97b157514c3bdc54bb4a13001cd/HelloMacCatalyst/HelloMacCatalyst.csproj#L7 -->
+		<!-- <MtouchExtraArgs Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">$(MtouchExtraArgs) -setenv:MONO_THREADS_SUSPEND=preemptive</MtouchExtraArgs> -->
+		<!-- Required for C# Hot Reload -->
+		<UseInterpreter>False</UseInterpreter>
+		<IsUnoHead>true</IsUnoHead>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)'=='net8.0-macos'">10.14</SupportedOSPlatformVersion>
+		<NoWarn>CA1416;Uno0001</NoWarn>
+		<DefaultLanguage>en-US</DefaultLanguage>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.4.0" />
+		<PackageReference Include="Uno.UI" Version="5.1.31" />
+		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="5.1.31" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.1.31" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Nager.Country" Version="4.0.0" />
+		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)'=='net8.0-android'">
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<AndroidKeyStore>true</AndroidKeyStore>
+				<AndroidSigningKeyStore>Android\calc-prod.keystore</AndroidSigningKeyStore>
+				<AndroidSigningKeyAlias>calc-prod</AndroidSigningKeyAlias>
+				<DefineConstants>$(DefineConstants);HAS_APP_CENTER</DefineConstants>
+			</PropertyGroup>
+			
+			<ItemGroup>
+				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.4.0.4" />
+				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+			</ItemGroup>
+			
+			<ItemGroup Condition="'$(Configuration)'=='Release'">
+				<AndroidAotProfile Include="Android/custom.aprof" />
+			</ItemGroup>
+
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<RunAOTCompilation>true</RunAOTCompilation>
+			</PropertyGroup>
+
+			<ItemGroup>
+				<AndroidEnvironment Include="Android/environment.conf" />
+			</ItemGroup>
+			
+			<ItemGroup>
+				<AndroidAsset Include="Android/Assets/**" />
+			</ItemGroup>
+
+			<ItemGroup>
+				<AndroidNativeLibrary Include="Android\libs\ARM\$(Configuration)\libCalcManager.so">
+					<Abi>armeabi-v7a</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="Android\libs\ARM64\$(Configuration)\libCalcManager.so">
+					<Abi>arm64-v8a</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="Android\libs\x86\$(Configuration)\libCalcManager.so">
+					<Abi>x86</Abi>
+				</AndroidNativeLibrary>
+				<AndroidNativeLibrary Include="Android\libs\x64\$(Configuration)\libCalcManager.so">
+					<Abi>x86_64</Abi>
+				</AndroidNativeLibrary>
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)'=='net8.0-ios'">
+			<ItemGroup>
+				<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.4.0" />
+				<!--
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+				-->
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'iossimulator-x64' ">
+				<NativeReference Include="iOS\NativeReferences/x86_64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'ios-arm64' ">
+				<NativeReference Include="iOS\NativeReferences/arm64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup>
+				<BundleResource Include="iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+			</ItemGroup>
+			<ItemGroup>
+				<!-- Required to avoid
+					 Undefined symbols for architecture arm64:
+							"_kSecImportExportPassphrase", referenced from:
+									_AppleCryptoNative_X509ImportCertificate in libSystem.Security.Cryptography.Native.Apple.a(pal_x509_ios.c.o)
+				-->
+				<_NativeExecutableFrameworks Include="Security" />
+			</ItemGroup>
+			<PropertyGroup>
+				<MtouchExtraArgs>$(MtouchExtraArgs) --registrar:static -gcc_flags "-lc++ -lstdc++" --dsym=true</MtouchExtraArgs>
+
+				<!-- https://github.com/xamarin/xamarin-macios/issues/14812 -->
+				<MtouchExtraArgs>$(MtouchExtraArgs) --marshal-objectivec-exceptions:disable</MtouchExtraArgs>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<CodesignKey>iPhone Distribution</CodesignKey>
+				<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(TargetFramework)'=='net8.0-maccatalyst'">
+			<ItemGroup>
+				<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.3.0-dev.3" />
+				<!--
+				<PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.1" />
+				<PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.1" />
+				 -->
+			</ItemGroup>
+			<ItemGroup>
+				<BundleResource Include="MacCatalyst/Resources/*.lproj/InfoPList.strings" />
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">
+				<NativeReference Include="MacCatalyst/NativeReferences/x86_64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">
+				<NativeReference Include="MacCatalyst/NativeReferences/arm64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<PropertyGroup>
+				<IPhoneResourcePrefix>MacCatalyst/Resources</IPhoneResourcePrefix>
+				
+				<AssemblyName>unocalc</AssemblyName>
+
+				<MtouchExtraArgs>$(MtouchExtraArgs) --registrar:static -gcc_flags "-lc++ -lstdc++" --dsym=true</MtouchExtraArgs>
+				
+				<!-- https://github.com/xamarin/xamarin-macios/issues/14812 -->
+				<MtouchExtraArgs>$(MtouchExtraArgs) --marshal-objectivec-exceptions:disable</MtouchExtraArgs>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<MtouchUseLlvm>true</MtouchUseLlvm>
+				<CodeSigningKey>Apple Distribution: Uno Platform Inc. (PD74CHS9Z5)</CodeSigningKey>
+				<PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+				<ApplicationTitle>Uno Calculator</ApplicationTitle>
+				<CreatePackage>true</CreatePackage>
+				<EnablePackageSigning>true</EnablePackageSigning>
+				<EnableCodeSigning>true</EnableCodeSigning>
+				<CodeSignEntitlements>MacCatalyst\Entitlements.plist</CodeSignEntitlements>
+				
+				<CodesignProvision>Uno Calculator (catalyst)</CodesignProvision>
+				<CodesignProvision Condition="$(BUILD_SOURCEBRANCH.StartsWith('refs/heads/canaries'))">Uno Calculator Canary (Catalyst)</CodesignProvision>
+
+				<!-- https://github.com/xamarin/xamarin-macios/issues/14686 -->
+				<_LibMonoLinkMode>Static</_LibMonoLinkMode>
+				<_LibXamarinLinkMode>Static</_LibXamarinLinkMode>
+			</PropertyGroup>
+			<ItemGroup>
+				<TrimmerRootDescriptor Include="MacCatalyst/linker.xml" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)'=='net8.0-macos'">
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
+				<NativeReference Include="..\Calculator.macOS\NativeReferences/x86_64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-arm64' ">
+				<NativeReference Include="..\Calculator.macOS\NativeReferences/arm64/libCalcManager.a">
+					<Kind>Static</Kind>
+				</NativeReference>
+			</ItemGroup>
+			<PropertyGroup>
+				<MtouchExtraArgs>--registrar:static -gcc_flags "-lc++ -lstdc++" --dsym=true</MtouchExtraArgs>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<MtouchUseLlvm>true</MtouchUseLlvm>
+				<_RunAotCompiler>True</_RunAotCompiler>
+				<CodeSigningKey>Apple Distribution: Uno Platform Inc. (PD74CHS9Z5)</CodeSigningKey>
+				<PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+				<CreatePackage>true</CreatePackage>
+				<EnablePackageSigning>true</EnablePackageSigning>
+				<EnableCodeSigning>true</EnableCodeSigning>
+				<CodeSignEntitlements>macOS\Entitlements.plist</CodeSignEntitlements>
+				<CodesignProvision>Uno Calculator Canary (macOS)</CodesignProvision>
+			</PropertyGroup>
+			<ItemGroup>
+				<TrimmerRootDescriptor Include="macOS/linker.xml" />
+			</ItemGroup>
+		</When>
+	</Choose>
+
+	<Import Project="..\Calculator.Shared\Calculator.Shared.projitems" Label="Shared" />
+
+	<ItemGroup>
+	  <AndroidResource Remove="Calculator.macOS\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Android\Environment.conf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidEnvironment Include="Android\environment.conf" />
+	</ItemGroup>
+</Project>

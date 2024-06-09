@@ -1,0 +1,41 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "01:00"
+  open-pull-requests-limit: 10
+  labels:
+  - kind/dependency
+  - do-not-merge/work-in-progress
+  ignore:
+  - dependency-name: Uno.Wasm.Bootstrap
+    versions:
+    - 2.0.0
+  - dependency-name: Uno.Wasm.Bootstrap.DevServer
+    versions:
+    - 2.0.0
+  - dependency-name: Microsoft.TypeScript.MSBuild
+    versions:
+    - 4.1.4
+    - 4.2.2
+    - 4.2.3
+  - dependency-name: Uno.UI.WebAssembly
+    versions:
+    - 3.5.1
+  - dependency-name: Uno.UI.Skia.Gtk
+    versions:
+    - 3.5.1
+  - dependency-name: Uno.UI
+    versions:
+    - 3.5.1
+  - dependency-name: Microsoft.Windows.Compatibility
+    versions:
+    - 5.0.1
+  - dependency-name: Microsoft.AppCenter.Crashes
+    versions:
+    - 4.1.0
+  - dependency-name: Microsoft.AppCenter.Analytics
+    versions:
+    - 4.1.0

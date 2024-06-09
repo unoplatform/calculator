@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup>
+		<DefineConstants Condition="'$(Configuration)'=='Release' and !$(BUILD_SOURCEBRANCH.Contains('canaries'))">$(DefineConstants);PRODUCTION</DefineConstants>
+	</PropertyGroup>
+</Project>

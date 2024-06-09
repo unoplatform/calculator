@@ -305,8 +305,8 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\fr-FR\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\gl-ES\CEngineStrings.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\gl-ES\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\ha-Latn-NG\CEngineStrings.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\ha-Latn-NG\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\ha-NG\CEngineStrings.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\ha-NG\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\he-IL\CEngineStrings.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\he-IL\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\hi-IN\CEngineStrings.resw" />
@@ -383,9 +383,12 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\uz-Latn-UZ\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\vi-VN\CEngineStrings.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Resources\vi-VN\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-CN\CEngineStrings.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-CN\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-TW\CEngineStrings.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-TW\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-Hans\CEngineStrings.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-Hans\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-Hant\CEngineStrings.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources\zh-Hant\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)DataLoaders\DefautlFromToCurrency.json" />
   </ItemGroup>
 </Project>

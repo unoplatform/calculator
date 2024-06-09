@@ -13,7 +13,11 @@ namespace WindowsCalculator.Wasm
 
 		static void Main(string[] args)
 		{
+			FeatureConfiguration.ApiInformation.NotImplementedLogLevel = Uno.Foundation.Logging.LogLevel.Debug;
+
+#if DEBUG
 			FeatureConfiguration.UIElement.AssignDOMXamlName = true;
+#endif
 
 			Windows.UI.Xaml.Application.Start(_ => _app = new App());
 		}

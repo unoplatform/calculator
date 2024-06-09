@@ -22,6 +22,7 @@ using CategorySelectionInitializer = System.Tuple<CalculatorApp.CalculatorList<U
 using UnitToUnitToConversionDataMap = System.Collections.Generic.Dictionary<UnitConversionManager.Unit, System.Collections.Generic.Dictionary<UnitConversionManager.Unit, UnitConversionManager.ConversionData>>;
 using CategoryToUnitVectorMap = System.Collections.Generic.Dictionary<UnitConversionManager.Category, CalculatorApp.CalculatorList<UnitConversionManager.Unit>>;
 using System.Globalization;
+using System.Linq;
 
 namespace CalculatorApp.ViewModel
 {
@@ -221,10 +222,10 @@ namespace CalculatorApp.ViewModel
 
 		public async void LoadData()
 		{
-			RegisterForNetworkBehaviorChanges();
-
 			if (!LoadFinished())
 			{
+				RegisterForNetworkBehaviorChanges();
+
 				var loadFunctions = new Func<Task<bool>>[]
 				{
 					TryLoadDataFromCacheAsync,
@@ -391,7 +392,7 @@ namespace CalculatorApp.ViewModel
 				return false;
 			}
 
-			StorageFolder localCacheFolder = ApplicationData.Current.LocalCacheFolder;
+			StorageFolder localCacheFolder = ApplicationData.Current.LocalFolder; // Uno specific, Original target: LocalCacheFolder 
 			if (localCacheFolder == null)
 			{
 				return false;
@@ -403,7 +404,7 @@ namespace CalculatorApp.ViewModel
 			CalculatorList<UCM.CurrencyStaticData> staticData = new CalculatorList<UCM.CurrencyStaticData>();
 			CurrencyRatioMap ratioMap = new CurrencyRatioMap();
 
-			bool didParse = TryParseWebResponses(staticDataResponse, allRatiosResponse, staticData, ratioMap);
+			bool didParse = TryParseWebResponses(staticDataResponse, allRatiosResponse, m_responseLanguage, staticData, ratioMap);
 			if (!didParse)
 			{
 				return false;
@@ -441,7 +442,7 @@ namespace CalculatorApp.ViewModel
 				CalculatorList<UCM.CurrencyStaticData> staticData = new CalculatorList<UCM.CurrencyStaticData>();
 				CurrencyRatioMap ratioMap = new CurrencyRatioMap();
 
-				bool didParse = TryParseWebResponses(staticDataResponse, allRatiosResponse, staticData, ratioMap);
+				bool didParse = TryParseWebResponses(staticDataResponse, allRatiosResponse, m_responseLanguage, staticData, ratioMap);
 				if (!didParse)
 				{
 					return false;
@@ -458,7 +459,7 @@ namespace CalculatorApp.ViewModel
 						new KeyValuePair<string, string>(CurrencyDataLoaderConstants.AllRatiosDataFilename, allRatiosResponse)
 					};
 
-					StorageFolder localCacheFolder = ApplicationData.Current.LocalCacheFolder;
+					StorageFolder localCacheFolder = ApplicationData.Current.LocalFolder; // Uno specific, Original target: LocalCacheFolder 
 					foreach (var fileInfo in cachedFiles)
 					{
 						await Utils.WriteFileToFolder(localCacheFolder, fileInfo.Key, fileInfo.Value, CreationCollisionOption.ReplaceExisting);
@@ -499,13 +500,14 @@ namespace CalculatorApp.ViewModel
 		bool TryParseWebResponses(
 			String staticDataJson,
 			String allRatiosJson,
+			string targetLanguage,
 			CalculatorList<UCM.CurrencyStaticData> staticData,
 			CurrencyRatioMap allRatiosData)
 		{
-			return TryParseStaticData(staticDataJson, staticData) && TryParseAllRatiosData(allRatiosJson, allRatiosData);
+			return TryParseStaticData(staticDataJson, targetLanguage, staticData) && TryParseAllRatiosData(allRatiosJson, allRatiosData, staticData);
 		}
 
-		bool TryParseStaticData(String rawJson, CalculatorList<UCM.CurrencyStaticData> staticData)
+		bool TryParseStaticData(String rawJson, string targetLanguage, CalculatorList<UCM.CurrencyStaticData> staticData)
 		{
 #if NETFX_CORE // TODO UNO
 			JsonArray data = null;
@@ -544,17 +546,43 @@ namespace CalculatorApp.ViewModel
 #else
 			try
 			{
+				var translationProvider = new Nager.Country.Translation.TranslationProvider();
+
+				var targetCulture = new CultureInfo(targetLanguage);
+
 				var items = Newtonsoft.Json.JsonConvert.DeserializeObject<UCM.CurrencyStaticData[]>(rawJson);
 				staticData.Clear();
-				foreach (var item in items)
-				{
-					staticData.Add(item);
-				}
-				staticData.Sort((UCM.CurrencyStaticData unit1, UCM.CurrencyStaticData unit2) => { return unit1.countryName.CompareTo(unit2.countryName) < 0; });
 
-				return true;
+				if (items is not null)
+				{
+					foreach (var item in items)
+					{
+						try
+						{
+							var translatedCountryName = translationProvider.GetCountryTranslatedName(item.countryCode, targetCulture.TwoLetterISOLanguageName);
+
+							if (translatedCountryName is not null)
+							{
+								staticData.Add(new UCM.CurrencyStaticData(item.countryCode, translatedCountryName, item.currencyCode, item.currencyCode, item.currencySymbol));
+								continue;
+							}
+						}
+						catch (Exception e)
+						{
+							// Ignore translation errors
+						}
+
+						staticData.Add(new UCM.CurrencyStaticData(item.countryCode, item.countryName, item.currencyCode, item.currencyCode, item.currencySymbol));
+					}
+					staticData.Sort((UCM.CurrencyStaticData unit1, UCM.CurrencyStaticData unit2) => { return unit1.countryName.CompareTo(unit2.countryName) < 0; });
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
 				return false;
 			}
@@ -568,7 +596,7 @@ namespace CalculatorApp.ViewModel
 			public string An { get; set; }
 		}
 
-		public bool TryParseAllRatiosData(String rawJson, CurrencyRatioMap allRatios)
+		public bool TryParseAllRatiosData(String rawJson, CurrencyRatioMap allRatios, CalculatorList<UCM.CurrencyStaticData> staticData)
 		{
 #if NETFX_CORE // TODO UNO
 			JsonArray data = null;
@@ -597,11 +625,32 @@ namespace CalculatorApp.ViewModel
 			{
 				string sourceCurrencyCode = DefaultCurrencyCode;
 
-				var items = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonCurrencyRatio[]>(rawJson);
+				var items = Newtonsoft.Json.JsonConvert.DeserializeObject<XRatesResponse>(rawJson);
 				allRatios.Clear();
-				foreach (var item in items)
+				foreach (var item in items.rates)
 				{
-					allRatios.Add(item.An, new UCM.CurrencyRatio(item.Rt, sourceCurrencyCode, item.An));
+					allRatios.Add(item.Key, new UCM.CurrencyRatio(item.Value, sourceCurrencyCode, item.Key));
+				}
+
+				if(allRatios.Count != staticData.Count)
+				{
+					var missingCurrencies = staticData
+						.Select(s => s.currencyCode)
+						.Except(allRatios.Select(r => r.Key))
+						.ToArray();
+
+					// Exclude missing currencies
+					foreach(var missingCurrency in missingCurrencies)
+					{
+						for (int i = 0; i < staticData.Count; i++)
+						{
+							if (staticData[i].currencyCode == missingCurrency)
+							{
+								staticData.RemoveAt(i);
+								break;
+							}
+						}
+					}
 				}
 
 				return true;
@@ -613,6 +662,8 @@ namespace CalculatorApp.ViewModel
 
 #endif
 		}
+
+		private record XRatesResponse(string result, string provider, string time_last_update_unix, string time_next_update_unix, string base_code, Dictionary<string, double> rates);
 
 		// FinalizeUnits
 		//
@@ -762,12 +813,12 @@ namespace CalculatorApp.ViewModel
 				// TODO UNO
 				//DateTimeFormatter dateFormatter = new DateTimeFormatter("{month.abbreviated} {day.integer}, {year.full}");
 				//string date = dateFormatter.Format(m_cacheTimestamp);
-				var date = m_cacheTimestamp.ToString("D");
+				var date = m_cacheTimestamp.ToLocalTime().ToString("D");
 
 				// TODO UNO
 				//DateTimeFormatter timeFormatter = new DateTimeFormatter("shorttime");
 				//string time = timeFormatter.Format(m_cacheTimestamp);
-				var time = m_cacheTimestamp.ToString("t");
+				var time = m_cacheTimestamp.ToLocalTime().ToString("t");
 
 				timestamp = LocalizationStringUtil.GetLocalizedString(m_timestampFormat, date, time);
 			}

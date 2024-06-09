@@ -1,0 +1,60 @@
+jobs:
+- job: Windows_Android_NetCore
+  timeoutInMinutes: 90
+
+  pool:
+    vmImage: 'windows-2022'
+
+  variables:
+    VersionCodeOffset: 400559 # last value for the APK release
+
+  workspace:
+     clean: all
+
+  steps:
+  - template: dotnet-install-windows.yml
+  - template: canary-updater.yml
+  - template: gitversion.yml
+  - template: jdk-setup.yml
+
+  - task: MSBuild@1
+    inputs:
+      solution: src/build/build.csproj
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r /p:Configuration=Release /detailedsummary
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: false
+      createLogFile: false
+
+  - template: build-calcmanager-windows.yml
+
+  - script: |
+      cd $(build.sourcesdirectory)/src/Calculator.mobile
+      dotnet publish -f:net8.0-android -c:Release /p:AndroidSigningKeyPass=$(KeystorePassword) /p:AndroidSigningStorePass=$(KeystorePassword) "/p:InformationalVersion=$(GITVERSION.INFORMATIONALVERSION)" /bl:$(build.artifactstagingdirectory)/android/msbuild-netcore.binlog
+    displayName: 'Build Store Packages (netcore)'
+
+  - task: CopyFiles@2
+    displayName: 'Publish Android netcore Binaries'
+    retryCountOnTaskFailure: 3
+    inputs:
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-android
+      Contents: |
+        **/*.aab
+        **/*.apk
+      TargetFolder: $(build.artifactstagingdirectory)/android-netcore
+      CleanTargetFolder: false
+      OverWrite: false
+      flattenFolders: false
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Package Artifacts
+    condition: always()
+    retryCountOnTaskFailure: 3
+    inputs:
+      pathToPublish: $(build.artifactstagingdirectory)
+      artifactType: container
+      artifactName: Calculator

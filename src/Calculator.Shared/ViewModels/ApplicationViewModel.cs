@@ -153,7 +153,6 @@ namespace CalculatorApp.ViewModel
                     m_CalculatorViewModel = new StandardCalculatorViewModel();
                 }
                 m_CalculatorViewModel.SetCalculatorType(m_mode);
-				Console.WriteLine($"m_CalculatorViewMode = {m_CalculatorViewModel}");
             }
             else if (NavCategory.IsDateCalculatorViewMode(m_mode))
             {
@@ -217,20 +216,22 @@ namespace CalculatorApp.ViewModel
             }
         }
 
-		public void OnKeyPress(VirtualKey key)
+		public bool OnKeyPress(VirtualKey key)
 		{
 			if (NavCategory.IsConverterViewMode(m_mode))
 			{
-				ConverterViewModel.OnKeyPress(key);
+				return ConverterViewModel.OnKeyPress(key);
 			}
 			else if (NavCategory.IsDateCalculatorViewMode(m_mode))
 			{
-				DateCalcViewModel.OnKeyPress(key);
+				return DateCalcViewModel.OnKeyPress(key);
 			}
 			else
 			{
-				CalculatorViewModel.OnKeyPress(key);
+				return CalculatorViewModel.OnKeyPress(key);
 			}
+
+			return false;
 		}
 
 		void SetMenuCategories()

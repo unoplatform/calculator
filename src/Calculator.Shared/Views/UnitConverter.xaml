@@ -8,6 +8,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:local="using:CalculatorApp"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
 			 xmlns:triggers="using:CalculatorApp.Views.StateTriggers"
 			 xmlns:vm="using:CalculatorApp.ViewModel"
 			 xmlns:ios="http://platform.uno/ios"
@@ -868,14 +869,24 @@
 				<RowDefinition Height="7*" />
 				<RowDefinition Height="10*" />
 			</Grid.RowDefinitions>
-			<ProgressRing x:Name="CurrencyLoadingProgressRing"
+			<muxc:ProgressRing x:Name="CurrencyLoadingProgressRingMUX"
 						  Grid.Row="1"
 						  Grid.Column="1"
 						  MaxWidth="140"
 						  MaxHeight="140"
 						  HorizontalAlignment="Stretch"
 						  VerticalAlignment="Stretch"
-						  IsActive="False" />
+						  IsActive="False"
+						  x:Load="{x:Bind Model.CanUseMUX}" />
+			<ProgressRing x:Name="CurrencyLoadingProgressRingWUX"
+						  Grid.Row="1"
+						  Grid.Column="1"
+						  MaxWidth="140"
+						  MaxHeight="140"
+						  HorizontalAlignment="Stretch"
+						  VerticalAlignment="Stretch"
+						  IsActive="False"
+						  x:Load="{x:Bind Model.CanUseWUX}" />
 		</Grid>
 
 		<!--TODO UNO: HorizontalAlignment="{x:Bind FlowDirectionHorizontalAlignment}" -->
@@ -1027,16 +1038,26 @@
 								IsTabStop="False"
 								TabIndex="5"
 								Visibility="Collapsed">
-					<StackPanel Orientation="Horizontal">
-						<HyperlinkButton x:Name="CurrencyRefreshBlock"
-										 x:Uid="RefreshButtonText"
-										 Foreground="{ThemeResource SystemControlHyperlinkBaseHighBrush}"
-										 Click="CurrencyRefreshButton_Click" />
-						<TextBlock Margin="3,7,0,0"
-								   Style="{ThemeResource CaptionTextBlockStyle}">
-                            <Run x:Name="CurrencySecondaryStatus"
-								 FontWeight="SemiBold"
-								 Text="" />
+					<StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<HyperlinkButton x:Name="CurrencyRefreshBlock"
+											x:Uid="RefreshButtonText"
+											Foreground="{ThemeResource SystemControlHyperlinkBaseHighBrush}"
+											VerticalContentAlignment="Center"
+											Click="CurrencyRefreshButton_Click" />
+
+							<TextBlock 
+									Margin="5,1,0,0" 
+									FontStyle="Italic"
+									VerticalAlignment="Center"
+									Foreground="{ThemeResource SystemControlHyperlinkBaseHighBrush}">
+								(Rates by <Hyperlink NavigateUri="https://www.exchangerate-api.com" Foreground="{ThemeResource SystemControlHyperlinkBaseHighBrush}">Exchange Rate API</Hyperlink>)
+							</TextBlock>
+						</StackPanel>
+						<TextBlock Margin="3,6,0,0"
+								Style="{ThemeResource CaptionTextBlockStyle}">
+							<Run x:Name="CurrencySecondaryStatus"
+								Text="" />
 						</TextBlock>
 					</StackPanel>
 				</ContentControl>

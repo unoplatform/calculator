@@ -156,28 +156,28 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>../Calculator.Droid/libs/$(Platform)/$(Configuration)/</OutDir>
+    <OutDir>../Calculator.Mobile/Android/libs/$(Platform)/$(Configuration)/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

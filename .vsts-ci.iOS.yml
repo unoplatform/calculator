@@ -2,42 +2,43 @@ jobs:
 - job: iOS
 
   pool:
-    vmImage: macOS-10.15
+    vmImage: macOS-13
 
   variables:
     - name: NUGET_PACKAGES
       value: $(build.sourcesdirectory)/.nuget
     - name: VersionCodeOffset
       value: 400559 # last value for the APK release
-    - group: apple.appstore.distribution
+    - group: unoplatform.apple.ios.appstore.distribution
 
   workspace:
      clean: all
 
   steps:
 
+  - template: build/uno-ci/dotnet-install-mac.yml
   - template: build/uno-ci/canary-updater.yml
   - template: build/uno-ci/gitversion.yml
-
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 3.1.201'
-    inputs:
-      packageType: runtime
-      version: 3.1.3
+  - template: build/uno-ci/jdk-setup.yml
 
   - task: InstallAppleCertificate@2
     displayName: Install Certificate
     inputs:
-      certSecureFile: apple.appstore.distribution.p12
+      certSecureFile: UnoPlatform-Apple-Distribution.p12
       certPwd: $(appleappstorecertificatepassword)
       keychain: temp
-      deleteCert: true
 
   - task: InstallAppleProvisioningProfile@1
     displayName: Install Provisioning Profile
     inputs:
       provisioningProfileLocation: secureFiles
       provProfileSecureFile: Uno_Calculator.mobileprovision
+
+  - task: InstallAppleProvisioningProfile@1
+    displayName: Install Provisioning Profile (Canary)
+    inputs:
+      provisioningProfileLocation: secureFiles
+      provProfileSecureFile: Uno_Calculator_Canary_iOS.mobileprovision
 
   - bash: |
       cd $(build.sourcesdirectory)/src/CalcManager
@@ -59,24 +60,19 @@ jobs:
       logProjectEvents: true
       createLogFile: true
 
-  - task: MSBuild@1
-    inputs:
-      solution: '$(build.sourcesdirectory)/src/Calculator.iOS/Calculator.iOS.csproj'
-      msbuildLocationMethod: version
-      msbuildVersion: latest
-      msbuildArchitecture: x86
-      msbuildArguments: /r /p:Configuration=Release /p:Platform=iPhone /bl:$(build.artifactstagingdirectory)/build.binlog  "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
-      clean: false
-      maximumCpuCount: true
-      restoreNugetPackages: false
-      logProjectEvents: true
-      createLogFile: true
+  - bash: |
+      cd $(build.sourcesdirectory)/src/Calculator.mobile
+      dotnet publish -f net8.0-ios -c Release /p:ArchiveOnBuild=true /bl:$(build.artifactstagingdirectory)/build-netcore.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION"
+
+    displayName: 'Build iOS Binaries (netcore)'
 
   - task: CopyFiles@2
-    displayName: 'Publish iOS Binaries'
+    displayName: 'Publish iOS Binaries (netcore)'
     inputs:
-      SourceFolder: $(build.sourcesdirectory)/src/Calculator.iOS/bin/iPhone/Release
-      Contents: '*.ipa'
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-ios
+      Contents:  |
+        **/*.ipa
+        **/*.dSym/**
       TargetFolder: $(build.artifactstagingdirectory)
       CleanTargetFolder: false
       OverWrite: false
@@ -84,6 +80,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     condition: always()
+    retryCountOnTaskFailure: 3
     inputs:
       PathtoPublish: $(build.artifactstagingdirectory)
       ArtifactName: Uno-Calculator-iOS

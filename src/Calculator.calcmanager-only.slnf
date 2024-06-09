@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "Calculator.sln",
+    "projects": [
+      "CalcManager\\CalcManager.vcxproj",
+    ]
+  }
+}

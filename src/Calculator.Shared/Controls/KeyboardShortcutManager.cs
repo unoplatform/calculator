@@ -101,8 +101,10 @@ namespace CalculatorApp
 				{
 					coreWindow.KeyDown += (snd, e) =>
 					{
-						target.OnKeyPress(e.Key);
-						e.Handled = true;
+						if (target.OnKeyPress(e.Key))
+						{
+							e.Handled = true;
+						}
 					};
 				}
 				catch (Exception)

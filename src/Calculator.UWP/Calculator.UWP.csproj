@@ -15,8 +15,9 @@
       <Version>4.3.1</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI">
-      <Version>3.5.0-dev.492</Version>
+      <Version>4.2.0-dev.267</Version>
     </PackageReference>
+    <PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,7 +35,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Calculator.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>A53CB427DAC033C8F8C40D7E67F8492AA8B18D58</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>2B2DFFA115E141DAE95EA508DF06E55B7710778F</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">

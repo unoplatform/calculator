@@ -2,18 +2,42 @@
 steps:
 
   - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 2.2.x'
+    displayName: 'Use .NET'
     inputs:
-      packageType: runtime
-      version: 2.2.x
+      packageType: 'sdk'
+      version: '8.0.200'
 
   - task: nventiveCanaryUpdater@5
-    displayName: 'Canary Update'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries')
+    displayName: 'Canary Update (dev)'
+    retryCountOnTaskFailure: 3
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries/dev')
     inputs:
       solution: src/Calculator.sln
       branchToMerge: uno
+      mergeBranch: true
       summaryFile: '$(Build.ArtifactStagingDirectory)/Canary.md'
       resultFile: '$(Build.ArtifactStagingDirectory)/result.json'
-      nugetUpdaterVersion: 2.0.6
-      packageAuthor: nventive
+      nugetVersion: dev
+      packageAuthor: 'nventive,unoplatform,uno platform'
+      nugetUpdaterVersion: '2.3.0-alpha.46'
+
+  - pwsh: |
+      cd $(build.sourcesdirectory)
+      dotnet nuget add source https://pkgs.dev.azure.com/uno-platform/1dd81cbd-cb35-41de-a570-b0df3571a196/_packaging/unoplatformdev/nuget/v3/index.json -n unodev
+    displayName: 'Use uno dev source'
+
+  - pwsh: |
+      gci -r -include "info.plist" |
+      foreach-object {
+          $a = $_.fullname; ( get-content $a ) |
+          foreach-object { $_ -replace "uno.platform.calculator","uno.platform.calculator-canary" }  | 
+          set-content $a }
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries')
+
+  - pwsh: |
+      gci -r -include "AndroidManifest.xml" |
+      foreach-object {
+          $a = $_.fullname; ( get-content $a ) |
+          foreach-object { $_ -replace "uno.platform.calculator","uno.platform.calculator.canary" }  | 
+          set-content $a }
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/canaries')

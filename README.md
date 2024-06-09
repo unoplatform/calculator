@@ -41,6 +41,8 @@ Prerequisites:
 
 - Open [src\Calculator.sln](/src/Calculator.sln) in Visual Studio to build and run the Calculator app.
 
+If building for WebAssembly fails, make sure to follow the notes in the `calculator/src/CalcManager/build.sh` file.
+
 ## Contributing
 We ❤ contributions. The team encourages community feedback and contributions. Please follow our [contributing guidelines](CONTRIBUTING.md).
 

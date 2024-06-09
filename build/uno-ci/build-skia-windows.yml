@@ -1,0 +1,53 @@
+jobs:
+- job: Windows_Skia
+  timeoutInMinutes: 90
+
+  pool:
+    vmImage: 'windows-2022'
+
+  variables:
+    VersionCodeOffset: 400559 # last value for the APK release
+
+  workspace:
+     clean: all
+
+  steps:
+  - template: dotnet-install-windows.yml
+  - template: canary-updater.yml
+  - template: gitversion.yml
+  - template: jdk-setup.yml
+
+  - task: MSBuild@1
+    inputs:
+      solution: src/build/build.csproj
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r /p:Configuration=Release /detailedsummary
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: false
+      createLogFile: false
+
+  - template: build-calcmanager-windows.yml
+
+  - script: dotnet publish -c Release -r win-x64 --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
+    displayName: 'Build Skia win10-x64'
+
+  - task: ArchiveFiles@2
+    displayName: 'Archive Skia win10-x64'
+    retryCountOnTaskFailure: 3
+    inputs:
+      rootFolderOrFile: '$(build.sourcesdirectory)\src\Calculator.Skia.Gtk\bin\Release\net8.0\win-x64\publish'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-win10-x64.zip' 
+      includeRootFolder: false
+      
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Package Artifacts
+    condition: always()
+    retryCountOnTaskFailure: 3
+    inputs:
+      pathToPublish: $(build.artifactstagingdirectory)
+      artifactType: container
+      artifactName: Calculator

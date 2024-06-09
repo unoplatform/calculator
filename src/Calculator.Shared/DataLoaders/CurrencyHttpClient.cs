@@ -17,28 +17,22 @@ namespace CalculatorApp.DataLoaders
 		string m_responseLanguage;
 		string m_sourceCurrencyCode;
 
-		static string sc_MetadataUriLocalizeFor = "https://cors-anywhere.herokuapp.com/https://go.microsoft.com/fwlink/?linkid=2041093&localizeFor=";
-		static string sc_RatiosUriRelativeTo = "https://cors-anywhere.herokuapp.com/https://go.microsoft.com/fwlink/?linkid=2041339&localCurrency=";
+		static string sc_MetadataUriLocalizeFor = "https://aka.platform.uno/unocalc-static-currencies";
+		static string sc_RatiosUriRelativeTo = "https://aka.platform.uno/unocalc-ratios"; // Free API from https://www.exchangerate-api.com/
+			// DEBUG STRING "https://uno-assets.platform.uno/calc-currencies/uno-calc/test-currency.json";
 
 		public CurrencyHttpClient()
 		{
-#if __WASM__
-			// Workaround for https://github.com/mono/mono/issues/14940
-			var handler = new Uno.UI.Wasm.WasmHttpHandler();
-			m_client = new System.Net.Http.HttpClient(handler)
-#else
 			m_client = new System.Net.Http.HttpClient()
-#endif
-
 			{
-				DefaultRequestHeaders = {{"origin", "WindowsCalculator"}} // Required for Android
+				DefaultRequestHeaders = {{"origin", "UnoCalculator"}} // Required for Android
 			};
 			m_responseLanguage = "en-US";
 		}
 
 		public void SetSourceCurrencyCode(string sourceCurrencyCode)
 		{
-			m_sourceCurrencyCode = sourceCurrencyCode;
+			m_sourceCurrencyCode = sourceCurrencyCode;	
 		}
 
 		public void SetResponseLanguage(string responseLanguage)
@@ -46,9 +40,9 @@ namespace CalculatorApp.DataLoaders
 			m_responseLanguage = responseLanguage;
 		}
 
-		public async Task<string> GetCurrencyMetadata() => await ExecuteRequestAsync(sc_MetadataUriLocalizeFor + m_responseLanguage);
+		public async Task<string> GetCurrencyMetadata() => await ExecuteRequestAsync(sc_MetadataUriLocalizeFor); // + m_responseLanguage);
 
-		public async Task<string> GetCurrencyRatios() => await ExecuteRequestAsync(sc_RatiosUriRelativeTo + m_sourceCurrencyCode);
+		public async Task<string> GetCurrencyRatios() => await ExecuteRequestAsync(sc_RatiosUriRelativeTo); // + m_sourceCurrencyCode);
 
 		private async Task<string> ExecuteRequestAsync(string url) => await m_client.GetStringAsync(new Uri(url));
 	}

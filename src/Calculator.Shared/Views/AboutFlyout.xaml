@@ -54,7 +54,7 @@
 				Content="Try Uno Platform"
 				FontSize="12"
 				Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-				NavigateUri="https://platform.uno/docs/articles/getting-started-tutorial-1.html"/>
+				NavigateUri="https://aka.platform.uno/calc-try-uno" />
 
 			<!--
 			<HyperlinkButton x:Name="AboutFlyoutEULA"

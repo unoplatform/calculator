@@ -1,0 +1,92 @@
+jobs:
+- job: Catalyst
+
+  pool:
+    vmImage: 'macos-13'
+
+  variables:
+    - name: NUGET_PACKAGES
+      value: $(build.sourcesdirectory)/.nuget
+    - name: VersionCodeOffset
+      value: 400559 # last value for the APK release
+    - group: unoplatform.apple.ios.appstore.distribution
+
+  workspace:
+     clean: all
+
+  steps:
+
+  - template: build/uno-ci/dotnet-install-mac.yml
+  - template: build/uno-ci/canary-updater.yml
+  - template: build/uno-ci/gitversion.yml
+  - template: build/uno-ci/jdk-setup.yml
+
+  - task: InstallAppleCertificate@2
+    displayName: Install Certificate
+    inputs:
+      certSecureFile: UnoPlatform-Apple-Distribution.p12
+      certPwd: $(appleappstorecertificatepassword)
+      keychain: temp
+
+  - task: InstallAppleCertificate@2
+    displayName: Install Certificate
+    inputs:
+      certSecureFile: UnoPlatform-MacInstaller.p12
+      certPwd: $(appleappstorecertificatepassword)
+      keychain: temp
+
+  - task: InstallAppleProvisioningProfile@1
+    displayName: 'Install Apple Provisioning Profile'
+    inputs:
+      provisioningProfileLocation: 'secureFiles'
+      provProfileSecureFile: Uno_Calculator_Canary_Catalyst.provisionprofile # Located in the Library's secure files
+
+  - task: InstallAppleProvisioningProfile@1
+    displayName: 'Install Apple Provisioning Profile'
+    inputs:
+      provisioningProfileLocation: 'secureFiles'
+      provProfileSecureFile: Uno_Calculator_catalyst.provisionprofile # Located in the Library's secure files
+
+  - bash: |
+      cd $(build.sourcesdirectory)/src/CalcManager
+      chmod +x build_catalyst.sh
+      ./build_catalyst.sh
+
+    displayName: Build native CalcManager
+
+  - task: MSBuild@1
+    inputs:
+      solution: '$(build.sourcesdirectory)/src/build/build.csproj'
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r /p:BuildPlatformTarget=iPhoneSimulator /bl:$(build.artifactstagingdirectory)/build.binlog 
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: true
+      createLogFile: true
+
+  - bash: |
+      cd $(build.sourcesdirectory)/src/Calculator.mobile
+      dotnet build -f net8.0-maccatalyst -c Release /bl:$(build.artifactstagingdirectory)/build.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
+
+  - task: CopyFiles@2
+    displayName: 'Publish Catalyst Binaries'
+    inputs:
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-maccatalyst/maccatalyst-x64
+      Contents: |
+        *.pkg
+        *.dSym/**
+      TargetFolder: $(build.artifactstagingdirectory)
+      CleanTargetFolder: false
+      OverWrite: false
+      flattenFolders: false
+
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    retryCountOnTaskFailure: 3
+    inputs:
+      PathtoPublish: $(build.artifactstagingdirectory)
+      ArtifactName: Uno-Calculator-catalyst
+      ArtifactType: Container

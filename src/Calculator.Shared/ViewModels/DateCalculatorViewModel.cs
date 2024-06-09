@@ -372,8 +372,9 @@ namespace CalculatorApp.ViewModel
 
 
 		// TODO UNO: KeyboardShortcutManager
-		public void OnKeyPress(VirtualKey key)
+		public bool OnKeyPress(VirtualKey key)
 		{
+			return false;
 		}
 
 		// PRIVATE

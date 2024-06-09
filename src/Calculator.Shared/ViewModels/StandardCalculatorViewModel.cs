@@ -145,7 +145,7 @@ namespace CalculatorApp.ViewModel
         public bool IsCurrentViewPinned { get => m_IsCurrentViewPinned; set { m_IsCurrentViewPinned = value; RaisePropertyChanged("IsCurrentViewPinned"); } }
 
 
-        private ObservableCollection<MemoryItemViewModel> m_MemorizedNumbers; // List<> => ObserableCollection<> because of https://github.com/nventive/Uno/issues/1046
+        private ObservableCollection<MemoryItemViewModel> m_MemorizedNumbers; // List<> => ObserableCollection<> because of https://github.com/unoplatform/Uno/issues/1046
 		public ObservableCollection<MemoryItemViewModel> MemorizedNumbers { get => m_MemorizedNumbers; set { m_MemorizedNumbers = value; RaisePropertyChanged("MemorizedNumbers"); } }
 
 
@@ -514,8 +514,6 @@ namespace CalculatorApp.ViewModel
 
         public StandardCalculatorViewModel()
         {
-			Console.WriteLine("new StandardCalculatorViewModel()");
-
             m_DisplayValue = "0";
             m_DecimalDisplayValue = "0";
             m_HexDisplayValue = "0";
@@ -1214,12 +1212,15 @@ namespace CalculatorApp.ViewModel
 		};
 
 		// TODO UNO: KeyboardShortcutManager
-		public void OnKeyPress(VirtualKey key)
+		public bool OnKeyPress(VirtualKey key)
 		{
 			if (_keyToCommandMap.TryGetValue(key, out var cmd))
 			{
 				m_standardCalculatorManager.SendCommand(cmd);
+				return true;
 			}
+
+			return false;
 		}
 
 		public void OnCopyCommand(object parameter)

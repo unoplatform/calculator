@@ -22,7 +22,7 @@ mkdir bin/x86_64
 libtool \
     -static \
     *.o \
-    -o ../Calculator.macOS/NativeReferences/x86_64/libCalcManager.a
+    -o ../Calculator.Mobile/macOS/NativeReferences/x86_64/libCalcManager.a
 
 rm *.o
 

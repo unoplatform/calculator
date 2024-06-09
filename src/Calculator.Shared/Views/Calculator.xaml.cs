@@ -495,7 +495,11 @@ namespace CalculatorApp
             }
             else
             { // flyout view
-                DockHistoryHolder.Child = null;
+				if (DockHistoryHolder != null)
+				{
+					DockHistoryHolder.Child = null;
+				}
+
                 if (!IsProgrammer)
                 {
                     HistoryButton.Visibility = Visibility.Visible;
@@ -548,7 +552,11 @@ namespace CalculatorApp
             }
 
 			HistoryFlyout_Hide();
-            DockHistoryHolder.Child = m_historyList;
+
+			if (DockHistoryHolder != null)
+			{
+				DockHistoryHolder.Child = m_historyList;
+			}
         }
 
         void OnHideHistoryClicked()

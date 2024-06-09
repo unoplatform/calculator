@@ -1711,7 +1711,7 @@
 										  BorderThickness="{TemplateBinding BorderThickness}"
 										  AutomationProperties.AccessibilityView="Raw"
 										  ContentTransitions="{TemplateBinding ContentTransitions}">
-							<!-- UNO TODO https://github.com/nventive/Uno/issues/1055 -->
+							<!-- UNO TODO https://github.com/unoplatform/Uno/issues/1055 -->
 							<ContentPresenter.ContentTemplate>
 								<DataTemplate>
 									<PathIcon AutomationProperties.AccessibilityView="Raw"

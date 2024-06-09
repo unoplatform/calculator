@@ -1,0 +1,55 @@
+jobs:
+- job: Windows_UWP
+  timeoutInMinutes: 90
+
+  pool:
+    vmImage: 'windows-2022'
+
+  variables:
+    VersionCodeOffset: 400559 # last value for the APK release
+
+  workspace:
+     clean: all
+
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK'
+    retryCountOnTaskFailure: 3
+    inputs:
+      packageType: sdk
+      version: 8.0.200
+
+  - template: canary-updater.yml
+  - template: gitversion.yml
+
+  - template: jdk-setup.yml
+
+  - task: MSBuild@1
+    inputs:
+      solution: src/build/build.csproj
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r /p:Configuration=Release /detailedsummary
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: false
+      createLogFile: false
+
+  - template: build-calcmanager-windows.yml
+
+  - task: MSBuild@1
+    displayName: 'Build UWP'
+    retryCountOnTaskFailure: 3
+    inputs:
+      solution: src/Calculator.UWP/Calculator.UWP.csproj
+      msbuildLocationMethod: version
+      msbuildVersion: latest
+      msbuildArchitecture: x86
+      msbuildArguments: /r /p:Configuration=Release /detailedsummary /p:SkipWasmBuild=true /p:BuildForPlayStore=true /p:AndroidSigningKeyPass=$(KeystorePassword) /p:AndroidSigningStorePass=$(KeystorePassword)  "/p:InformationalVersion=$(GITVERSION.INFORMATIONALVERSION)" /bl:$(build.artifactstagingdirectory)/android/msbuild-xamarin.binlog
+      clean: false
+      maximumCpuCount: true
+      restoreNugetPackages: false
+      logProjectEvents: false
+      createLogFile: false

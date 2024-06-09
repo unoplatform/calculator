@@ -104,7 +104,7 @@ namespace CalculatorApp
             }
 
             ViewMode initialMode = ViewMode.Standard;
-            if (e.Parameter != null)
+            if (e.Parameter is string { Length: > 0 })
             {
                 String stringParameter = (String)(e.Parameter);
                 if (stringParameter != null)
