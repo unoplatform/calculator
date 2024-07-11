@@ -30,6 +30,8 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Nager.Country" Version="4.0.0" />
 		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />
+		
+		<PackageReference Include="Uno.Fonts.OpenSans" Version="2.4.0" />
 	</ItemGroup>
 
 	<Choose>
