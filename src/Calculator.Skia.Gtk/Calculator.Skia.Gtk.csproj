@@ -21,14 +21,14 @@
 	</ItemGroup>
 	
   <ItemGroup>
-		<PackageReference Include="Uno.UI.Skia.Gtk" Version="5.1.31" />
-		<PackageReference Include="Uno.UI.Lottie" Version="5.1.31" />
+		<PackageReference Include="Uno.UI.Skia.Gtk" Version="5.3.90" />
+		<PackageReference Include="Uno.UI.Lottie" Version="5.3.90" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.5" />
 		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.5" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.1.31" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.3.90" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Nager.Country" Version="4.0.0" />
 		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />
