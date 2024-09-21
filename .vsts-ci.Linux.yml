@@ -49,7 +49,7 @@ jobs:
   - script: |
       cd $(build.sourcesdirectory)
       dotnet msbuild /r /p:BuildPlatformTarget=Wasm $(build.sourcesdirectory)/src/build/build.csproj
-      dotnet msbuild /r /p:Configuration=Release $(build.sourcesdirectory)/src/Calculator.Wasm/Calculator.Wasm.csproj  "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" /bl:$(build.artifactstagingdirectory)/linux.binlog 
+      dotnet publish -c Release $(build.sourcesdirectory)/src/Calculator.Wasm/Calculator.Wasm.csproj  "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" /bl:$(build.artifactstagingdirectory)/linux.binlog 
 
     env:
       GITVERSION_FullSemVer: $(GITVERSION_FullSemVer)
