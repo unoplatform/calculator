@@ -18,7 +18,9 @@
 		<WasmShellMonoRuntimeExecutionMode Condition="'$(UseAOT)'!=''">InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>
 		<WasmShellEnableEmccProfiling>true</WasmShellEnableEmccProfiling>
 
-		<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>
+		<!--
+		TODO restore for net9
+		<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>-->
 
 		<!--
 		Uncomment to generate an AOT profile
@@ -86,10 +88,6 @@
 		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />
 
 		<PackageReference Include="Uno.Fonts.OpenSans" Version="2.4.0" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<WasmShellAdditionalPInvokeLibrary Include="CalcManager" />
 	</ItemGroup>
 	
 	<ItemGroup>
