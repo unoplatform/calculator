@@ -15,12 +15,11 @@
 		<WasmShellIndexHtmlPath>$(MSBuildThisFileDirectory)index.html</WasmShellIndexHtmlPath>
 
 		<UseAOT Condition="($([MSBuild]::IsOsPlatform('Linux')) or ( $([MSBuild]::IsOsPlatform('Windows')) and '$(SkipWasmBuild)'=='' )) and '$(Configuration)'=='Release'">true</UseAOT>
+		<RunAOTCompilation Condition="'$(UseAOT)'!=''">true</RunAOTCompilation>
 		<WasmShellMonoRuntimeExecutionMode Condition="'$(UseAOT)'!=''">InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>
 		<WasmShellEnableEmccProfiling>true</WasmShellEnableEmccProfiling>
 
-		<!--
-		TODO restore for net9
-		<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>-->
+		<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>
 
 		<!--
 		Uncomment to generate an AOT profile
@@ -83,7 +82,6 @@
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.5.0-dev.465" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.6.0" />
-		<PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.2" />
 		<PackageReference Include="Nager.Country" Version="4.0.0" />
 		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />
 
