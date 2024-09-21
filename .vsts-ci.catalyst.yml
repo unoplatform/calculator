@@ -22,6 +22,10 @@ jobs:
   - template: build/uno-ci/canary-updater.yml
   - template: build/uno-ci/gitversion.yml
   - template: build/uno-ci/jdk-setup.yml
+  
+  - template: build/uno-ci/xcode-select.yml
+    parameters:
+      xCodeRoot: $(XCODE_ROOT)
 
   - task: InstallAppleCertificate@2
     displayName: Install Certificate

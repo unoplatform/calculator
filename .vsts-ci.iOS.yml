@@ -23,7 +23,7 @@ jobs:
   - template: build/uno-ci/gitversion.yml
   - template: build/uno-ci/jdk-setup.yml
   
-  - template: templates/xcode-select.yml
+  - template: build/uno-ci/xcode-select.yml
     parameters:
       xCodeRoot: $(XCODE_ROOT)
 
@@ -33,7 +33,7 @@ jobs:
       certSecureFile: UnoPlatform-Apple-Distribution.p12
       certPwd: $(appleappstorecertificatepassword)
       keychain: temp
-
+        
   - task: InstallAppleProvisioningProfile@1
     displayName: Install Provisioning Profile
     inputs:
