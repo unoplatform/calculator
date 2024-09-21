@@ -14,14 +14,7 @@ jobs:
   - checkout: self
     clean: true
 
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk'
-    retryCountOnTaskFailure: 3
-    inputs:
-      packageType: sdk
-      version: 9.0.100-rc.1.24452.12
-      includePreviewVersions: true
-
+  - template: build/uno-ci/dotnet-install-linux.yml
   - template: build/uno-ci/canary-updater.yml
   - template: build/uno-ci/gitversion.yml
   
