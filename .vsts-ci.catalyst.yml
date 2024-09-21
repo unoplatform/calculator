@@ -5,6 +5,8 @@ jobs:
     vmImage: 'macos-14'
 
   variables:
+    - name: XCODE_ROOT
+      value: '/Applications/Xcode_15.4.app'
     - name: NUGET_PACKAGES
       value: $(build.sourcesdirectory)/.nuget
     - name: VersionCodeOffset

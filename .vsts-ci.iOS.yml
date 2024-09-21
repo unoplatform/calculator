@@ -5,6 +5,8 @@ jobs:
     vmImage: macOS-14
 
   variables:
+    - name: XCODE_ROOT
+      value: '/Applications/Xcode_15.4.app'
     - name: NUGET_PACKAGES
       value: $(build.sourcesdirectory)/.nuget
     - name: VersionCodeOffset
@@ -20,6 +22,10 @@ jobs:
   - template: build/uno-ci/canary-updater.yml
   - template: build/uno-ci/gitversion.yml
   - template: build/uno-ci/jdk-setup.yml
+  
+  - template: templates/xcode-select.yml
+    parameters:
+      xCodeRoot: $(XCODE_ROOT)
 
   - task: InstallAppleCertificate@2
     displayName: Install Certificate
