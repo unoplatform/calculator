@@ -54,6 +54,10 @@ namespace CalculatorApp
 
 			Telemetry.AnalyticsService.Initialize();
 #endif
+
+#if __WASM__
+			CalculationManager.NativeDispatch.InitializeExports();
+#endif
 		}
 
 #if __MACOS__

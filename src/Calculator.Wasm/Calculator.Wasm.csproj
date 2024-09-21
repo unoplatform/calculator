@@ -7,6 +7,7 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<IsUnoHead>true</IsUnoHead>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<WasmShellGenerateCompressedFiles Condition="'$(Configuration)'=='Debug'">false</WasmShellGenerateCompressedFiles>
 		<MonoRuntimeDebuggerEnabled Condition="'$(Configuration)'=='Debug'">true</MonoRuntimeDebuggerEnabled>
@@ -88,11 +89,15 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<WasmShellAdditionalPInvokeLibrary Include="CalcManager" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<MonoRuntimeMixedModeExcludedAssembly Include="Newtonsoft.Json" />
 		<MonoRuntimeMixedModeExcludedAssembly Include="System.Data" />
 	</ItemGroup>
 	<ItemGroup Condition="$([MSBuild]::IsOsPlatform('Linux')) or ( $([MSBuild]::IsOsPlatform('Windows')) and '$(SkipWasmBuild)'=='' )">
-		<Content Include="..\CalcManager\bin\wasm\**\*.bc" />
+		<Content Include="..\CalcManager\bin\wasm\**\*.a" />
 	</ItemGroup>
 	<ItemGroup>
 		<TypeScriptCompile Include="ts\GoogleAnalytics.ts" />

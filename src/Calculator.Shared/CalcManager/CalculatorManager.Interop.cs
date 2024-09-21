@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CalculationManager
 {
-	public static class NativeDispatch
+	public static partial class NativeDispatch
 	{
 #if __IOS__ || __MACOS__
 		private const string DllPath = "__Internal"; // https://docs.microsoft.com/en-us/xamarin/ios/platform/native-interop
@@ -162,6 +164,9 @@ namespace CalculationManager
 #if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(MaxDigitsReachedCallbackFunc))]
 #endif
+#if __WASM__
+		[JSExport]
+#endif
 		public static void MaxDigitsReachedCallback(IntPtr state)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -170,8 +175,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.MaxDigitsReachedCallback");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(MemoryItemChangedCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void MemoryItemChangedCallback(IntPtr state, int indexOfMemory)
 		{
@@ -181,8 +189,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.MemoryItemChangedCallback({indexOfMemory})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(OnHistoryItemAddedCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void OnHistoryItemAddedCallback(IntPtr state, int addedItemIndex)
 		{
@@ -192,8 +203,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.OnHistoryItemAddedCallback({addedItemIndex})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(OnNoRightParenAddedCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void OnNoRightParenAddedCallback(IntPtr state)
 		{
@@ -203,8 +217,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.OnNoRightParenAddedCallback");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(SetExpressionDisplayCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void SetExpressionDisplayCallback(IntPtr state, IntPtr historyItem)
 		{
@@ -223,8 +240,11 @@ namespace CalculationManager
 
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(SetMemorizedNumbersCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void SetMemorizedNumbersCallback(IntPtr state, int count, IntPtr newMemorizedNumbers)
 		{
@@ -242,8 +262,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.SetMemorizedNumbersCallback({string.Join(";", numbers)})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(SetParenthesisNumberCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void SetParenthesisNumberCallback(IntPtr state, int parenthesisCount)
 		{
@@ -253,10 +276,13 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.SetParenthesisNumberCallback({parenthesisCount})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(BinaryOperatorReceivedFunc))]
 #endif
 
+#if __WASM__
+		[JSExport]
+#endif
 		public static void BinaryOperatorReceivedCallback(IntPtr state)
 		{
 			var manager = GCHandle.FromIntPtr((IntPtr)state).Target as CalculatorDisplay;
@@ -265,8 +291,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.BinaryOperatorReceivedCallback");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(SetPrimaryDisplayCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void SetPrimaryDisplayCallback(IntPtr state, IntPtr pDisplayStringValue, bool isError)
 		{
@@ -278,8 +307,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.SetPrimaryDisplayCallback({displayStringValue}, {isError})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(SetIsInErrorCallbackFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static void SetIsInErrorCallback(IntPtr state, bool isError)
 		{
@@ -289,8 +321,11 @@ namespace CalculationManager
 			DebugTrace($"CalculatorManager.SetIsInErrorCallback({isError})");
 		}
 
-#if __IOS__  || __MACOS__
+#if __IOS__ || __MACOS__
 		[ObjCRuntime.MonoPInvokeCallback(typeof(GetCEngineStringFunc))]
+#endif
+#if __WASM__
+		[JSExport]
 #endif
 		public static IntPtr GetCEngineStringCallback(IntPtr state, IntPtr pResourceId)
 		{
@@ -306,6 +341,15 @@ namespace CalculationManager
 
 			return pEngineString;
 		}
+
+#if __WASM__
+		[JSImport("globalThis.CalcManager.initializeExports")]
+		public static partial Task InitializeExports();
+
+		[JSImport("globalThis.CalcManager.registerCallbacks")]
+		public static partial int[] RegisterCallbacks();
+#endif
+
 		private static bool IsStringUTF32 =>
 			GetWChar_t_Size() == 4;
 

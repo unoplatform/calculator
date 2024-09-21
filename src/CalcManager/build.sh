@@ -9,7 +9,7 @@
 #   source ./emsdk_env.sh
 # Navigate back to this file's folder in the same terminal
 
-mkdir -p bin/wasm/CalcManager.bc/3.0.0/st,simd
+mkdir -p bin/wasm/CalcManager.a/3.0.0/st,simd
 
 echo Generating LLVM Bitcode files
 emcc \
@@ -20,6 +20,6 @@ emcc \
     -s ALLOW_MEMORY_GROWTH=1 \
 	-s BINARYEN=1 \
 	-fwasm-exceptions \
-	-o bin/wasm/CalcManager.bc/3.0.0/st,simd/CalcManager.bc \
+	-o bin/wasm/CalcManager.a/3.0.0/st,simd/CalcManager.a \
 	-r \
 	CEngine/*.cpp Ratpack/*.cpp *.cpp -I.
