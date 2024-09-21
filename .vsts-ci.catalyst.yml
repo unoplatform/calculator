@@ -69,12 +69,12 @@ jobs:
 
   - bash: |
       cd $(build.sourcesdirectory)/src/Calculator.mobile
-      dotnet build -f net8.0-maccatalyst -c Release /bl:$(build.artifactstagingdirectory)/build.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
+      dotnet build -f net9.0-maccatalyst -c Release /bl:$(build.artifactstagingdirectory)/build.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
 
   - task: CopyFiles@2
     displayName: 'Publish Catalyst Binaries'
     inputs:
-      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-maccatalyst/maccatalyst-x64
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net9.0-maccatalyst/maccatalyst-x64
       Contents: |
         *.pkg
         *.dSym/**

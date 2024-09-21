@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<NoWarn>NU1701</NoWarn>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<DefaultLanguage>en-US</DefaultLanguage>
@@ -72,13 +72,12 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Uno.UI.WebAssembly" Version="5.3.90" />
-		<PackageReference Include="Uno.UI.Lottie" Version="5.3.90" />
+		<PackageReference Include="Uno.UI.WebAssembly" Version="5.5.0-dev.465" />
+		<PackageReference Include="Uno.UI.Lottie" Version="5.5.0-dev.465" />
 		<PackageReference Include="Uno.UI.Sample.Banner" Version="1.45.0-dev.64" />
-		<PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.20" />
-		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.20" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.0-dev.296" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.3.90" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.5.0-dev.465" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.6.0" />
 		<PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.2" />
