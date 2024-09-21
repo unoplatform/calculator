@@ -62,14 +62,14 @@ jobs:
 
   - bash: |
       cd $(build.sourcesdirectory)/src/Calculator.mobile
-      dotnet publish -f net8.0-ios -c Release /p:ArchiveOnBuild=true /bl:$(build.artifactstagingdirectory)/build-netcore.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION"
+      dotnet publish -f net9.0-ios -c Release /p:ArchiveOnBuild=true /bl:$(build.artifactstagingdirectory)/build-netcore.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION"
 
     displayName: 'Build iOS Binaries (netcore)'
 
   - task: CopyFiles@2
     displayName: 'Publish iOS Binaries (netcore)'
     inputs:
-      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-ios
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net9.0-ios
       Contents:  |
         **/*.ipa
         **/*.dSym/**

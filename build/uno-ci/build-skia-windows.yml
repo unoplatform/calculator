@@ -39,7 +39,7 @@ jobs:
     displayName: 'Archive Skia win10-x64'
     retryCountOnTaskFailure: 3
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)\src\Calculator.Skia.Gtk\bin\Release\net8.0\win-x64\publish'
+      rootFolderOrFile: '$(build.sourcesdirectory)\src\Calculator.Skia.Gtk\bin\Release\net9.0\win-x64\publish'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-win10-x64.zip' 
       includeRootFolder: false
       
