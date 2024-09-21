@@ -2,7 +2,7 @@ jobs:
 - job: Catalyst
 
   pool:
-    vmImage: 'macos-13'
+    vmImage: 'macos-14'
 
   variables:
     - name: NUGET_PACKAGES
@@ -35,7 +35,7 @@ jobs:
       certPwd: $(appleappstorecertificatepassword)
       keychain: temp
 
-  - task: InstallAppleProvisioningProfile@1
+  - task: InstallAppleProvisioningProfile@1 
     displayName: 'Install Apple Provisioning Profile'
     inputs:
       provisioningProfileLocation: 'secureFiles'

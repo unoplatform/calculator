@@ -2,7 +2,7 @@ jobs:
 - job: iOS
 
   pool:
-    vmImage: macOS-13
+    vmImage: macOS-14
 
   variables:
     - name: NUGET_PACKAGES
