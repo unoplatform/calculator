@@ -45,9 +45,9 @@
 		<LinkerDescriptor Include="LinkerConfig.xml" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(UseAOT)'!=''">
-		<WasmShellEnableAotProfile Include="aot.profile" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(UseAOT)'!=''">
+		<WasmShellEnableAotProfile>aot.profile</WasmShellEnableAotProfile>
+	</PropertyGroup>
 
 	<!--
 	<ItemGroup>
