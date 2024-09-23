@@ -14,7 +14,7 @@
 		<WasmPWAManifestFile>manifest.json</WasmPWAManifestFile>
 		<WasmShellIndexHtmlPath>$(MSBuildThisFileDirectory)index.html</WasmShellIndexHtmlPath>
 
-		<UseAOT Condition="($([MSBuild]::IsOsPlatform('Linux')) or ( $([MSBuild]::IsOsPlatform('Windows')) and '$(SkipWasmBuild)'=='' )) and '$(Configuration)'=='Release'">true</UseAOT>
+		<UseAOT Condition=" '$(Configuration)'=='Release' ">true</UseAOT>
 		<RunAOTCompilation Condition="'$(UseAOT)'!=''">true</RunAOTCompilation>
 		<WasmShellMonoRuntimeExecutionMode Condition="'$(UseAOT)'!=''">InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>
 		<WasmShellEnableEmccProfiling>true</WasmShellEnableEmccProfiling>
@@ -29,7 +29,10 @@
 		-->
 		
 		<!-- Disable SIMD for edge enhanced security mode validation -->
+		<!--
+		.NET 9 fails with SIMD disabled
 		<WasmShellEnableSimd>false</WasmShellEnableSimd>
+		-->
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="..\Calculator.UWP\Assets\*.png" Link="Assets\%(FileName)%(Extension)" />
@@ -46,7 +49,7 @@
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(UseAOT)'!=''">
-		<WasmShellEnableAotProfile>aot.profile</WasmShellEnableAotProfile>
+		<WasmAotProfilePath>$(MSBuildProjectDirectory)\aot.profile</WasmAotProfilePath>
 	</PropertyGroup>
 
 	<!--
