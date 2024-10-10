@@ -6,7 +6,7 @@ jobs:
 
   variables:
     - name: XCODE_ROOT
-      value: '/Applications/Xcode_15.4.app'
+      value: '/Applications/Xcode_16.app'
     - name: NUGET_PACKAGES
       value: $(build.sourcesdirectory)/.nuget
     - name: VersionCodeOffset
