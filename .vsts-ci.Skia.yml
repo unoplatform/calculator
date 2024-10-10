@@ -59,7 +59,7 @@ jobs:
     displayName: 'Use .NET SDK'
     retryCountOnTaskFailure: 3
     inputs:
-      version: 9.0.100-rc.1.24452.12
+      version: 9.0.100-rc.2.24474.11
       includePreviewVersions: true
 
   - script: |
@@ -141,7 +141,7 @@ jobs:
     displayName: 'Use .NET SDK'
     retryCountOnTaskFailure: 3
     inputs:
-      version: 9.0.100-rc.1.24452.12
+      version: 9.0.100-rc.2.24474.11
       includePreviewVersions: true
 
   - task: DownloadBuildArtifacts@0

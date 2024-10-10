@@ -1,6 +1,6 @@
 parameters:
-  DotNetVersion: '9.0.100-rc.1.24452.12'
-  UnoCheck_Version: '1.26.0-dev.42'
+  DotNetVersion: '9.0.100-rc.2.24474.11'
+  UnoCheck_Version: '1.26.0-dev.65'
   
 steps:
 
