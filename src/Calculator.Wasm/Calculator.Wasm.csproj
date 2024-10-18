@@ -18,6 +18,7 @@
 		<RunAOTCompilation Condition="'$(UseAOT)'!=''">true</RunAOTCompilation>
 		<WasmShellMonoRuntimeExecutionMode Condition="'$(UseAOT)'!=''">InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>
 		<WasmShellEnableEmccProfiling>true</WasmShellEnableEmccProfiling>
+		<WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
 
 		<!--<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>-->
 
