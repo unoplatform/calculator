@@ -3,7 +3,7 @@
   <PropertyGroup>
 		<OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
 		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<DefineConstants>$(DefineConstants);UNO_REFERENCE_API</DefineConstants>
 		<NoWarn>$(NoWarn);Uno0001</NoWarn>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
@@ -21,14 +21,14 @@
 	</ItemGroup>
 	
   <ItemGroup>
-		<PackageReference Include="Uno.UI.Skia.Gtk" Version="5.3.90" />
-		<PackageReference Include="Uno.UI.Lottie" Version="5.3.90" />
+		<PackageReference Include="Uno.UI.Skia.Gtk" Version="5.6.0-dev.127" />
+		<PackageReference Include="Uno.UI.Lottie" Version="5.6.0-dev.127" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.5" />
 		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.5" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.3.90" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.6.0-dev.127" />
 		<PackageReference Include="Uno.Core.Extensions.Disposables" Version="4.0.1" />
 		<PackageReference Include="Nager.Country" Version="4.0.0" />
 		<PackageReference Include="Nager.Country.Translation" Version="3.0.4" />

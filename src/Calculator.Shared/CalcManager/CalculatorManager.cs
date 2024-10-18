@@ -108,26 +108,25 @@ namespace CalculationManager
             _resourceProviderHandle = GCHandle.Alloc(resourceProvider);
 
 #if __WASM__
-			var rawPtrs = Uno.Foundation.WebAssemblyRuntime.InvokeJS("CalcManager.registerCallbacks()");
-			var ptrs = rawPtrs.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+			var ptrs = NativeDispatch.RegisterCallbacks();
 
 			var p = new CalculatorManager_CreateParams
 			{
 				CalculatorState = GCHandle.ToIntPtr(_displayCallbackHandle),
 				ResourceState = GCHandle.ToIntPtr(_resourceProviderHandle),
 
-				GetCEngineString = (IntPtr)int.Parse(ptrs[0]),
-				BinaryOperatorReceived = (IntPtr)int.Parse(ptrs[1]),
-				SetPrimaryDisplay = (IntPtr)int.Parse(ptrs[2]),
-				SetIsInError = (IntPtr)int.Parse(ptrs[3]),
-				SetParenthesisNumber = (IntPtr)int.Parse(ptrs[4]),
-				MaxDigitsReached = (IntPtr)int.Parse(ptrs[5]),
-				MemoryItemChanged = (IntPtr)int.Parse(ptrs[6]),
-				OnHistoryItemAdded = (IntPtr)int.Parse(ptrs[7]),
-				OnNoRightParenAdded = (IntPtr)int.Parse(ptrs[8]),
-				SetExpressionDisplay = (IntPtr)int.Parse(ptrs[9]),
-				SetMemorizedNumbers = (IntPtr)int.Parse(ptrs[10]),
-			};
+				GetCEngineString = ptrs[0],
+				BinaryOperatorReceived = ptrs[1],
+				SetPrimaryDisplay = ptrs[2],
+				SetIsInError = ptrs[3],
+				SetParenthesisNumber = ptrs[4],
+				MaxDigitsReached = ptrs[5],
+				MemoryItemChanged = ptrs[6],
+				OnHistoryItemAdded = ptrs[7],
+				OnNoRightParenAdded = ptrs[8],
+				SetExpressionDisplay = ptrs[9],
+				SetMemorizedNumbers = ptrs[10],
+			};	
 
 #else
             var p = new CalculatorManager_CreateParams
@@ -153,7 +152,7 @@ namespace CalculationManager
             _nativeManager = NativeDispatch.CalculatorManager_Create(ref p);
 		}
 
-        public void Reset(bool clearMemory = true)
+		public void Reset(bool clearMemory = true)
 			=> NativeDispatch.CalculatorManager_Reset(_nativeManager, clearMemory);
 
 		public void SetStandardMode()
@@ -178,7 +177,7 @@ namespace CalculationManager
         public void DeSerializePrimaryDisplay(List<long> serializedPrimaryDisplay) => throw new NotImplementedException();
         public Command SerializeSavedDegreeMode() => throw new NotImplementedException();
 
-        public void MemorizeNumber()
+		public void MemorizeNumber()
 			=> NativeDispatch.CalculatorManager_MemorizeNumber(_nativeManager);
 
 		public void MemorizedNumberLoad(int value)
@@ -202,7 +201,7 @@ namespace CalculationManager
 		public List<char> GetSavedCommands()
 			=> throw new NotImplementedException();
 
-        public void SetRadix(RADIX_TYPE iRadixType)
+		public void SetRadix(RADIX_TYPE iRadixType)
 			=> NativeDispatch.CalculatorManager_SetRadix(_nativeManager, iRadixType);
 
 		public void SetMemorizedNumbersString()
@@ -322,7 +321,7 @@ namespace CalculationManager
 
 		public void SetHistory(CALCULATOR_MODE eMode, List<HISTORYITEM> history) => throw new NotImplementedException();
 
-        public void SetInHistoryItemLoadMode(bool isHistoryItemLoadMode)
+		public void SetInHistoryItemLoadMode(bool isHistoryItemLoadMode)
 			=> NativeDispatch.CalculatorManager_SetInHistoryItemLoadMode(_nativeManager, isHistoryItemLoadMode);
 	}
 }

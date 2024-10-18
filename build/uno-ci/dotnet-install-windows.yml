@@ -1,7 +1,6 @@
 parameters:
-  DotNetVersion: '8.0.200'
-  UnoCheck_Version: '1.20.0-dev.7'
-  UnoCheck_Manifest: 'https://raw.githubusercontent.com/unoplatform/uno.check/cb74c45d871e416469bac56f228f0d514e0db3c3/manifests/uno.ui.manifest.json'
+  DotNetVersion: '9.0.100-rc.2.24474.11'
+  UnoCheck_Version: '1.26.0-dev.65'
   
 steps:
 
@@ -25,7 +24,7 @@ steps:
 
   - powershell: |
       & dotnet tool update --global uno.check --version ${{ parameters.UnoCheck_Version }} --add-source https://api.nuget.org/v3/index.json
-      & uno-check -v --ci --non-interactive --fix --skip xcode --skip gtk3 --skip vswin --skip androidemulator --skip androidsdk --skip vsmac --manifest ${{ parameters.UnoCheck_Manifest }}
+      & uno-check -v --ci --pre-major --non-interactive --fix --skip xcode --skip gtk3 --skip vswin --skip androidemulator --skip androidsdk --skip vsmac
     displayName: Install .NET Workloads
     errorActionPreference: continue
     ignoreLASTEXITCODE: true

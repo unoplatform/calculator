@@ -54,6 +54,10 @@ namespace CalculatorApp
 
 			Telemetry.AnalyticsService.Initialize();
 #endif
+
+#if __WASM__
+			CalculationManager.NativeDispatch.InitializeExports();
+#endif
 		}
 
 #if __MACOS__
@@ -133,7 +137,7 @@ namespace CalculatorApp
         /// </summary>
         private static void InitializeLogging()
         {
-#if !PRODUCTION
+#if true // !PRODUCTION
 			AppDomain.CurrentDomain.UnhandledException += (s, e) => {
                 global::System.Console.WriteLine(e.ExceptionObject);
 			};

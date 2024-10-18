@@ -5,7 +5,8 @@ steps:
     displayName: 'Use .NET'
     inputs:
       packageType: 'sdk'
-      version: '8.0.200'
+      version: 9.0.100-rc.2.24474.11
+      includePreviewVersions: true
 
   - task: nventiveCanaryUpdater@5
     displayName: 'Canary Update (dev)'

@@ -59,7 +59,8 @@ jobs:
     displayName: 'Use .NET SDK'
     retryCountOnTaskFailure: 3
     inputs:
-      version: 8.0.200
+      version: 9.0.100-rc.2.24474.11
+      includePreviewVersions: true
 
   - script: |
         mkdir -p $(build.sourcesdirectory)/src/CalcManager/bin/runtimes
@@ -87,7 +88,7 @@ jobs:
 
   - script: |
       dotnet publish -c Release -r linux-x64 --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-      echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-x64/publish/VERSION
+      echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-x64/publish/VERSION
 
     displayName: 'Build Skia linux-x64'
     env:
@@ -99,7 +100,7 @@ jobs:
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-x64'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-x64/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-x64/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-x64.zip' 
       includeRootFolder: false
 
@@ -140,7 +141,8 @@ jobs:
     displayName: 'Use .NET SDK'
     retryCountOnTaskFailure: 3
     inputs:
-      version: 8.0.200
+      version: 9.0.100-rc.2.24474.11
+      includePreviewVersions: true
 
   - task: DownloadBuildArtifacts@0
     inputs:
@@ -170,7 +172,7 @@ jobs:
 
   - script: |
         dotnet publish -c Release -r linux-arm --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm/publish/VERSION
+        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-arm/publish/VERSION
 
     displayName: 'Build Skia linux-arm'
     env:
@@ -178,7 +180,7 @@ jobs:
 
   - script: |
         dotnet publish -c Release -r linux-arm64 --self-contained true $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/Calculator.Skia.Gtk.csproj
-        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm64/publish/VERSION
+        echo "$GITVERSION_FullSemVer" > $(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-arm64/publish/VERSION
 
     displayName: 'Build Skia linux-arm64'
     env:
@@ -190,14 +192,14 @@ jobs:
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-arm'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-arm/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-arm.zip' 
       includeRootFolder: false
 
   - task: ArchiveFiles@2
     displayName: 'Archive Skia linux-arm64'
     inputs:
-      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net8.0/linux-arm64/publish/'
+      rootFolderOrFile: '$(build.sourcesdirectory)/src/Calculator.Skia.Gtk/bin/Release/net9.0/linux-arm64/publish/'
       archiveFile: '$(Build.ArtifactStagingDirectory)/skia/Calculator-linux-arm64.zip' 
       includeRootFolder: false
 

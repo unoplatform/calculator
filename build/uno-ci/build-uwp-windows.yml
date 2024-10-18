@@ -17,7 +17,8 @@ jobs:
     retryCountOnTaskFailure: 3
     inputs:
       packageType: sdk
-      version: 8.0.200
+      version: 9.0.100-rc.2.24474.11
+      includePreviewVersions: true
 
   - template: canary-updater.yml
   - template: gitversion.yml

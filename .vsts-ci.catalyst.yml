@@ -2,9 +2,11 @@ jobs:
 - job: Catalyst
 
   pool:
-    vmImage: 'macos-13'
+    vmImage: macOS-14
 
   variables:
+    - name: XCODE_ROOT
+      value: '/Applications/Xcode_16.app'
     - name: NUGET_PACKAGES
       value: $(build.sourcesdirectory)/.nuget
     - name: VersionCodeOffset
@@ -35,7 +37,7 @@ jobs:
       certPwd: $(appleappstorecertificatepassword)
       keychain: temp
 
-  - task: InstallAppleProvisioningProfile@1
+  - task: InstallAppleProvisioningProfile@1 
     displayName: 'Install Apple Provisioning Profile'
     inputs:
       provisioningProfileLocation: 'secureFiles'
@@ -46,6 +48,10 @@ jobs:
     inputs:
       provisioningProfileLocation: 'secureFiles'
       provProfileSecureFile: Uno_Calculator_catalyst.provisionprofile # Located in the Library's secure files
+  
+  - template: build/uno-ci/xcode-select.yml
+    parameters:
+      xCodeRoot: $(XCODE_ROOT)
 
   - bash: |
       cd $(build.sourcesdirectory)/src/CalcManager
@@ -69,12 +75,12 @@ jobs:
 
   - bash: |
       cd $(build.sourcesdirectory)/src/Calculator.mobile
-      dotnet build -f net8.0-maccatalyst -c Release /bl:$(build.artifactstagingdirectory)/build.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
+      dotnet build -f net9.0-maccatalyst -c Release /bl:$(build.artifactstagingdirectory)/build.binlog "/p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION" 
 
   - task: CopyFiles@2
     displayName: 'Publish Catalyst Binaries'
     inputs:
-      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net8.0-maccatalyst/maccatalyst-x64
+      SourceFolder: $(build.sourcesdirectory)/src/Calculator.Mobile/bin/Release/net9.0-maccatalyst/maccatalyst-x64
       Contents: |
         *.pkg
         *.dSym/**
