@@ -137,7 +137,7 @@ namespace CalculatorApp
         /// </summary>
         private static void InitializeLogging()
         {
-#if true // !PRODUCTION
+#if !PRODUCTION
 			AppDomain.CurrentDomain.UnhandledException += (s, e) => {
                 global::System.Console.WriteLine(e.ExceptionObject);
 			};

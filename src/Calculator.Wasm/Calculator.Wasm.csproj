@@ -20,7 +20,7 @@
 		<WasmShellEnableEmccProfiling>true</WasmShellEnableEmccProfiling>
 		<WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
 
-		<!--<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>-->
+		<UnoXamlResourcesTrimming Condition="'$(Configuration)'=='Release'">true</UnoXamlResourcesTrimming>
 
 		<!--
 		Uncomment to generate an AOT profile
