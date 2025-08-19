@@ -4,7 +4,7 @@ jobs:
   container: unoplatform/dotnet-build:3.0.1
 
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-latest'
 
   variables:
     NUGET_PACKAGES: $(build.sourcesdirectory)/.nuget
@@ -37,7 +37,7 @@ jobs:
   container: unoplatform/dotnet-build:3.0.1
 
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-latest'
 
   variables:
     NUGET_PACKAGES: $(build.sourcesdirectory)/.nuget
@@ -193,7 +193,7 @@ jobs:
   dependsOn:
     - Linux_Skia_x86
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-24.04'
 
   steps:
   - task: DownloadBuildArtifacts@0
@@ -202,13 +202,8 @@ jobs:
       downloadPath: '$(build.sourcesdirectory)/build'
 
   - script: |
+        sudo apt update
         sudo snap install snapcraft --classic --channel 7.x
-        sudo usermod --append --groups lxd $USER
-        export PATH=$PATH:/snap/bin
-        sudo chown root:root /
-        sudo /snap/bin/lxd.migrate -yes
-        sudo /snap/bin/lxd waitready
-        sudo /snap/bin/lxd init --auto
 
     displayName: 'Install Snapcraft'
     retryCountOnTaskFailure: 3
@@ -216,7 +211,7 @@ jobs:
   - script: |
         export PATH=$PATH:/snap/bin
         cd $(build.sourcesdirectory)/build
-        sg lxd -c 'snapcraft --use-lxd'
+        snapcraft --destructive-mode
     displayName: 'Build Snap'
 
   - task: CopyFiles@2
@@ -274,92 +269,41 @@ jobs:
       artifactType: container
       artifactName: Calculator
 
-# armhf is not supported by azuredevops
-# - job: ARMHF_Snap
+# Disabled until moving to uno 6
+# - job: x64_AppImage
 #   dependsOn:
-#     - Linux_Skia_ARM
-# 
-#   container: unoplatform/snapcraft:20201014-armhf
-#   pool: 'Linux-Arm64-20.04'
-# 
+#     - Linux_Skia_x86
+#     
+#   pool:
+#     vmImage: 'ubuntu-24.04'# 
+#   container:
+#     image: appimagecrafters/appimage-builder:0.7.2# 
 #   steps:
+#   - task: UseDotNet@2
+#     displayName: 'Use .Net Core runtime 3.1.x'
+#     retryCountOnTaskFailure: 3
+#     inputs:
+#       packageType: sdk
+#       version: '3.1.x'# 
 #   - task: DownloadBuildArtifacts@0
 #     inputs:
 #       artifactName: Calculator
-#       downloadPath: '$(build.sourcesdirectory)/build'
-# 
+#       downloadPath: '$(build.sourcesdirectory)/build'# 
+#   - template: build/uno-ci/gitversion.yml# 
 #   - script: |
-#         cd $(build.sourcesdirectory)/build
-#         snapcraft
-#         
-#   - task: CopyFiles@2
-#     displayName: 'Publish Snap'
-#     inputs:
-#       SourceFolder: $(build.sourcesdirectory)/build
-#       Contents: '**/*.snap'
-#       TargetFolder: $(build.artifactstagingdirectory)/skia
-#       CleanTargetFolder: false
-#       OverWrite: false
-#       flattenFolders: false
-# 
+#         cd $(build.sourcesdirectory)/build/appimage
+#         mkdir -p AppDir/usr/bin/uno-calculator
+#         unzip $(build.sourcesdirectory)/build/Calculator/skia/Calculator-linux-x64.zip -d AppDir/usr/bin/uno-calculator
+#         mkdir -p AppDir/usr/share/icons/50x50
+#         cp AppDir/usr/bin/uno-calculator/Assets/StoreLogo.png AppDir/usr/share/icons/50x50/
+#         appimage-builder --recipe AppImageBuilder.x64.yaml --skip-test
+#         cp *.AppImage $(build.artifactstagingdirectory)# 
+#     env:
+#       GITVERSION_FullSemVer: $(GitVersion.FullSemVer)# 
 #   - task: PublishBuildArtifacts@1
 #     displayName: Publish Package Artifacts
+#     retryCountOnTaskFailure: 3
 #     inputs:
 #       pathToPublish: $(build.artifactstagingdirectory)
 #       artifactType: container
 #       artifactName: Calculator
-
-- job: x64_AppImage
-  dependsOn:
-    - Linux_Skia_x86
-    
-  pool:
-    vmImage: 'ubuntu-20.04'
-
-  container:
-    image: appimagecrafters/appimage-builder:0.7.2
-    options: "--name ci-container -v /usr/bin/docker:/tmp/docker:ro"
-
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .Net Core runtime 3.1.x'
-    retryCountOnTaskFailure: 3
-    inputs:
-      packageType: sdk
-      version: '3.1.x'
-
-  - task: DownloadBuildArtifacts@0
-    inputs:
-      artifactName: Calculator
-      downloadPath: '$(build.sourcesdirectory)/build'
-
-  - script: |
-      /tmp/docker exec -t -u 0 ci-container \
-      sh -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" -y install sudo"
-      sudo apt update
-      sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-      sudo apt -y install zip git
-    displayName: 'Setup dependencies'
-    retryCountOnTaskFailure: 3
-
-  - template: build/uno-ci/gitversion.yml
-
-  - script: |
-        cd $(build.sourcesdirectory)/build/appimage
-        mkdir -p AppDir/usr/bin/uno-calculator
-        unzip $(build.sourcesdirectory)/build/Calculator/skia/Calculator-linux-x64.zip -d AppDir/usr/bin/uno-calculator
-        mkdir -p AppDir/usr/share/icons/50x50
-        cp AppDir/usr/bin/uno-calculator/Assets/StoreLogo.png AppDir/usr/share/icons/50x50/
-        appimage-builder --recipe AppImageBuilder.x64.yaml --skip-test
-        cp *.AppImage $(build.artifactstagingdirectory)
-
-    env:
-      GITVERSION_FullSemVer: $(GitVersion.FullSemVer)
-
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Package Artifacts
-    retryCountOnTaskFailure: 3
-    inputs:
-      pathToPublish: $(build.artifactstagingdirectory)
-      artifactType: container
-      artifactName: Calculator
