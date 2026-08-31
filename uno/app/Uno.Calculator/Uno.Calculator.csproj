@@ -1,7 +1,7 @@
 <Project Sdk="Uno.Sdk.Private">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0-desktop</TargetFrameworks>
+    <TargetFrameworks>net10.0-desktop;net10.0-browserwasm</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
     <Nullable>enable</Nullable>
@@ -84,6 +84,19 @@
                  Link="Strings\%(RecursiveDir)%(Filename)%(Extension)" />
     <Content Include="$(UpstreamXamlRoot)Assets\**\*.*"
              Link="Assets\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!--
+    The native engine, statically linked into the wasm module, so DllImport("CalcManager")
+    resolves against symbols in the module itself. NativeFileReference is the .NET WebAssembly
+    SDK's item - Uno.Wasm.Bootstrap's WasmShellNativeFileReference is not read by the SDK link
+    step that actually runs here. Build the archive with uno/native/build-wasm.sh.
+
+    The path keeps the bootstrapper's <emscripten version>/<runtime features> layout so the
+    archive stays selectable if that pipeline is ever used again.
+  -->
+  <ItemGroup Condition="'$([MSBuild]::GetTargetPlatformIdentifier($(TargetFramework)))' == 'browserwasm'">
+    <NativeFileReference Include="$(ForkRoot)native/bin/wasm/CalcManager.a/**/CalcManager.a" />
   </ItemGroup>
 
 </Project>
