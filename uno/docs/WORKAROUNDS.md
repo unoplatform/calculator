@@ -27,6 +27,8 @@ drifting, a shrinking one means the fork is converging on plain upstream.
 | [#24302](https://github.com/unoplatform/uno/issues/24302) | `BackdropMaterial.ApplyToRootOrPageBackground` applies a transparent brush instead of the Mica fallback, so every translucent Fluent fill composites over black. | `forked/App.xaml` (`CalcPageBackdropBrush`), `forked/Views/MainPage.xaml` |
 
 Also filed and awaiting fixes, but needing no workaround here:
+[#24308](https://github.com/unoplatform/uno/issues/24308) (WASM: `OnLaunched` exceptions swallowed - blank canvas, empty console),
+[#24309](https://github.com/unoplatform/uno/issues/24309) (Skia: `FindElementsInHostCoordinates` returns only ancestors),
 [#24285](https://github.com/unoplatform/uno/issues/24285) (case-sensitive resource lookup),
 [#24286](https://github.com/unoplatform/uno/issues/24286) (`JsonObject.TryParse` throws),
 [#24287](https://github.com/unoplatform/uno/issues/24287) (`LanguageFontGroup` throws),
