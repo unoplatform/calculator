@@ -1,0 +1,4 @@
+<Project>
+  <!-- Deliberately empty: stops MSBuild walking up into upstream's src/Directory.Build.props,
+       which configures the UWP projects and does not apply to the Uno head. -->
+</Project>

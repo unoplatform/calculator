@@ -1,0 +1,89 @@
+<Project Sdk="Uno.Sdk.Private">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-desktop</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <ApplicationTitle>Calculator</ApplicationTitle>
+    <ApplicationId>uno.platform.calculator</ApplicationId>
+    <ApplicationPublisher>Uno Platform</ApplicationPublisher>
+    <Description>Windows Calculator on Uno Platform.</Description>
+
+    <!--
+      Uno Workaround #24297 - upstream C# exposes Windows.UI.Core.CoreDispatcher, which the
+      bindable-type metadata generator emits a reference to assembly 'Uno' for - an assembly
+      Uno 7 no longer ships. x:Bind is unaffected. Delete when #24297 ships.
+    -->
+    <UnoDisableBindableTypeProvidersGeneration>true</UnoDisableBindableTypeProvidersGeneration>
+
+    <UnoFeatures>
+      SkiaRenderer;
+      Mvvm;
+    </UnoFeatures>
+
+    <!--
+      THE TWO ROOTS. Everything under $(UpstreamRoot) is upstream's and is never copied,
+      never edited - only referenced. Everything fork-owned lives under uno/.
+    -->
+    <UpstreamRoot>$(MSBuildThisFileDirectory)..\..\..\src\</UpstreamRoot>
+    <UpstreamXamlRoot>$(UpstreamRoot)Calculator\</UpstreamXamlRoot>
+    <ForkRoot>$(MSBuildThisFileDirectory)..\..\</ForkRoot>
+    <UnoIngestOutputPath>$(MSBuildThisFileDirectory)obj\ingest\</UnoIngestOutputPath>
+  </PropertyGroup>
+
+  <Import Project="$(ForkRoot)build\ingest\Uno.Ingest.targets" />
+
+  <ItemGroup>
+    <!--
+      Upstream C#, rewritten into obj/ingest by the UnoIngest task. The glob mirrors
+      upstream's own <Compile Include="**\*.cs" />, so a file added upstream is picked
+      up with no action from us.
+    -->
+    <UnoIngestSource Include="$(UpstreamRoot)Calculator\**\*.cs;$(UpstreamRoot)Calculator.ViewModels\**\*.cs"
+                     Exclude="$(UpstreamRoot)Calculator\App.xaml.cs" />
+    <UnoIngestSource Include="$(UpstreamRoot)Calculator\App.xaml.cs" />
+    <!-- Upstream ships its own assembly attributes; the SDK generates them too. -->
+    <UnoIngestSource Remove="$(UpstreamRoot)**\Properties\AssemblyInfo.cs" />
+
+    <!-- Fork-owned: the interop seam, the graphing stub, and the compat adapters. -->
+    <Compile Include="$(ForkRoot)interop\**\*.cs" />
+    <Compile Include="$(ForkRoot)adapters\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Upstream XAML, linked in place. Never copied, never rewritten - which is what
+         keeps its 426 markup keys and the .resw keys in lockstep across 60 locales. -->
+    <Page Include="$(UpstreamXamlRoot)**\*.xaml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="$(ForkRoot)forked\**\*.xaml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+
+    <!-- App.xaml is the ApplicationDefinition, so it must not also be a Page.
+         NOTE: a Remove must FOLLOW its Include - MSBuild evaluates items in order. -->
+    <Page Remove="$(UpstreamXamlRoot)App.xaml" />
+    <Page Remove="$(ForkRoot)forked\App.xaml" />
+
+    <!--
+      Fork-owned view overrides. Each is upstream's file with one workaround applied, so
+      the upstream original is removed and the forked copy wins. Delete each as its Uno
+      fix lands - the cap is 5, enforced by uno/ci/purity-gate.sh.
+        App.xaml                  #24301 (BrushTransition drops Opacity) + #24302 (backdrop)
+        MainPage.xaml             #24302 (BackdropMaterial applies a transparent brush)
+        EquationInputArea         #24301
+        EquationStylePanelControl #24295 (x:Bind cast argument emits an invalid cast)
+    -->
+    <Page Remove="$(UpstreamXamlRoot)Views\MainPage.xaml" />
+    <Page Remove="$(UpstreamXamlRoot)Views\GraphingCalculator\EquationInputArea.xaml" />
+    <Page Remove="$(UpstreamXamlRoot)Views\GraphingCalculator\EquationStylePanelControl.xaml" />
+
+    <ApplicationDefinition Include="$(ForkRoot)forked\App.xaml" Link="App.xaml" />
+
+    <!-- Upstream resources and assets, referenced in place. -->
+    <PRIResource Include="$(UpstreamXamlRoot)Resources\**\*.resw"
+                 Link="Strings\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="$(UpstreamXamlRoot)Assets\**\*.*"
+             Link="Assets\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

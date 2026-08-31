@@ -1,0 +1,202 @@
+<Page x:Class="CalculatorApp.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:automation="using:CalculatorApp.ViewModel.Common.Automation"
+      xmlns:common="using:CalculatorApp.Common"
+      xmlns:converters="using:CalculatorApp.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:CalculatorApp"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      xmlns:selectors="using:CalculatorApp.TemplateSelectors"
+      xmlns:utils="using:CalculatorApp.Utils"
+      xmlns:vmcom="using:CalculatorApp.ViewModel.Common"
+      x:Name="PageRoot"
+      Background="{ThemeResource CalcPageBackdropBrush}"
+      Loaded="OnPageLoaded"
+      mc:Ignorable="d">
+
+    <!-- Uno Workaround #24302 - BackdropMaterial.ApplyToRootOrPageBackground is a no-op that leaves the page transparent, so the backdrop is set explicitly. Delete this fork when #24302 ships. -->
+    <Page.Resources>
+        <automation:NarratorNotifier x:Name="NarratorNotifier"/>
+        <Style x:Name="CalculatorBaseStyle" TargetType="local:Calculator">
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+        <Style x:Name="UnitConverterBaseStyle" TargetType="local:UnitConverter">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+        <Style x:Key="NavViewItemStyle" TargetType="muxc:NavigationViewItem">
+            <Setter Property="KeyTipPlacementMode" Value="Right"/>
+        </Style>
+        <DataTemplate x:Key="NavViewCategoryItemDataTemplate" x:DataType="vmcom:NavCategory">
+            <muxc:NavigationViewItem Style="{StaticResource NavViewItemStyle}"
+                                     AccessKey="{x:Bind AccessKey}"
+                                     AutomationProperties.AutomationId="{x:Bind AutomationId}"
+                                     AutomationProperties.Name="{x:Bind AutomationName}"
+                                     Content="{x:Bind Name}"
+                                     Tag="{x:Bind ViewMode}"
+                                     IsEnabled="{x:Bind IsEnabled, Mode=OneWay}">
+                <muxc:NavigationViewItem.Icon>
+                    <FontIcon FontFamily="{StaticResource CalculatorFontFamily}" Glyph="{x:Bind Glyph}"/>
+                </muxc:NavigationViewItem.Icon>
+            </muxc:NavigationViewItem>
+        </DataTemplate>
+        <DataTemplate x:Key="NavViewCategoryGroupItemDataTemplate" x:DataType="vmcom:NavCategoryGroup">
+            <muxc:NavigationViewItemHeader AutomationProperties.HeadingLevel="Level1"
+                                           AutomationProperties.Name="{x:Bind AutomationName}"
+                                           Content="{x:Bind Name}"/>
+        </DataTemplate>
+        <selectors:NavViewMenuItemTemplateSelector x:Key="NavViewMenuItemTemplateSelector"
+                                                   CategoryGroupItemTemplate="{StaticResource NavViewCategoryGroupItemDataTemplate}"
+                                                   CategoryItemTemplate="{StaticResource NavViewCategoryItemDataTemplate}"/>
+
+        <converters:BooleanToVisibilityNegationConverter x:Key="BooleanToVisibilityNegationConverter"/>
+        <converters:BooleanNegationConverter x:Key="BooleanNegationConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Mode">
+                <VisualState x:Name="ConverterWide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="{StaticResource AppMinWindowHeight}" MinWindowWidth="640"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="DockVisible">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="{StaticResource AppMinWindowHeight}" MinWindowWidth="560"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="MinSizeLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="{StaticResource AppMinWindowHeight}" MinWindowWidth="{StaticResource AppMinWindowWidth}"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="DefaultLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="0" MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel Visibility="Collapsed">
+            <!--
+                These buttons are only here to serve as the target for copy/paste commands
+                they are not to be shown, only to have the command and shortcut assigned to them.
+            -->
+            <Button x:Name="CopyButton"
+                    common:KeyboardShortcutManager.VirtualKeyControlChord="{utils:ResourceVirtualKey Name=copyButton/[using:CalculatorApp.Common]KeyboardShortcutManager/VirtualKeyControlChord}"
+                    Command="{x:Bind ViewModel.CopyCommand}"/>
+            <Button x:Name="PasteButton"
+                    common:KeyboardShortcutManager.VirtualKeyControlChord="{utils:ResourceVirtualKey Name=pasteButton/[using:CalculatorApp.Common]KeyboardShortcutManager/VirtualKeyControlChord}"
+                    Command="{x:Bind ViewModel.PasteCommand}"/>
+            <Button x:Name="CopyButtonAlternate"
+                    common:KeyboardShortcutManager.VirtualKeyControlChord="{utils:ResourceVirtualKey Name=copyButtonAlternate/[using:CalculatorApp.Common]KeyboardShortcutManager/VirtualKeyControlChord}"
+                    Command="{x:Bind ViewModel.CopyCommand}"/>
+            <Button x:Name="PasteButtonAlternate"
+                    common:KeyboardShortcutManager.VirtualKeyShiftChord="{utils:ResourceVirtualKey Name=pasteButtonAlternate/[using:CalculatorApp.Common]KeyboardShortcutManager/VirtualKeyShiftChord}"
+                    Command="{x:Bind ViewModel.PasteCommand}"/>
+        </StackPanel>
+
+        <local:TitleBar x:Name="AppTitleBar"
+                        Grid.Row="0"
+                        AlwaysOnTopClick="TitleBarAlwaysOnTopButtonClick"
+                        BackButtonSpaceReserved="{x:Bind ShouldShowBackButton(ViewModel.IsAlwaysOnTop, Popup.IsOpen), Mode=OneWay}"
+                        IsAlwaysOnTopMode="{x:Bind ViewModel.IsAlwaysOnTop, Mode=OneWay}"/>
+
+        <muxc:NavigationView x:Name="NavView"
+                             Grid.Row="1"
+                             AccessKey="{utils:ResourceString Name=NavView/AccessKey}"
+                             CompactModeThresholdWidth="Infinity"
+                             DataContext="{x:Bind ViewModel}"
+                             ExpandedModeThresholdWidth="Infinity"
+                             IsBackButtonVisible="Collapsed"
+                             IsPaneToggleButtonVisible="{x:Bind ViewModel.IsAlwaysOnTop, Converter={StaticResource BooleanNegationConverter}, Mode=OneWay}"
+                             IsSettingsVisible="True"
+                             ItemInvoked="OnNavItemInvoked"
+                             Loaded="OnNavLoaded"
+                             MenuItemTemplateSelector="{StaticResource NavViewMenuItemTemplateSelector}"
+                             MenuItemsSource="{x:Bind NavViewCategoriesSource, Mode=OneWay}"
+                             OpenPaneLength="{x:Bind NavigationViewOpenPaneLength(ViewModel.IsAlwaysOnTop), Mode=OneWay}"
+                             PaneClosed="OnNavPaneClosed"
+                             PaneDisplayMode="LeftMinimal"
+                             PaneOpened="OnNavPaneOpened"
+                             SelectionChanged="OnNavSelectionChanged"
+                             TabIndex="1"
+                             UseSystemFocusVisuals="True"
+                             Visibility="{x:Bind Popup.IsOpen, Mode=OneWay, Converter={StaticResource BooleanToVisibilityNegationConverter}}">
+            <Grid>
+                <Grid>
+                    <Border x:Name="CalcHolder">
+                        <!-- PLACEHOLDER!!!! This is where the calculator goes when it is delay loaded -->
+                    </Border>
+                    <Border x:Name="DateCalcHolder">
+                        <!-- PLACEHOLDER!!!! This is where the date calculator goes when it is delay loaded -->
+                    </Border>
+                    <Border x:Name="GraphingCalcHolder">
+                        <!-- PLACEHOLDER!!!! This is where the graphing calculator goes when it is delay loaded -->
+                    </Border>
+                    <Border x:Name="ConverterHolder">
+                        <!-- PLACEHOLDER!!!! This is where the converter goes when it is delay loaded -->
+                    </Border>
+                </Grid>
+
+                <Grid Height="{StaticResource HamburgerHeight}"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource HamburgerHeightGridLength}"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="Header"
+                               Grid.Column="1"
+                               Style="{StaticResource CategoryNameTextBlockStyle}"
+                               Text="{x:Bind ViewModel.CategoryName, Mode=OneWay}"
+                               Visibility="{x:Bind ViewModel.IsAlwaysOnTop, Converter={StaticResource BooleanToVisibilityNegationConverter}, Mode=OneWay}"/>
+
+                    <Button x:Name="NormalAlwaysOnTopButton"
+                            Grid.Column="2"
+                            Style="{StaticResource SquareIconButtonStyle}"
+                            AutomationProperties.AutomationId="NormalAlwaysOnTopButton"
+                            AutomationProperties.Name="{utils:ResourceString Name=EnterAlwaysOnTopButton/[using:Windows.UI.Xaml.Automation]AutomationProperties/Name}"
+                            Click="AlwaysOnTopButtonClick"
+                            Content="&#xEE49;"
+                            TabIndex="3"
+                            ToolTipService.ToolTip="{utils:ResourceString Name=EnterAlwaysOnTopButton/[using:Windows.UI.Xaml.Controls]ToolTipService/ToolTip}"
+                            Visibility="{x:Bind ViewModel.DisplayNormalAlwaysOnTopOption, Mode=OneWay}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Up" Modifiers="Menu"/>
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                </Grid>
+            </Grid>
+        </muxc:NavigationView>
+
+        <Popup x:Name="Popup"
+               AutomationProperties.AccessibilityView="Raw"
+               Closed="Popup_Closed"
+               HorizontalOffset="0"
+               IsLightDismissEnabled="False"
+               LightDismissOverlayMode="Off"
+               Opened="Popup_Opened">
+            <Popup.ChildTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Popup.ChildTransitions>
+
+            <Grid x:Name="PopupContent" x:Load="false">
+                <local:Settings BackButtonClick="Settings_BackButtonClick" TitleBarHeight="{x:Bind DoubleToGridLength(AppTitleBar.Height), Mode=OneWay}"/>
+            </Grid>
+        </Popup>
+    </Grid>
+</Page>
