@@ -1,0 +1,231 @@
+<Project>
+
+  <!--
+    Uno ingest: rewrites upstream's UWP-flavoured C# into the Microsoft.UI.* form Uno
+    compiles, writing the result to $(UnoIngestOutputPath). Upstream files are never
+    modified - that invariant is what makes `git merge msft/main` conflict-free, and it
+    is enforced by uno/ci/purity-gate.sh.
+
+    Every rule below is either a genuine UWP -> WinUI API difference (upstream's sources
+    would not compile against WinUI either), or a workaround for a filed Uno bug. The
+    Uno-bug rules carry their issue number and are deleted as fixes land.
+
+    Implemented as an inline task so it needs nothing beyond the .NET SDK.
+  -->
+
+  <UsingTask TaskName="UnoIngest" TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Sources ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <UpstreamRoot ParameterType="System.String" Required="true" />
+      <UpstreamXamlDir ParameterType="System.String" Required="true" />
+      <OutputPath ParameterType="System.String" Required="true" />
+      <RewrittenCount ParameterType="System.Int32" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+
+// ---- ordered, longest-match-first -------------------------------------------------
+var rules = new List<KeyValuePair<string, string>>();
+Action<string, string> R = (a, b) => rules.Add(new KeyValuePair<string, string>(a, b));
+
+// Namespace moves. Deny case: Windows.UI.Color (singular) stays under Windows.*,
+// while Windows.UI.Colors (plural) moves - handled by the sentinel below.
+R("Windows.UI.Xaml",        "Microsoft.UI.Xaml");
+R("Windows.UI.Text",        "Microsoft.UI.Text");
+R("Windows.UI.Composition", "Microsoft.UI.Composition");
+R("Windows.UI.Colors",      "Microsoft.UI.Colors");
+
+// UWP -> WinUI type moves (not Uno gaps).
+R("Windows.Devices.Input.PointerDeviceType",   "Microsoft.UI.Input.PointerDeviceType");
+R("Windows.UI.Core.WindowSizeChangedEventArgs","Microsoft.UI.Xaml.WindowSizeChangedEventArgs");
+R("Windows.UI.Core.CoreWindowActivationState", "Microsoft.UI.Xaml.WindowActivationState");
+R("CoreWindowActivationState",                 "Microsoft.UI.Xaml.WindowActivationState");
+R("== PointerDeviceType.",                     "== Microsoft.UI.Input.PointerDeviceType.");
+
+// WinUI moves the UWP activation payload behind UWPLaunchActivatedEventArgs.
+R("args.PrelaunchActivated",           "args.UWPLaunchActivatedEventArgs.PrelaunchActivated");
+R("OnAppLaunch(args, args.Arguments,", "OnAppLaunch(args.UWPLaunchActivatedEventArgs, args.Arguments,");
+
+// WinUI 3 removed CoreWindow, so Window.Current.CoreWindow is null and this NREs during
+// page load, preventing the window from ever showing. Keyboard shortcuts need rehosting
+// on UIElement events - tracked as fork work, not an Uno bug.
+R("                var coreWindow = Window.Current.CoreWindow;\n" +
+  "                coreWindow.CharacterReceived += OnCharacterReceivedHandler;\n" +
+  "                coreWindow.KeyDown += OnKeyDownHandler;\n" +
+  "                coreWindow.KeyUp += OnKeyUpHandler;\n" +
+  "                coreWindow.Dispatcher.AcceleratorKeyActivated += OnAcceleratorKeyActivated;",
+  "                /* Fork TODO: WinUI 3 removed CoreWindow; rehost shortcuts on UIElement events. */");
+
+// --- Uno workarounds. Every rule below cites a filed issue and is deleted when that
+// --- fix ships. See uno/docs/WORKAROUNDS.md for the index. ------------------------
+
+// unoplatform/uno#24298 - unimplemented members that throw on the startup path.
+R("var appView = ApplicationView.GetForCurrentView();",
+  "/* Uno Workaround #24298: ApplicationView.GetForCurrentView not implemented */");
+R("appView.SetPreferredMinSize(minWindowSize);",
+  "/* Uno Workaround #24298: ApplicationView.SetPreferredMinSize not implemented */");
+R("appView.TryResizeView(minWindowSize);",
+  "/* Uno Workaround #24298: ApplicationView.TryResizeView not implemented */");
+R("ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;",
+  "/* Uno Workaround #24298: ApplicationView.PreferredLaunchWindowingMode not implemented */");
+R("SizeHelper.FromDimensions(", "new global::Windows.Foundation.Size(");
+R("NavCategoryStates.SetCurrentUser(args.User.NonRoamableId);",
+  "NavCategoryStates.SetCurrentUser(string.Empty); // Uno Workaround #24298: LaunchActivatedEventArgs.User not implemented");
+R("UserActivityRequestManager.GetForCurrentView().UserActivityRequested += async (_, args) =>",
+  "var __unoUserActivityHandler = /* Uno Workaround #24298: UserActivityRequestManager not implemented */ " +
+  "async (global::System.Object _, global::Windows.ApplicationModel.UserActivities.UserActivityRequestedEventArgs args) =>");
+R("                string formatted = formatter.FormatUInt(i);\n" +
+  "                _digitSymbols[i] = formatted[0];",
+  "                _digitSymbols[i] = (char)('0' + i); /* Uno Workaround #24298: DecimalFormatter.FormatUInt not implemented */");
+
+// unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
+R("windowId = ApplicationView.GetApplicationViewIdForWindow(window);",
+  "/* Uno Workaround #24288: throws instead of returning a sentinel; -1 is the documented value. */");
+
+// unoplatform/uno#24296 - multi-arg formatter ctors leave internals null, so every
+// later member access NREs far from the cause.
+R("new DecimalFormatter(new[] { _resolvedName }, \"ZZ\")",
+  "new DecimalFormatter() /* Uno Workaround #24296: 2-arg ctor leaves internals null */");
+R("new DateTimeFormatter(format, new[] { _resolvedName }, \"ZZ\", calendar, clock)",
+  "new DateTimeFormatter(format) /* Uno Workaround #24296: multi-arg ctor unimplemented */");
+
+// Uno Workaround #24284 - MRT slash-path lookups return "", and this markup extension
+// Enum.Parse()s the result, throwing during XAML load.
+R("return Enum.Parse(typeof(MyVirtualKey), resourceString);",
+  "return string.IsNullOrEmpty(resourceString) ? (object)default(MyVirtualKey) : Enum.Parse(typeof(MyVirtualKey), resourceString);");
+R("LocalizationSettings.GetInstance().GetFlowDirection()",
+  "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
+
+// ---- regexes ----------------------------------------------------------------------
+const string sentinel = "__UNO_COLOR_SENTINEL__";
+var colorSingular = new Regex(@"Windows\.UI\.Color(?![s\w])");
+// Unqualified Colors.X resolves to an inaccessible Windows.UI.Colors on Uno.
+var bareColors = new Regex(@"(?<![\w.])Colors\.");
+// Upstream builds Calculator.ViewModels as its own assembly, where the namespace
+// CalculatorApp.Utils does not exist, so a bare `Utils.` binds to the using-imported
+// CalculatorApp.ViewModel.Common.Utils. Ingesting into ONE assembly brings the app-side
+// CalculatorApp.Utils NAMESPACE into scope, and enclosing-namespace lookup beats
+// using-directives, so `Utils.` silently rebinds and fails. Qualify it in ViewModels only.
+var vmUtils = new Regex(@"(?<![\w.])Utils\.");
+var xamlRoot = new Regex(@"^<\s*([A-Za-z_][\w.]*)");
+// Uno Workaround #24294 - another XAML file cannot set inherited DPs on a control whose
+// code-behind omits the base class. Upstream omits it everywhere; inject from the paired
+// .xaml root element.
+var classDecl = new Regex(
+    @"^(?<i>[ \t]*)(?<mods>(?:public|internal)\s+(?:sealed\s+)?partial\s+class\s+)" +
+    @"(?<name>[A-Za-z_]\w*)(?<bases>\s*:\s*[^\r\n{]+)?[ \t]*$", RegexOptions.Multiline);
+
+var rootNs = new Dictionary<string, string>
+{
+    { "Application",        "Microsoft.UI.Xaml.Application" },
+    { "ResourceDictionary", "Microsoft.UI.Xaml.ResourceDictionary" },
+    { "Window",             "Microsoft.UI.Xaml.Window" },
+};
+var controlBases = new[] { "UserControl", "Page", "Control", "Application", "ResourceDictionary", "Window" };
+
+int written = 0;
+
+foreach (var item in Sources)
+{
+    var source = item.GetMetadata("FullPath");
+    // Mirror upstream's own layout under the ingest root.
+    var relative = source.StartsWith(UpstreamRoot, StringComparison.OrdinalIgnoreCase)
+        ? source.Substring(UpstreamRoot.Length)
+        : Path.GetFileName(source);
+
+    // Normalise to LF so the multi-line rules match regardless of checkout line endings.
+    var text = File.ReadAllText(source).Replace("\r\n", "\n");
+
+    text = colorSingular.Replace(text, sentinel);
+    foreach (var rule in rules) { text = text.Replace(rule.Key, rule.Value); }
+    text = text.Replace(sentinel, "Windows.UI.Color");
+    text = bareColors.Replace(text, "Microsoft.UI.Colors.");
+
+    var posix = source.Replace('\\', '/');
+    if (posix.IndexOf("Calculator.ViewModels", StringComparison.Ordinal) >= 0)
+    {
+        text = vmUtils.Replace(text, "global::CalculatorApp.ViewModel.Common.Utils.");
+    }
+
+    if (posix.EndsWith(".xaml.cs", StringComparison.OrdinalIgnoreCase))
+    {
+        var xamlName = Path.GetFileName(posix.Substring(0, posix.Length - 3));
+        var paired = Directory.Exists(UpstreamXamlDir)
+            ? Directory.GetFiles(UpstreamXamlDir, xamlName, SearchOption.AllDirectories).FirstOrDefault()
+            : null;
+        if (paired != null)
+        {
+            string root = null;
+            foreach (var raw in File.ReadAllLines(paired))
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("<!--") || line.StartsWith("<?")) { continue; }
+                var m = xamlRoot.Match(line);
+                if (m.Success) { root = m.Groups[1].Value.Split(':').Last(); }
+                break;
+            }
+            if (root != null)
+            {
+                string ns;
+                if (!rootNs.TryGetValue(root, out ns)) { ns = "Microsoft.UI.Xaml.Controls." + root; }
+                var full = "global::" + ns;
+                text = classDecl.Replace(text, m =>
+                {
+                    var bases = m.Groups["bases"].Success ? m.Groups["bases"].Value.Trim() : "";
+                    var head = m.Groups["i"].Value + m.Groups["mods"].Value + m.Groups["name"].Value;
+                    if (bases.Length > 0)
+                    {
+                        var existing = bases.TrimStart(':').Trim();
+                        if (controlBases.Any(b => existing.IndexOf(b, StringComparison.Ordinal) >= 0))
+                        {
+                            return m.Value;   // already names a control base
+                        }
+                        return head + " : " + full + ", " + existing;
+                    }
+                    return head + " : " + full;
+                });
+            }
+        }
+    }
+
+    var destination = Path.Combine(OutputPath, relative);
+    Directory.CreateDirectory(Path.GetDirectoryName(destination));
+    // Only write when changed, so incremental builds stay incremental.
+    if (!File.Exists(destination) || File.ReadAllText(destination) != text)
+    {
+        File.WriteAllText(destination, text);
+    }
+    written++;
+}
+
+RewrittenCount = written;
+Log.LogMessage(MessageImportance.Normal, "UnoIngest: rewrote {0} upstream source(s) into {1}", written, OutputPath);
+
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Runs before the XAML generator, which needs the ingested types to resolve
+       x:Class partials. The task itself skips unchanged files, so this stays cheap. -->
+  <Target Name="UnoIngestSources" BeforeTargets="BeforeCompile;CoreCompile;UnoXamlGenerator">
+    <UnoIngest Sources="@(UnoIngestSource)"
+               UpstreamRoot="$(UpstreamRoot)"
+               UpstreamXamlDir="$(UpstreamXamlRoot)"
+               OutputPath="$(UnoIngestOutputPath)" />
+
+    <!-- Added HERE, not in a static ItemGroup: MSBuild evaluates item globs before any
+         target runs, so on a clean tree obj/ingest is still empty and a static glob
+         matches nothing. Adding them inside the target - before CoreCompile, and so
+         before the XAML source generator - makes a one-pass clean build work. -->
+    <ItemGroup>
+      <Compile Include="$(UnoIngestOutputPath)**\*.cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>
