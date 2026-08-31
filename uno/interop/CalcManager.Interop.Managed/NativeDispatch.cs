@@ -92,7 +92,7 @@ internal static class NativeDispatch
 
     /// <summary>Returns a heap-allocated const wchar_t*; convert with <see cref="PtrToString"/>.</summary>
     [DllImport(DllPath)]
-    internal static extern IntPtr CalculatorManager_GetResultForRadix(IntPtr nativeManager, int radix, int precision);
+    internal static extern IntPtr CalculatorManager_GetResultForRadix(IntPtr nativeManager, int radix, int precision, [MarshalAs(UnmanagedType.U1)] bool groupDigitsPerRadix);
 
     [DllImport(DllPath)]
     internal static extern void CalculatorManager_SetPrecision(IntPtr nativeManager, int precision);

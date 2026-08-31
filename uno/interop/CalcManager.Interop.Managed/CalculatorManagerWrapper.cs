@@ -178,14 +178,9 @@ public sealed class CalculatorManagerWrapper
     /// </remarks>
     public bool IsInputEmpty => true;
 
-    /// <param name="groupDigitsPerRadix">
-    /// TODO(P5): ignored. The C export is CalculatorManager_GetResultForRadix(radix, precision)
-    /// and the C++ method behind it takes no grouping flag either, so digit grouping has to be
-    /// applied in managed code or added to the engine.
-    /// </param>
     public string GetResultForRadix(uint radix, int precision, bool groupDigitsPerRadix)
     {
-        IntPtr pResult = NativeDispatch.CalculatorManager_GetResultForRadix(_nativeManager, (int)radix, precision);
+        IntPtr pResult = NativeDispatch.CalculatorManager_GetResultForRadix(_nativeManager, (int)radix, precision, groupDigitsPerRadix);
         return NativeDispatch.PtrToString(pResult);
     }
 
