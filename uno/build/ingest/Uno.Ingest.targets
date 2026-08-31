@@ -102,6 +102,46 @@ R("return Enum.Parse(typeof(MyVirtualKey), resourceString);",
 R("LocalizationSettings.GetInstance().GetFlowDirection()",
   "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
 
+// Upstream portability, not an Uno bug: these four imports resolve only on Windows, so
+// MainPage's constructor throws DllNotFoundException("kernel32.dll") on wasm, Android, iOS,
+// Linux and macOS. uno/adapters/Win32Locale.cs reimplements them over CultureInfo with the
+// same return-value contracts. Delete if microsoft/calculator ever drops the P/Invokes.
+const string k32 = "        [DllImport(\"kernel32.dll\", CharSet = CharSet.Unicode, SetLastError = true)]\n";
+const string shimNote = "        // Upstream Workaround: kernel32 is Windows-only; see uno/adapters/Win32Locale.cs\n";
+
+R(k32 + "        private static extern int ResolveLocaleName(string lpNameToResolve, [Out] char[] lpLocaleName, int cchLocaleName);",
+  shimNote +
+  "        private static int ResolveLocaleName(string lpNameToResolve, char[] lpLocaleName, int cchLocaleName)\n" +
+  "            => global::CalculatorApp.Uno.Win32Locale.ResolveLocaleName(lpNameToResolve, lpLocaleName, cchLocaleName);");
+
+R(k32 + "        private static extern int GetLocaleInfoEx(string lpLocaleName, uint LCType, [Out] char[] lpLCData, int cchData);",
+  "        private static int GetLocaleInfoEx(string lpLocaleName, uint LCType, char[] lpLCData, int cchData)\n" +
+  "            => global::CalculatorApp.Uno.Win32Locale.GetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);");
+
+R(k32 + "        private static extern int GetLocaleInfoEx(string lpLocaleName, uint LCType, ref int lpLCData, int cchData);",
+  "        private static int GetLocaleInfoEx(string lpLocaleName, uint LCType, ref int lpLCData, int cchData)\n" +
+  "            => global::CalculatorApp.Uno.Win32Locale.GetLocaleInfoEx(lpLocaleName, LCType, ref lpLCData, cchData);");
+
+R(k32 +
+  "        private static extern uint FormatMessageW(\n" +
+  "            uint dwFlags,\n" +
+  "            [MarshalAs(UnmanagedType.LPWStr)] string lpSource,\n" +
+  "            uint dwMessageId,\n" +
+  "            uint dwLanguageId,\n" +
+  "            [Out] char[] lpBuffer,\n" +
+  "            uint nSize,\n" +
+  "            IntPtr arguments);",
+  shimNote +
+  "        private static uint FormatMessageW(\n" +
+  "            uint dwFlags,\n" +
+  "            string lpSource,\n" +
+  "            uint dwMessageId,\n" +
+  "            uint dwLanguageId,\n" +
+  "            char[] lpBuffer,\n" +
+  "            uint nSize,\n" +
+  "            IntPtr arguments)\n" +
+  "            => global::CalculatorApp.Uno.Win32Locale.FormatMessageW(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, arguments);");
+
 // ---- regexes ----------------------------------------------------------------------
 const string sentinel = "__UNO_COLOR_SENTINEL__";
 var colorSingular = new Regex(@"Windows\.UI\.Color(?![s\w])");

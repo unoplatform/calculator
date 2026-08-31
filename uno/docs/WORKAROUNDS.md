@@ -48,6 +48,7 @@ These are fork-owned by design and have no issue to wait on:
 |---|---|---|
 | `GraphControl` types-and-enums stub | The Uno Calculator does not ship the graphing calculator; the stub exists so upstream's four graphing ViewModels compile and `ApplicationViewModel.cs` stays byte-identical. | `interop/GraphControl.Shim/` |
 | `TraceLogging` no-ops | The app ships no telemetry; the types exist so upstream's `TraceLogger.cs` compiles. | `adapters/TraceLogging.cs` |
+| kernel32 P/Invokes | `LocalizationSettings` and `LocalizationStringUtil` call `ResolveLocaleName`, `GetLocaleInfoEx` and `FormatMessageW`, which resolve only on Windows - so `MainPage`'s constructor throws `DllNotFoundException` on wasm, Android, iOS, Linux and macOS. Every LCTYPE requested has a `CultureInfo` equivalent. | `adapters/Win32Locale.cs`, `build/ingest/Uno.Ingest.targets` (4 rules) |
 | UWP → WinUI type moves | Genuine API differences — upstream's UWP sources would not compile against WinUI either. | `build/ingest/Uno.Ingest.targets` |
 | `CoreWindow` keyboard hookup | WinUI 3 removed `CoreWindow`. Shortcuts need rehosting on `UIElement` events; that is fork work, not an Uno defect. | `build/ingest/Uno.Ingest.targets` |
 | `Utils.` qualification in ViewModels | An artefact of ingesting upstream's two assemblies into one, which changes C# name resolution. | `build/ingest/Uno.Ingest.targets` |
