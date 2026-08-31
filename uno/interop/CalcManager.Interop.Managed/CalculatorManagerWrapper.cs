@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace CalcManager.Interop;
@@ -34,21 +35,13 @@ namespace CalcManager.Interop;
 /// StandardCalculatorViewModel wraps construction in try/catch, nulls its field, and null-guards
 /// every later call, so the app renders without calculating.
 /// </remarks>
-public sealed class CalculatorManagerWrapper
+public sealed unsafe class CalculatorManagerWrapper
 {
-    // The native side holds these function pointers for the lifetime of the manager, and
-    // Marshal.GetFunctionPointerForDelegate does not root the delegate. Static fields do.
-    private static readonly NativeDispatch.SetPrimaryDisplayCallbackFunc s_setPrimaryDisplay = SetPrimaryDisplayThunk;
-    private static readonly NativeDispatch.SetIsInErrorCallbackFunc s_setIsInError = SetIsInErrorThunk;
-    private static readonly NativeDispatch.SetExpressionDisplayCallbackFunc s_setExpressionDisplay = SetExpressionDisplayThunk;
-    private static readonly NativeDispatch.SetParenthesisNumberCallbackFunc s_setParenthesisNumber = SetParenthesisNumberThunk;
-    private static readonly NativeDispatch.OnNoRightParenAddedCallbackFunc s_onNoRightParenAdded = NoRightParenAddedThunk;
-    private static readonly NativeDispatch.MaxDigitsReachedCallbackFunc s_maxDigitsReached = MaxDigitsReachedThunk;
-    private static readonly NativeDispatch.BinaryOperatorReceivedFunc s_binaryOperatorReceived = BinaryOperatorReceivedThunk;
-    private static readonly NativeDispatch.OnHistoryItemAddedCallbackFunc s_onHistoryItemAdded = HistoryItemAddedThunk;
-    private static readonly NativeDispatch.SetMemorizedNumbersCallbackFunc s_setMemorizedNumbers = SetMemorizedNumbersThunk;
-    private static readonly NativeDispatch.MemoryItemChangedCallbackFunc s_memoryItemChanged = MemoryItemChangedThunk;
-    private static readonly NativeDispatch.GetCEngineStringFunc s_getCEngineString = GetCEngineStringThunk;
+    // Mono's wasm backend builds native->managed trampolines at compile time from
+    // [UnmanagedCallersOnly] statics. Function pointers obtained from delegates via
+    // Marshal.GetFunctionPointerForDelegate have no trampoline there, so the engine's
+    // callbacks never arrive and the display never updates. Uno Workaround: none needed -
+    // this is the documented .NET wasm contract, and it is correct on every other head too.
 
     // The sink is kept alive by _sinkHandle, which native dereferences on every callback.
     private readonly GCHandle _sinkHandle;
@@ -96,17 +89,17 @@ public sealed class CalculatorManagerWrapper
                 CalculatorState = state,
                 ResourceState = state,
 
-                SetPrimaryDisplay = Marshal.GetFunctionPointerForDelegate(s_setPrimaryDisplay),
-                SetIsInError = Marshal.GetFunctionPointerForDelegate(s_setIsInError),
-                SetExpressionDisplay = Marshal.GetFunctionPointerForDelegate(s_setExpressionDisplay),
-                SetParenthesisNumber = Marshal.GetFunctionPointerForDelegate(s_setParenthesisNumber),
-                OnNoRightParenAdded = Marshal.GetFunctionPointerForDelegate(s_onNoRightParenAdded),
-                MaxDigitsReached = Marshal.GetFunctionPointerForDelegate(s_maxDigitsReached),
-                BinaryOperatorReceived = Marshal.GetFunctionPointerForDelegate(s_binaryOperatorReceived),
-                OnHistoryItemAdded = Marshal.GetFunctionPointerForDelegate(s_onHistoryItemAdded),
-                SetMemorizedNumbers = Marshal.GetFunctionPointerForDelegate(s_setMemorizedNumbers),
-                MemoryItemChanged = Marshal.GetFunctionPointerForDelegate(s_memoryItemChanged),
-                GetCEngineString = Marshal.GetFunctionPointerForDelegate(s_getCEngineString),
+                SetPrimaryDisplay = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, byte, void>)&SetPrimaryDisplayThunk,
+                SetIsInError = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, byte, void>)&SetIsInErrorThunk,
+                SetExpressionDisplay = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, void>)&SetExpressionDisplayThunk,
+                SetParenthesisNumber = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int, void>)&SetParenthesisNumberThunk,
+                OnNoRightParenAdded = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, void>)&NoRightParenAddedThunk,
+                MaxDigitsReached = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, void>)&MaxDigitsReachedThunk,
+                BinaryOperatorReceived = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, void>)&BinaryOperatorReceivedThunk,
+                OnHistoryItemAdded = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int, void>)&HistoryItemAddedThunk,
+                SetMemorizedNumbers = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int, IntPtr, void>)&SetMemorizedNumbersThunk,
+                MemoryItemChanged = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int, void>)&MemoryItemChangedThunk,
+                GetCEngineString = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr>)&GetCEngineStringThunk,
             };
 
             _nativeManager = NativeDispatch.CalculatorManager_Create(ref parms);
@@ -422,11 +415,12 @@ public sealed class CalculatorManagerWrapper
         return GCHandle.FromIntPtr(state).Target as CallbackSink;
     }
 
-    private static void SetPrimaryDisplayThunk(IntPtr state, IntPtr pDisplay, bool isError)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static void SetPrimaryDisplayThunk(IntPtr state, IntPtr pDisplay, byte isError)
     {
         try
         {
-            SinkFrom(state)?.SetPrimaryDisplay?.Invoke(NativeDispatch.PtrToString(pDisplay), isError);
+            SinkFrom(state)?.SetPrimaryDisplay?.Invoke(NativeDispatch.PtrToString(pDisplay), isError != 0);
         }
         catch (Exception ex)
         {
@@ -434,11 +428,12 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
-    private static void SetIsInErrorThunk(IntPtr state, bool isError)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static void SetIsInErrorThunk(IntPtr state, byte isError)
     {
         try
         {
-            SinkFrom(state)?.SetIsInError?.Invoke(isError);
+            SinkFrom(state)?.SetIsInError?.Invoke(isError != 0);
         }
         catch (Exception ex)
         {
@@ -446,6 +441,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void SetExpressionDisplayThunk(IntPtr state, IntPtr pHistoryItem)
     {
         try
@@ -465,6 +461,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void SetParenthesisNumberThunk(IntPtr state, int parenthesisCount)
     {
         try
@@ -477,6 +474,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void NoRightParenAddedThunk(IntPtr state)
     {
         try
@@ -489,6 +487,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void MaxDigitsReachedThunk(IntPtr state)
     {
         try
@@ -501,6 +500,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void BinaryOperatorReceivedThunk(IntPtr state)
     {
         try
@@ -513,6 +513,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void HistoryItemAddedThunk(IntPtr state, int addedItemIndex)
     {
         try
@@ -525,6 +526,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void SetMemorizedNumbersThunk(IntPtr state, int count, IntPtr pNumbers)
     {
         try
@@ -549,6 +551,7 @@ public sealed class CalculatorManagerWrapper
         }
     }
 
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static void MemoryItemChangedThunk(IntPtr state, int indexOfMemory)
     {
         try
@@ -564,6 +567,7 @@ public sealed class CalculatorManagerWrapper
     // TODO(P5): the returned buffer leaks. Native copies it into a std::wstring and drops the
     // pointer (CCalcManager.cpp:167-172) without ever calling back to free it, and resource
     // lookups are frequent. Fixing it needs either a free callback in the ABI or a caching layer.
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static IntPtr GetCEngineStringThunk(IntPtr state, IntPtr pResourceId)
     {
         try

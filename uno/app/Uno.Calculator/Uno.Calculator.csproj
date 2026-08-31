@@ -6,6 +6,8 @@
     <UnoSingleProject>true</UnoSingleProject>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Native callbacks are taken as function pointers to [UnmanagedCallersOnly] statics. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <ApplicationTitle>Calculator</ApplicationTitle>
     <ApplicationId>uno.platform.calculator</ApplicationId>
