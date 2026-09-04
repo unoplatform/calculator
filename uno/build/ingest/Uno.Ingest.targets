@@ -102,6 +102,23 @@ R("return Enum.Parse(typeof(MyVirtualKey), resourceString);",
 R("LocalizationSettings.GetInstance().GetFlowDirection()",
   "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
 
+// Uno Workaround #24390 - GeographicRegion.CodeTwoLetter throws NotImplementedException, so
+// every converter page and the date calculator fail to construct their ViewModel. Upstream's
+// `?? "US"` guard cannot help: the getter throws instead of returning null.
+R("            : this(region?.CodeTwoLetter ?? \"US\")",
+  "            : this(global::CalculatorApp.Uno.GlobalizationCompat.CurrentRegionCode) // Uno Workaround #24390");
+
+R("                new Windows.Globalization.GeographicRegion().CodeTwoLetter ?? \"US\",",
+  "                global::CalculatorApp.Uno.GlobalizationCompat.CurrentRegionCode, // Uno Workaround #24390");
+
+R("            string userCurrency = Windows.System.UserProfile.GlobalizationPreferences.Currencies.Count > 0\n" +
+  "                ? Windows.System.UserProfile.GlobalizationPreferences.Currencies[0]\n" +
+  "                : \"USD\";",
+  "            string userCurrency = global::CalculatorApp.Uno.GlobalizationCompat.CurrentCurrencyCode; // Uno Workaround #24390");
+
+R("                var languages = Windows.System.UserProfile.GlobalizationPreferences.Languages;",
+  "                var languages = global::CalculatorApp.Uno.GlobalizationCompat.CurrentLanguages; // Uno Workaround #24390");
+
 // Upstream portability, not an Uno bug: these four imports resolve only on Windows, so
 // MainPage's constructor throws DllNotFoundException("kernel32.dll") on wasm, Android, iOS,
 // Linux and macOS. uno/adapters/Win32Locale.cs reimplements them over CultureInfo with the
