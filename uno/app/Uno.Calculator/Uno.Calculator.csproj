@@ -14,12 +14,6 @@
     <ApplicationPublisher>Uno Platform</ApplicationPublisher>
     <Description>Windows Calculator on Uno Platform.</Description>
 
-    <!--
-      Uno Workaround #24297 - upstream C# exposes Windows.UI.Core.CoreDispatcher, which the
-      bindable-type metadata generator emits a reference to assembly 'Uno' for - an assembly
-      Uno 7 no longer ships. x:Bind is unaffected. Delete when #24297 ships.
-    -->
-    <UnoDisableBindableTypeProvidersGeneration>true</UnoDisableBindableTypeProvidersGeneration>
 
     <UnoFeatures>
       SkiaRenderer;
