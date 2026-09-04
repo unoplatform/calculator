@@ -102,6 +102,28 @@ R("return Enum.Parse(typeof(MyVirtualKey), resourceString);",
 R("LocalizationSettings.GetInstance().GetFlowDirection()",
   "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
 
+// Uno Workaround #24391 - the converter's value containers are HorizontalAlignment=Left,
+// and under Uno that collapses the grid to its content width: the CalculationResult's inner
+// ScrollViewer ends up exactly as wide as the text (8.7px for "0"), so the control's font
+// auto-scaler sees "text already fills the container", shrinks to MinFontSize and can never
+// grow. WinUI renders the same markup at MaxFontSize. Stretching just the two value containers
+// restores it (measured: 36.7px/font 14 -> 500.7px/font 46); the ComboBoxes that share this
+// binding must stay Left, so this cannot be fixed on FlowDirectionHorizontalAlignment itself.
+R("            InitializeComponent();\n" +
+  "\n" +
+  "            // adding ESC key shortcut binding to clear button",
+  "            InitializeComponent();\n" +
+  "\n" +
+  "            // Uno Workaround #24391: content-width collapse starves the font auto-scaler.\n" +
+  "            // Applied on Loaded: the x:Bind on HorizontalAlignment re-asserts Left after the ctor.\n" +
+  "            Loaded += (_, __) =>\n" +
+  "            {\n" +
+  "                Value1Container.HorizontalAlignment = HorizontalAlignment.Stretch;\n" +
+  "                Value2Container.HorizontalAlignment = HorizontalAlignment.Stretch;\n" +
+  "            };\n" +
+  "\n" +
+  "            // adding ESC key shortcut binding to clear button");
+
 // Uno Workaround #24390 - GeographicRegion.CodeTwoLetter throws NotImplementedException, so
 // every converter page and the date calculator fail to construct their ViewModel. Upstream's
 // `?? "US"` guard cannot help: the getter throws instead of returning null.
