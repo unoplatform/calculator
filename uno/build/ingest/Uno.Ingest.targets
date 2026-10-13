@@ -144,6 +144,12 @@ R("Clipboard.SetContentWithOptions(dataPackage, null);", "Clipboard.SetContent(d
 // Same for paste: only the parameterless GetTextAsync is implemented, and it reads the Text format.
 R("dataPackageView.GetTextAsync(StandardDataFormats.Text)", "dataPackageView.GetTextAsync()");
 
+// Uno Workaround (unfiled: xbind-theme-source) - an x:Bind to AboutEULA.Foreground is not notified when a theme
+// switch re-resolves that brush, so the GitHub link kept the old theme's colour. Re-run the bindings once it settles.
+R("                ThemeHelper.RootTheme = ThemeHelper.GetEnum<ElementTheme>(selectItem.Tag.ToString());\n",
+  "                ThemeHelper.RootTheme = ThemeHelper.GetEnum<ElementTheme>(selectItem.Tag.ToString());\n" +
+  "                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => Bindings.Update());\n");
+
 // unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
 R("ApplicationView.GetApplicationViewIdForWindow(CoreWindow.GetForCurrentThread())",
   "-1 /* Uno Workaround #24288 */");
