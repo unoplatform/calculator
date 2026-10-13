@@ -51,6 +51,11 @@ R("== PointerDeviceType.",                     "== Microsoft.UI.Input.PointerDev
 // WinUI moves the UWP activation payload behind UWPLaunchActivatedEventArgs.
 R("args.PrelaunchActivated",           "args.UWPLaunchActivatedEventArgs.PrelaunchActivated");
 R("OnAppLaunch(args, args.Arguments,", "OnAppLaunch(args.UWPLaunchActivatedEventArgs, args.Arguments,");
+// WinUI 3 has no Application.OnActivated; protocol activation arrives via AppInstance instead.
+R("protected override void OnActivated(IActivatedEventArgs args)", "private void OnActivated(IActivatedEventArgs args)");
+// WinUI 3 has no Application.Suspending; CoreApplication raises it instead.
+R("            Suspending += OnSuspending;", "            global::Windows.ApplicationModel.Core.CoreApplication.Suspending += OnSuspending;");
+R("Application.Current.Suspending += ", "global::Windows.ApplicationModel.Core.CoreApplication.Suspending += ");
 
 // WinUI 3 removed CoreWindow, so Window.Current.CoreWindow is null and this NREs during
 // page load, preventing the window from ever showing. Keyboard shortcuts need rehosting
@@ -303,7 +308,8 @@ Log.LogMessage(MessageImportance.Normal, "UnoIngest: rewrote {0} upstream source
          matches nothing. Adding them inside the target - before CoreCompile, and so
          before the XAML source generator - makes a one-pass clean build work. -->
     <ItemGroup>
-      <Compile Include="$(UnoIngestOutputPath)**\*.cs" />
+      <!-- Only files the task wrote: tooling has been seen dropping SDK AssemblyAttributes files in here. -->
+      <Compile Include="$(UnoIngestOutputPath)**\*.cs" Exclude="$(UnoIngestOutputPath)**\*AssemblyAttributes.cs" />
     </ItemGroup>
   </Target>
 

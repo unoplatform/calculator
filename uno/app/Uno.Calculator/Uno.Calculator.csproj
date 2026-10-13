@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk.Private">
+<Project Sdk="Uno.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0-desktop;net10.0-browserwasm</TargetFrameworks>
