@@ -8,6 +8,7 @@
              xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
              xmlns:utils="using:CalculatorApp.Utils"
+             xmlns:unobehaviors="using:Uno.UI.Behaviors"
              Foreground="{ThemeResource TextFillColorPrimaryBrush}"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded"
@@ -53,7 +54,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <!-- Upstream targets Windows, which has no system bars; keep content clear of mobile status/navigation bars. -->
+    <Grid unobehaviors:VisibleBoundsPadding.PaddingMask="All">
         <Grid.RowDefinitions>
             <RowDefinition Height="{x:Bind TitleBarHeight, Mode=OneWay}"/>
             <RowDefinition Height="Auto"/>
