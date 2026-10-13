@@ -90,6 +90,8 @@
 
     <Content Include="$(UpstreamXamlRoot)Assets\**\*.*"
              Link="Assets\%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- Uno Workaround #24299 - TitleBar.xaml asks for the unqualified name, which upstream only ships qualified. -->
+    <Content Include="$(UpstreamXamlRoot)Assets\CalculatorAppList.targetsize-32.png" Link="Assets\CalculatorAppList.png" />
   </ItemGroup>
 
   <!--

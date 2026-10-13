@@ -131,6 +131,13 @@ R("            DockPivot.SelectedIndex = 0;\n" +
   "        }\n\n" +
   "        private void OnIsStandardPropertyChanged");
 
+// Uno Workaround (unfiled: templateselector-null-item) - Uno asks the selector for a template while the
+// container's Content is still null; the NRE aborts every supplementary result ("About equal to" stayed empty).
+R("            SupplementaryResult result = (SupplementaryResult)item;\n" +
+  "            if (result.IsWhimsical())",
+  "            SupplementaryResult result = item as SupplementaryResult;\n" +
+  "            if (result?.IsWhimsical() == true)");
+
 // unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
 R("ApplicationView.GetApplicationViewIdForWindow(CoreWindow.GetForCurrentThread())",
   "-1 /* Uno Workaround #24288 */");
