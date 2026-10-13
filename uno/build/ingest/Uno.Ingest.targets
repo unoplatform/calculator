@@ -57,15 +57,23 @@ R("protected override void OnActivated(IActivatedEventArgs args)", "private void
 R("            Suspending += OnSuspending;", "            global::Windows.ApplicationModel.Core.CoreApplication.Suspending += OnSuspending;");
 R("Application.Current.Suspending += ", "global::Windows.ApplicationModel.Core.CoreApplication.Suspending += ");
 
-// WinUI 3 removed CoreWindow, so Window.Current.CoreWindow is null and this NREs during
-// page load, preventing the window from ever showing. Keyboard shortcuts need rehosting
-// on UIElement events - tracked as fork work, not an Uno bug.
+// WinUI 3 removed CoreWindow, so keyboard shortcuts are rehosted on the root visual by
+// uno/adapters/KeyboardBridge.cs. Only the handler parameter types change; bodies are upstream's.
 R("                var coreWindow = Window.Current.CoreWindow;\n" +
   "                coreWindow.CharacterReceived += OnCharacterReceivedHandler;\n" +
   "                coreWindow.KeyDown += OnKeyDownHandler;\n" +
   "                coreWindow.KeyUp += OnKeyUpHandler;\n" +
   "                coreWindow.Dispatcher.AcceleratorKeyActivated += OnAcceleratorKeyActivated;",
-  "                /* Fork TODO: WinUI 3 removed CoreWindow; rehost shortcuts on UIElement events. */");
+  "                global::CalculatorApp.Uno.KeyboardBridge.Attach(OnCharacterReceivedHandler, OnKeyDownHandler, OnKeyUpHandler, OnAcceleratorKeyActivated);");
+R("OnCharacterReceivedHandler(CoreWindow sender, CharacterReceivedEventArgs args)",
+  "OnCharacterReceivedHandler(object sender, global::CalculatorApp.Uno.CoreCharacterArgs args)");
+R("OnKeyDownHandler(CoreWindow sender, KeyEventArgs args)",
+  "OnKeyDownHandler(object sender, global::CalculatorApp.Uno.CoreKeyArgs args)");
+R("OnKeyUpHandler(CoreWindow sender, KeyEventArgs args)",
+  "OnKeyUpHandler(object sender, global::CalculatorApp.Uno.CoreKeyArgs args)");
+R("OnAcceleratorKeyActivated(CoreDispatcher dispatcher, AcceleratorKeyEventArgs args)",
+  "OnAcceleratorKeyActivated(object dispatcher, global::CalculatorApp.Uno.CoreAcceleratorArgs args)");
+R("Window.Current.CoreWindow.GetKeyState(", "global::Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(");
 
 // --- Uno workarounds. Every rule below cites a filed issue and is deleted when that
 // --- fix ships. See uno/docs/WORKAROUNDS.md for the index. ------------------------
@@ -112,6 +120,11 @@ R("new DecimalFormatter(new[] { _resolvedName }, \"ZZ\")",
 R("new DateTimeFormatter(format, new[] { _resolvedName }, \"ZZ\", calendar, clock)",
   "new DateTimeFormatter(format) /* Uno Workaround #24296: multi-arg ctor unimplemented */");
 
+// Uno Workaround #24284 - resolve MRT slash-paths against the raw resw names; see uno/adapters/MrtCompat.cs.
+R("_stringResLoader?.GetString(key)", "global::CalculatorApp.Uno.MrtCompat.GetString(_stringResLoader, key)");
+// No global:: here - these calls sit inside interpolated strings, where "::" parses as a format specifier.
+R("loader.GetString(\"", "CalculatorApp.Uno.MrtCompat.GetString(loader, \"");
+
 // Uno Workaround #24284 - MRT slash-path lookups return "", and this markup extension
 // Enum.Parse()s the result, throwing during XAML load.
 R("return Enum.Parse(typeof(MyVirtualKey), resourceString);",
@@ -120,11 +133,6 @@ R("LocalizationSettings.GetInstance().GetFlowDirection()",
   "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
 
 // Uno Workaround #24391 - the converter's value containers are HorizontalAlignment=Left,
-// Uno Workaround #24284 - resolve MRT slash-paths against the raw resw names; see uno/adapters/MrtCompat.cs.
-R("_stringResLoader?.GetString(key)", "global::CalculatorApp.Uno.MrtCompat.GetString(_stringResLoader, key)");
-// No global:: here - these calls sit inside interpolated strings, where "::" parses as a format specifier.
-R("loader.GetString(\"", "CalculatorApp.Uno.MrtCompat.GetString(loader, \"");
-
 // and under Uno that collapses the grid to its content width: the CalculationResult's inner
 // ScrollViewer ends up exactly as wide as the text (8.7px for "0"), so the control's font
 // auto-scaler sees "text already fills the container", shrinks to MinFontSize and can never
