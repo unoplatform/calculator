@@ -89,6 +89,16 @@ R("                string formatted = formatter.FormatUInt(i);\n" +
   "                _digitSymbols[i] = formatted[0];",
   "                _digitSymbols[i] = (char)('0' + i); /* Uno Workaround #24298: DecimalFormatter.FormatUInt not implemented */");
 
+// Uno Workaround (unfiled: popup-child-x-load) - the forked MainPage.xaml drops x:Load from
+// PopupContent, so it is never null here; size it on every open instead of only on first load.
+R("            if (PopupContent == null)\n" +
+  "            {\n" +
+  "                FindName(\"PopupContent\");\n" +
+  "\n" +
+  "                var windowBounds",
+  "            {\n" +
+  "                var windowBounds");
+
 // unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
 R("windowId = ApplicationView.GetApplicationViewIdForWindow(window);",
   "/* Uno Workaround #24288: throws instead of returning a sentinel; -1 is the documented value. */");

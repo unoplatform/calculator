@@ -28,6 +28,15 @@ drifting, a shrinking one means the fork is converging on plain upstream.
 | [#24301](https://github.com/unoplatform/uno/issues/24301) | `BrushTransition` drops `SolidColorBrush.Opacity`, so brushes differing only by opacity paint opaque white for the whole transition. | `forked/App.xaml` (16 brushes as alpha-in-Color), `forked/Views/GraphingCalculator/EquationInputArea.xaml` |
 | [#24302](https://github.com/unoplatform/uno/issues/24302) | `BackdropMaterial.ApplyToRootOrPageBackground` applies a transparent brush instead of the Mica fallback, so every translucent Fluent fill composites over black. | `forked/App.xaml` (`CalcPageBackdropBrush`), `forked/Views/MainPage.xaml` |
 
+### Not yet filed
+
+Searchable as `Uno Workaround (unfiled: <slug>)`; swap in the issue number once filed.
+
+| Slug | What it works around | Where |
+|---|---|---|
+| `popup-child-x-load` | An `x:Load="False"` element that is a `Popup.Child` never materializes (`ElementStub.SwapViews` only swaps visual children), so `FindName` recurses until the stack overflows. Opening Settings killed the app. | `forked/Views/MainPage.xaml`, `build/ingest/Uno.Ingest.targets` (1 rule) |
+| `xamlgen-null-collection-initializer` | The XAML generator fills a null-default collection property (`Panel.ChildrenTransitions`) with a C# collection initializer, which NREs in `InitializeComponent`. WinUI creates the collection implicitly. | `forked/Views/Settings.xaml` |
+
 Also filed and awaiting fixes, but needing no workaround here:
 [#24308](https://github.com/unoplatform/uno/issues/24308) (WASM: `OnLaunched` exceptions swallowed - blank canvas, empty console),
 [#24309](https://github.com/unoplatform/uno/issues/24309) (Skia: `FindElementsInHostCoordinates` returns only ancestors),

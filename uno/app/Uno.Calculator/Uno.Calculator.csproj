@@ -68,10 +68,12 @@
         MainPage.xaml             #24302 (BackdropMaterial applies a transparent brush)
         EquationInputArea         #24301
         EquationStylePanelControl #24295 (x:Bind cast argument emits an invalid cast)
+        Settings                  (unfiled) null ChildrenTransitions gets a collection initializer
     -->
     <Page Remove="$(UpstreamXamlRoot)Views\MainPage.xaml" />
     <Page Remove="$(UpstreamXamlRoot)Views\GraphingCalculator\EquationInputArea.xaml" />
     <Page Remove="$(UpstreamXamlRoot)Views\GraphingCalculator\EquationStylePanelControl.xaml" />
+    <Page Remove="$(UpstreamXamlRoot)Views\Settings.xaml" />
 
     <ApplicationDefinition Include="$(ForkRoot)forked\App.xaml" Link="App.xaml" />
 

@@ -194,7 +194,8 @@
                 </TransitionCollection>
             </Popup.ChildTransitions>
 
-            <Grid x:Name="PopupContent" x:Load="false">
+            <!-- Uno Workaround (unfiled: popup-child-x-load) - an x:Load stub as Popup.Child never materializes, so FindName recurses until the stack overflows. -->
+            <Grid x:Name="PopupContent">
                 <local:Settings BackButtonClick="Settings_BackButtonClick" TitleBarHeight="{x:Bind DoubleToGridLength(AppTitleBar.Height), Mode=OneWay}"/>
             </Grid>
         </Popup>
