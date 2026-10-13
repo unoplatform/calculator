@@ -15,7 +15,7 @@ drifting, a shrinking one means the fork is converging on plain upstream.
 
 | Issue | What it works around | Where |
 |---|---|---|
-| [#24284](https://github.com/unoplatform/uno/issues/24284) | `ResourceLoader` ignores MRT slash-path semantics and silently returns `""`, so 426 accessibility strings and every mode title are blank. An empty string also reaches `Enum.Parse` and throws during XAML load. | `build/ingest/Uno.Ingest.targets` (2 rules) |
+| [#24284](https://github.com/unoplatform/uno/issues/24284) | `ResourceLoader` maps only the first `/` of an MRT path, so every key with a `[using:...]` segment returns `""`: 426 accessibility strings, and every keyboard shortcut (they are resource-driven). An empty string also reaches `Enum.Parse` and throws during XAML load. | `adapters/MrtCompat.cs`, `build/ingest/Uno.Ingest.targets` (4 rules) |
 | [#24288](https://github.com/unoplatform/uno/issues/24288) | `ApplicationView.GetApplicationViewIdForWindow` throws instead of returning a sentinel, aborting page load. | `build/ingest/Uno.Ingest.targets` |
 | [#24293](https://github.com/unoplatform/uno/issues/24293) | `x:Name` inside a `Resources` dictionary generates no backing field, though generated code and upstream code-behind both reference it. | `adapters/ResourceNamedMembers.cs` |
 | [#24294](https://github.com/unoplatform/uno/issues/24294) | Inherited DPs cannot be set from another XAML file on a control whose code-behind omits the base class — which upstream does everywhere. | `build/ingest/Uno.Ingest.targets` (base injection) |

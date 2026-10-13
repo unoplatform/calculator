@@ -120,6 +120,11 @@ R("LocalizationSettings.GetInstance().GetFlowDirection()",
   "global::Microsoft.UI.Xaml.FlowDirection.LeftToRight /* Uno Workaround #24284: LocalizationSettings init */");
 
 // Uno Workaround #24391 - the converter's value containers are HorizontalAlignment=Left,
+// Uno Workaround #24284 - resolve MRT slash-paths against the raw resw names; see uno/adapters/MrtCompat.cs.
+R("_stringResLoader?.GetString(key)", "global::CalculatorApp.Uno.MrtCompat.GetString(_stringResLoader, key)");
+// No global:: here - these calls sit inside interpolated strings, where "::" parses as a format specifier.
+R("loader.GetString(\"", "CalculatorApp.Uno.MrtCompat.GetString(loader, \"");
+
 // and under Uno that collapses the grid to its content width: the CalculationResult's inner
 // ScrollViewer ends up exactly as wide as the text (8.7px for "0"), so the control's font
 // auto-scaler sees "text already fills the container", shrinks to MinFontSize and can never
