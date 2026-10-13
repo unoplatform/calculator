@@ -1,3 +1,4 @@
+<!-- Uno Workaround (unfiled: popup-child-foreground-theme) - a Popup child inherits Foreground from the app theme instead of its logical parent's RequestedTheme, so the root sets it explicitly. -->
 <UserControl x:Class="CalculatorApp.Settings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +8,7 @@
              xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
              xmlns:utils="using:CalculatorApp.Utils"
+             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded"
              mc:Ignorable="d">
@@ -39,6 +41,15 @@
             <StaticResource x:Key="HyperlinkButtonBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush"/>
 
             <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <BitmapImage x:Key="AboutAppIconSource" UriSource="ms-appx:///Assets/CalculatorAppList.targetsize-32_altform-unplated.png"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <BitmapImage x:Key="AboutAppIconSource" UriSource="ms-appx:///Assets/CalculatorAppList.targetsize-32_altform-lightunplated.png"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -119,9 +130,8 @@
                            Text="{utils:ResourceString Name=AboutGroupTitle/Text}"/>
                 <toolkit:SettingsExpander x:Name="AboutExpander">
                     <toolkit:SettingsExpander.HeaderIcon>
-                        <BitmapIcon AutomationProperties.AccessibilityView="Raw"
-                                    ShowAsMonochrome="False"
-                                    UriSource="ms-appx:///Assets/CalculatorAppList.png"/>
+                        <!-- Uno Workaround #24299 - MRT altform/targetsize qualifiers are not resolved; pick the unplated glyph per theme. -->
+                        <ImageIcon AutomationProperties.AccessibilityView="Raw" Source="{ThemeResource AboutAppIconSource}"/>
                     </toolkit:SettingsExpander.HeaderIcon>
                     <TextBlock x:Name="AboutBuildVersion"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"

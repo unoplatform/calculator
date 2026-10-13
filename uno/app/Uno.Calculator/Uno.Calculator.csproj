@@ -13,6 +13,8 @@
     <ApplicationId>uno.platform.calculator</ApplicationId>
     <ApplicationPublisher>Uno Platform</ApplicationPublisher>
     <Description>Windows Calculator on Uno Platform.</Description>
+    <!-- Upstream stamps its version in CI (11.<yymm>.<build>); mirror the current minor. -->
+    <ApplicationDisplayVersion>11.2607.0</ApplicationDisplayVersion>
 
 
     <UnoFeatures>
@@ -54,6 +56,7 @@
          keeps its 426 markup keys and the .resw keys in lockstep across 60 locales. -->
     <Page Include="$(UpstreamXamlRoot)**\*.xaml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
     <Page Include="$(ForkRoot)forked\**\*.xaml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="$(ForkRoot)adapters\**\*.xaml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
 
     <!-- App.xaml is the ApplicationDefinition, so it must not also be a Page.
          NOTE: a Remove must FOLLOW its Include - MSBuild evaluates items in order. -->
@@ -68,7 +71,7 @@
         MainPage.xaml             #24302 (BackdropMaterial applies a transparent brush)
         EquationInputArea         #24301
         EquationStylePanelControl #24295 (x:Bind cast argument emits an invalid cast)
-        Settings                  (unfiled) null ChildrenTransitions gets a collection initializer
+        Settings                  (unfiled) null ChildrenTransitions initializer + popup Foreground theme; #24299 icon
     -->
     <Page Remove="$(UpstreamXamlRoot)Views\MainPage.xaml" />
     <Page Remove="$(UpstreamXamlRoot)Views\GraphingCalculator\EquationInputArea.xaml" />

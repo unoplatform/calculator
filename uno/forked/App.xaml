@@ -16,6 +16,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+                <!-- Uno Workaround #24297 - look-alike CommunityToolkit SettingsControls. -->
+                <ResourceDictionary Source="ms-appx:///SettingsControls.xaml"/>
 
                 <!-- Overwrite some resources of WinUI -->
                 <ResourceDictionary>

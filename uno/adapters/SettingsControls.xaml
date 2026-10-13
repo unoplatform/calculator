@@ -1,0 +1,111 @@
+<!-- Uno Workaround #24297 - templates for the SettingsCard/SettingsExpander look-alikes in
+     SettingsControls.cs, modelled on CommunityToolkit.WinUI.Controls.SettingsControls. -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+                    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+        <ControlTemplate x:Key="SettingsCardTemplate" TargetType="toolkit:SettingsCard">
+            <Grid MinHeight="{TemplateBinding MinHeight}"
+                  Padding="{TemplateBinding Padding}"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Viewbox x:Name="PART_HeaderIconPresenter"
+                         Width="20"
+                         Height="20"
+                         Margin="2,0,20,0"
+                         VerticalAlignment="Center">
+                    <ContentPresenter Content="{TemplateBinding HeaderIcon}"/>
+                </Viewbox>
+
+                <StackPanel Grid.Column="1"
+                            Margin="0,0,24,0"
+                            VerticalAlignment="Center">
+                    <ContentPresenter x:Name="PART_HeaderPresenter"
+                                      Content="{TemplateBinding Header}"
+                                      FontSize="{ThemeResource BodyFontSize}"
+                                      Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                      TextWrapping="Wrap"/>
+                    <ContentPresenter x:Name="PART_DescriptionPresenter"
+                                      Content="{TemplateBinding Description}"
+                                      FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Grid.Column="2"
+                                  VerticalAlignment="Center"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"/>
+            </Grid>
+        </ControlTemplate>
+
+    <Style TargetType="toolkit:SettingsCard">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}"/>
+        <Setter Property="Padding" Value="16,16,16,16"/>
+        <Setter Property="MinHeight" Value="68"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template" Value="{StaticResource SettingsCardTemplate}"/>
+    </Style>
+
+    <Style TargetType="toolkit:SettingsExpander">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="toolkit:SettingsExpander">
+                    <muxc:Expander x:Name="PART_Expander"
+                                   MinHeight="68"
+                                   Padding="0"
+                                   HorizontalAlignment="Stretch"
+                                   HorizontalContentAlignment="Stretch">
+                        <muxc:Expander.Header>
+                            <toolkit:SettingsCard MinHeight="66"
+                                                  Padding="0,12,0,12"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Content="{TemplateBinding Content}"
+                                                  Description="{TemplateBinding Description}"
+                                                  Header="{TemplateBinding Header}"
+                                                  HeaderIcon="{TemplateBinding HeaderIcon}"/>
+                        </muxc:Expander.Header>
+                        <ItemsControl x:Name="PART_ItemsRepeater">
+                            <ItemsControl.Resources>
+                                <Style TargetType="toolkit:SettingsCard">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+                                    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+                                    <Setter Property="CornerRadius" Value="0"/>
+                                    <Setter Property="Padding" Value="58,8,44,8"/>
+                                    <Setter Property="MinHeight" Value="52"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    <Setter Property="Template" Value="{StaticResource SettingsCardTemplate}"/>
+                                </Style>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </muxc:Expander>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

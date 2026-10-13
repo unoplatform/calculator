@@ -21,10 +21,11 @@ drifting, a shrinking one means the fork is converging on plain upstream.
 | [#24294](https://github.com/unoplatform/uno/issues/24294) | Inherited DPs cannot be set from another XAML file on a control whose code-behind omits the base class — which upstream does everywhere. | `build/ingest/Uno.Ingest.targets` (base injection) |
 | [#24295](https://github.com/unoplatform/uno/issues/24295) | `x:Bind` function binding with a `((TypeName))` cast argument emits an invalid cast. | `forked/Views/GraphingCalculator/EquationStylePanelControl.xaml` |
 | [#24296](https://github.com/unoplatform/uno/issues/24296) | Multi-arg `DecimalFormatter` / `DateTimeFormatter` ctors leave internals null, so later member access NREs far from the cause. | `build/ingest/Uno.Ingest.targets` (2 rules) |
-| [#24297](https://github.com/unoplatform/uno/issues/24297) | 7.0-dev packages (HotDesign, Toolkit, CommunityToolkit) reference `Uno` / `Uno.UI.Toolkit`, which Uno 7 no longer ships. The `UnoDisableBindableTypeProvidersGeneration` half of this workaround has been **removed**: it is no longer needed, and it silently broke published builds by removing the trimmer roots that keep reflection-instantiated pages alive. | `adapters/SettingsControls.cs` |
+| [#24297](https://github.com/unoplatform/uno/issues/24297) | 7.0-dev packages (HotDesign, Toolkit, CommunityToolkit) reference `Uno` / `Uno.UI.Toolkit`, which Uno 7 no longer ships. The `UnoDisableBindableTypeProvidersGeneration` half of this workaround has been **removed**: it is no longer needed, and it silently broke published builds by removing the trimmer roots that keep reflection-instantiated pages alive. | `adapters/SettingsControls.cs` + `.xaml` (templated look-alikes of `SettingsCard`/`SettingsExpander`), `forked/App.xaml` (merge) |
 | [#24298](https://github.com/unoplatform/uno/issues/24298) | Unimplemented WinUI members that throw on the app startup path (`ApplicationView.*`, `SizeHelper.FromDimensions`, `LaunchActivatedEventArgs.User`, `UserActivityRequestManager`, `DecimalFormatter.FormatUInt`, `RichEditTextDocument.GetMath`/`SetMath`). | `build/ingest/Uno.Ingest.targets` (7 rules), `adapters/RichEditMathCompat.cs` |
 | [#24390](https://github.com/unoplatform/uno/issues/24390) | `GeographicRegion.CodeTwoLetter` and `GlobalizationPreferences.Currencies`/`Languages` throw `NotImplementedException` on a construction path, and upstream's `?? "US"` / `.Count > 0` guards cannot help because the getters throw. Took out all 13 converter pages and the date calculator. | `adapters/GlobalizationCompat.cs`, `build/ingest/Uno.Ingest.targets` (4 rules) |
 | [#24391](https://github.com/unoplatform/uno/issues/24391) | A `HorizontalAlignment="Left"` grid collapses its star column to content width, so the converter's `CalculationResult` gets a `ScrollViewer` exactly as wide as its text and the font auto-scaler shrinks to `MinFontSize` instead of growing to 46. | `build/ingest/Uno.Ingest.targets` (1 rule, stretches the two value containers) |
+| [#24299](https://github.com/unoplatform/uno/issues/24299) | MRT `targetsize`/`altform` qualified assets are not resolved; `CalculatorAppList.png` exists only qualified, so the About icon was missing. | `forked/Views/Settings.xaml` (themed `ImageIcon`) |
 | [#24301](https://github.com/unoplatform/uno/issues/24301) | `BrushTransition` drops `SolidColorBrush.Opacity`, so brushes differing only by opacity paint opaque white for the whole transition. | `forked/App.xaml` (16 brushes as alpha-in-Color), `forked/Views/GraphingCalculator/EquationInputArea.xaml` |
 | [#24302](https://github.com/unoplatform/uno/issues/24302) | `BackdropMaterial.ApplyToRootOrPageBackground` applies a transparent brush instead of the Mica fallback, so every translucent Fluent fill composites over black. | `forked/App.xaml` (`CalcPageBackdropBrush`), `forked/Views/MainPage.xaml` |
 
@@ -35,6 +36,7 @@ Searchable as `Uno Workaround (unfiled: <slug>)`; swap in the issue number once 
 | Slug | What it works around | Where |
 |---|---|---|
 | `popup-child-x-load` | An `x:Load="False"` element that is a `Popup.Child` never materializes (`ElementStub.SwapViews` only swaps visual children), so `FindName` recurses until the stack overflows. Opening Settings killed the app. | `forked/Views/MainPage.xaml`, `build/ingest/Uno.Ingest.targets` (1 rule) |
+| `popup-child-foreground-theme` | A Popup child inherits `Foreground` from the app theme rather than from its logical parent's `RequestedTheme`, so Settings headings stayed white on the Light theme. | `forked/Views/Settings.xaml` (root `Foreground`) |
 | `xamlgen-null-collection-initializer` | The XAML generator fills a null-default collection property (`Panel.ChildrenTransitions`) with a C# collection initializer, which NREs in `InitializeComponent`. WinUI creates the collection implicitly. | `forked/Views/Settings.xaml` |
 
 Also filed and awaiting fixes, but needing no workaround here:
@@ -43,7 +45,7 @@ Also filed and awaiting fixes, but needing no workaround here:
 [#24285](https://github.com/unoplatform/uno/issues/24285) (case-sensitive resource lookup),
 [#24286](https://github.com/unoplatform/uno/issues/24286) (`JsonObject.TryParse` throws),
 [#24287](https://github.com/unoplatform/uno/issues/24287) (`LanguageFontGroup` throws),
-[#24299](https://github.com/unoplatform/uno/issues/24299) (MRT-qualified assets unresolved),
+
 [#24300](https://github.com/unoplatform/uno/issues/24300) (system accent colour hardcoded).
 
 ## Fixed upstream
