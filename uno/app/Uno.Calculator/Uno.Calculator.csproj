@@ -95,4 +95,12 @@
     <NativeFileReference Include="$(ForkRoot)native/bin/wasm/CalcManager.a/**/CalcManager.a" />
   </ItemGroup>
 
+  <!-- Desktop loads the engine as a plain DLL next to the app. Build it with uno/native/build-win32.bat. -->
+  <ItemGroup Condition="'$([MSBuild]::GetTargetPlatformIdentifier($(TargetFramework)))' == 'desktop'">
+    <None Include="$(ForkRoot)native/bin/win32/CalcManager.dll"
+          Link="CalcManager.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
