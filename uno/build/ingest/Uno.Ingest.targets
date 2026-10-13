@@ -148,6 +148,15 @@ R("windowId = ApplicationView.GetApplicationViewIdForWindow(window);",
 // later member access NREs far from the cause.
 R("new DecimalFormatter(new[] { _resolvedName }, \"ZZ\")",
   "new DecimalFormatter() /* Uno Workaround #24296: 2-arg ctor leaves internals null */");
+// ...and the date calculator's 5-arg one, whose language argument (Language.CurrentInputMethodLanguageTag) throws
+// NotImplementedException on its own (unfiled: input-method-language-tag), failing DateCalculatorViewModel's ctor.
+R("            _dateTimeFormatter = new Windows.Globalization.DateTimeFormatting.DateTimeFormatter(\n" +
+  "                \"longdate\",\n" +
+  "                new[] { Windows.Globalization.Language.CurrentInputMethodLanguageTag },\n" +
+  "                new Windows.Globalization.GeographicRegion().CodeTwoLetter ?? \"US\",\n" +
+  "                calendarIdentifier,\n" +
+  "                Windows.Globalization.ClockIdentifiers.TwentyFourHour);",
+  "            _dateTimeFormatter = new Windows.Globalization.DateTimeFormatting.DateTimeFormatter(\"longdate\"); // Uno Workaround #24296");
 R("new DateTimeFormatter(format, new[] { _resolvedName }, \"ZZ\", calendar, clock)",
   "new DateTimeFormatter(format) /* Uno Workaround #24296: multi-arg ctor unimplemented */");
 
