@@ -150,6 +150,19 @@ R("                ThemeHelper.RootTheme = ThemeHelper.GetEnum<ElementTheme>(sel
   "                ThemeHelper.RootTheme = ThemeHelper.GetEnum<ElementTheme>(selectItem.Tag.ToString());\n" +
   "                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => Bindings.Update());\n");
 
+// WinUI 3 has no ApplicationView compact overlay (and Uno throws on it, #24298): "Keep on top" goes through
+// AppWindow instead - see uno/adapters/AlwaysOnTopCompat.cs.
+R("ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay)",
+  "global::CalculatorApp.Uno.AlwaysOnTopCompat.IsSupported");
+R("ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.CompactOverlay",
+  "global::CalculatorApp.Uno.AlwaysOnTopCompat.IsActive");
+R("ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay)",
+  "global::CalculatorApp.Uno.AlwaysOnTopCompat.CreateOptions()");
+R("ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default)",
+  "global::CalculatorApp.Uno.AlwaysOnTopCompat.Exit()");
+R("ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, compactOptions)",
+  "global::CalculatorApp.Uno.AlwaysOnTopCompat.Enter(compactOptions.CustomSize)");
+
 // unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
 R("ApplicationView.GetApplicationViewIdForWindow(CoreWindow.GetForCurrentThread())",
   "-1 /* Uno Workaround #24288 */");
