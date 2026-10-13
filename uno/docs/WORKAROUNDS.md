@@ -36,6 +36,7 @@ Searchable as `Uno Workaround (unfiled: <slug>)`; swap in the issue number once 
 | Slug | What it works around | Where |
 |---|---|---|
 | `popup-child-x-load` | An `x:Load="False"` element that is a `Popup.Child` never materializes (`ElementStub.SwapViews` only swaps visual children), so `FindName` recurses until the stack overflows. Opening Settings killed the app. | `forked/Views/MainPage.xaml`, `build/ingest/Uno.Ingest.targets` (1 rule) |
+| `itemsstackpanel-in-itemscontrol` | An `ItemsStackPanel` as a plain `ItemsControl`'s panel measures to zero width, stacks every item at one offset and keeps stale containers, so the expression line (`12 + 3 =`) never drew. Swapped for a horizontal `StackPanel` at runtime. | `adapters/ItemsPanelCompat.cs`, `build/ingest/Uno.Ingest.targets` (1 rule) |
 | `popup-child-foreground-theme` | A Popup child inherits `Foreground` from the app theme rather than from its logical parent's `RequestedTheme`, so Settings headings stayed white on the Light theme. | `forked/Views/Settings.xaml` (root `Foreground`) |
 | `xamlgen-null-collection-initializer` | The XAML generator fills a null-default collection property (`Panel.ChildrenTransitions`) with a C# collection initializer, which NREs in `InitializeComponent`. WinUI creates the collection implicitly. | `forked/Views/Settings.xaml` |
 
