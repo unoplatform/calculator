@@ -112,6 +112,25 @@ R("                    m_itemsControl = (ItemsControl)uiElement;\n",
   "                    m_itemsControl = (ItemsControl)uiElement;\n" +
   "                    global::CalculatorApp.Uno.ItemsPanelCompat.UseHorizontalStackPanel(m_itemsControl);\n");
 
+// Uno Workaround (unfiled: pivot-items-mutation) - see uno/adapters/PivotCompat.cs.
+R("                m_pivotItem = (PivotItem)DockPivot.Items[0];\n",
+  "                global::CalculatorApp.Uno.PivotCompat.PrepareForItemsChange(DockPivot);\n" +
+  "                m_pivotItem = (PivotItem)DockPivot.Items[0];\n");
+R("                    DockPivot.Items.Insert(0, m_pivotItem);\n",
+  "                    global::CalculatorApp.Uno.PivotCompat.PrepareForItemsChange(DockPivot);\n" +
+  "                    DockPivot.Items.Insert(0, m_pivotItem);\n");
+R("            DockPivot.SelectedIndex = 0;\n" +
+  "            UpdateViewState();\n" +
+  "            UpdatePanelViewState();\n" +
+  "        }\n\n" +
+  "        private void OnIsStandardPropertyChanged",
+  "            DockPivot.SelectedIndex = 0;\n" +
+  "            global::CalculatorApp.Uno.PivotCompat.RefreshHeaders(DockPivot);\n" +
+  "            UpdateViewState();\n" +
+  "            UpdatePanelViewState();\n" +
+  "        }\n\n" +
+  "        private void OnIsStandardPropertyChanged");
+
 // unoplatform/uno#24288 - GetApplicationViewIdForWindow throws instead of a sentinel.
 R("ApplicationView.GetApplicationViewIdForWindow(CoreWindow.GetForCurrentThread())",
   "-1 /* Uno Workaround #24288 */");
